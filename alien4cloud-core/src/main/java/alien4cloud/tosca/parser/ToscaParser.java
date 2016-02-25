@@ -37,6 +37,8 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
         parserRegistriesByVersion.put("tosca_simple_yaml_1_0_0_wd03", registry);
         registry = mappingGenerator.process("classpath:alien-dsl-1.1.0-mapping.yml");
         parserRegistriesByVersion.put("alien_dsl_1_1_0", registry);
+        registry = mappingGenerator.process("classpath:tosca-simple-profile-mapping.yml");
+        parserRegistriesByVersion.put("tosca_simple_yaml_1_0", registry);
     }
 
     @Override
