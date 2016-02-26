@@ -21,6 +21,7 @@ import alien4cloud.model.components.IndexedNodeType;
 import alien4cloud.model.components.IndexedToscaElement;
 import alien4cloud.model.components.PropertyDefinition;
 import alien4cloud.model.components.PropertyValue;
+import alien4cloud.model.components.Repository;
 import alien4cloud.model.topology.NodeGroup;
 import alien4cloud.model.topology.NodeTemplate;
 import alien4cloud.model.topology.Topology;
@@ -86,6 +87,12 @@ public class TopologyChecker implements IChecker<Topology> {
         }
 
         final ArchiveRoot archiveRoot = (ArchiveRoot) context.getRoot().getWrappedInstance();
+        
+        Map<String, Repository> repositories = archiveRoot.getArchive().getRepositories();
+        if (repositories != null) {
+            instance.setRepositories(repositories);
+        }
+        
         Set<CSARDependency> dependencies = archiveRoot.getArchive().getDependencies();
         if (dependencies != null) {
             instance.setDependencies(dependencies);

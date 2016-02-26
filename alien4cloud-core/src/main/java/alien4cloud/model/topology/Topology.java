@@ -17,6 +17,7 @@ import org.elasticsearch.annotation.query.TermFilter;
 import alien4cloud.model.components.CSARDependency;
 import alien4cloud.model.components.DeploymentArtifact;
 import alien4cloud.model.components.PropertyDefinition;
+import alien4cloud.model.components.Repository;
 import alien4cloud.paas.wf.Workflow;
 import alien4cloud.security.IManagedSecuredResource;
 import alien4cloud.utils.jackson.ConditionalAttributes;
@@ -49,6 +50,9 @@ public class Topology implements IManagedSecuredResource {
     /** Last update date of the topology to verify if the topology has been changed **/
     private Date lastUpdateDate = new Date();
 
+    /** The list of repositories of this topology. */
+    private Map<String, Repository> repositories;
+    
     /** The list of dependencies of this topology. */
     @TermFilter(paths = { "name", "version" })
     @NestedObject(nestedClass = CSARDependency.class)

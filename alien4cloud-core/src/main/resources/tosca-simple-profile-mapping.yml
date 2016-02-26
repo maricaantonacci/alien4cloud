@@ -32,6 +32,9 @@
   template_name: archive.name
   template_author: archive.templateAuthor
   template_version: archive.version
+  repositories:
+    map: archive.repositories
+    type: repository_type
   description: archive.description
   imports:
     set: archive.dependencies
@@ -64,6 +67,10 @@
     deferredOrder: 1000 # we want this to be the last executed
     type: topology_template_type
 
+- repository_type: alien4cloud.model.components.Repository
+  description: description
+  url: url
+  
 - topology_template_type: alien4cloud.model.topology.Topology|topologyChecker
   description: .topologyTemplateDescription # mapped to a root's property
   inputs:

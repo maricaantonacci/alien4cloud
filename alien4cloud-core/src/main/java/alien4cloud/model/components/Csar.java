@@ -2,6 +2,7 @@ package alien4cloud.model.components;
 
 import static alien4cloud.dao.model.FetchContext.SUMMARY;
 
+import java.util.Map;
 import java.util.Set;
 
 import lombok.EqualsAndHashCode;
@@ -37,6 +38,8 @@ public class Csar implements IDeploymentSource {
 	private String templateAuthor;
 
 	private String description;
+	
+	private Map<String, Repository> repositories;
 
     @TermFilter(paths = { "name", "version" })
     @NestedObject(nestedClass = CSARDependency.class)
