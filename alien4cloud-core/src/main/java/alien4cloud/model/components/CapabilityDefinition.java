@@ -32,6 +32,8 @@ public class CapabilityDefinition {
     /** Identifies the type of the capability. */
     @FormSuggestion(fromClass = IndexedCapabilityType.class, path = "elementId")
     private String type;
+    
+    private List<String> validSources;
 
     /**
      * Specifies the upper boundary of client requirements the defined capability can serve. The default value for this attribute is one. A value of

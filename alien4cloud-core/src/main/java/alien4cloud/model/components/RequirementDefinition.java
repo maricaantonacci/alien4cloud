@@ -37,6 +37,10 @@ public class RequirementDefinition {
     private String relationshipType;
     /** Can specify the optional target capability name on which to bind the relationship. */
     private String capabilityName;
+
+    private String relationshipName;
+    private String nodeName;
+    
     /**
      * Specifies the lower boundary by which a requirement MUST be matched for Node Templates according to the current Node Type, or for instances created for
      * those Node Templates. The default value for this attribute is one. A value of zero would indicate that matching of the requirement is optional.

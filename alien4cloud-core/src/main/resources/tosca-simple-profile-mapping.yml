@@ -193,6 +193,9 @@
   properties:
     map: properties
     type: template_property
+  valid_source_types:
+    list: validSources
+    type: scalar
 
 - constraint_list: list # This element must be parsed as a list
   type: constraint # the elements in the list are constraints
@@ -234,6 +237,10 @@
     reference: relationshipType
     type: relationship_type_reference
   capability: capabilityName
+  relationship:
+    reference: relationshipType
+    type: relationship_type_reference
+  node: nodeName
   node_filter:
     reference: nodeFilter
     type: node_filter_type
@@ -389,10 +396,10 @@
   artifacts:
     sequence_to_map: artifacts
     type: deployment_artifact
-  valid_targets:
+  valid_target_types:
     list: validTargets
     type: scalar
-  valid_sources:
+  valid_source_types:
     list: validSources
     type: scalar
 
