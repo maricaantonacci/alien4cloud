@@ -25,6 +25,9 @@ import alien4cloud.model.deployment.IDeploymentSource;
 @EqualsAndHashCode(of = { "name", "version" })
 @ESObject
 public class Csar implements IDeploymentSource {
+
+	public final static String DEFAULT_CSAR_VERSION = "1.0.0-SNAPSHOT";
+	
 	@FetchContext(contexts = { SUMMARY }, include = { true })
 	private String name;
 
@@ -64,7 +67,11 @@ public class Csar implements IDeploymentSource {
 	/** Argument constructor */
 	public Csar(String name, String version) {
 		this.name = name;
-		this.version = version;
+		if (version == null) {
+			this.version = DEFAULT_CSAR_VERSION;
+		} else {
+			this.version = version;
+		}
 	}
 
 	@Id

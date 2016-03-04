@@ -3,6 +3,7 @@
 # declare custom parsers for complex types that requires specific parser.
 - scalar: alien4cloud.tosca.parser.impl.base.ScalarParser
 - property_value: alien4cloud.tosca.parser.impl.advanced.PropertyValueParser
+- imports_definition: alien4cloud.tosca.parser.impl.advanced.ImportsParser
 - import_definition: alien4cloud.tosca.parser.impl.advanced.ImportParser
 - bound: alien4cloud.tosca.parser.impl.advanced.BoundParser
 - implementation_artifact: alien4cloud.tosca.parser.impl.advanced.ImplementationArtifactParser
@@ -24,10 +25,13 @@
 - artifact_ref_parser: alien4cloud.tosca.parser.impl.advanced.ArtifactReferenceParser
 - sustitution_mapping_parser: alien4cloud.tosca.parser.impl.advanced.SustitutionMappingParser
 - constraint: alien4cloud.tosca.parser.impl.advanced.ConstraintParser
+- tosca_definitions_version_parser: alien4cloud.tosca.parser.impl.advanced.ToscaDefinitionsVersionParser
 
 # declare standard mapping based parsers
 - definition: alien4cloud.tosca.model.ArchiveRoot
-  tosca_definitions_version: archive.toscaDefinitionsVersion
+  tosca_definitions_version:
+    reference: archive.toscaDefinitionsVersion
+    type: tosca_definitions_version_parser
   tosca_default_namespace: archive.toscaDefaultNamespace
   template_name: archive.name
   template_author: archive.templateAuthor
@@ -37,8 +41,8 @@
     type: repository_type
   description: archive.description
   imports:
-    set: archive.dependencies
-    type: import_definition
+    reference: archive.dependencies
+    type: imports_definition
   dsl_definitions: null # this means we take this node in charge but won't parse it's content
   node_types:
     map: nodeTypes

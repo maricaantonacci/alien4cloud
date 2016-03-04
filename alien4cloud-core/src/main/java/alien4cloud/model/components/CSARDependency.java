@@ -18,7 +18,7 @@ import org.elasticsearch.mapping.IndexType;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of={"name", "version", "toscaDefinitionDependency"})
 @ToString
 public class CSARDependency {
     @NonNull
@@ -28,4 +28,19 @@ public class CSARDependency {
     @NonNull
     @StringField(indexType = IndexType.not_analyzed)
     private String version;
+    
+    private String file;
+    
+    private String repository;
+    
+    private boolean toscaDefinitionDependency;
+    
+    public CSARDependency(String name) {
+    	this(name, Csar.DEFAULT_CSAR_VERSION);
+    }
+    
+    public CSARDependency(String name, String version) {
+    	this.name = name;
+    	this.version = version;
+    }
 }
