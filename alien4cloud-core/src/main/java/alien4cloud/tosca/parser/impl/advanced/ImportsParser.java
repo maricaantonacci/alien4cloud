@@ -41,7 +41,7 @@ public class ImportsParser extends SetParser<CSARDependency> {
                     dependencies = Sets.newLinkedHashSet(parsedDependencies);
                 } else {
                     for (CSARDependency parsedDependency : parsedDependencies) {
-                        if (dependencies.contains(parsedDependency)) {
+                        if (!dependencies.contains(parsedDependency)) {
                             dependencies.add(parsedDependency);
                         }
                     }
