@@ -7,9 +7,11 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import alien4cloud.model.components.AbstractPropertyValue;
+import alien4cloud.model.components.CSARDependency;
 import alien4cloud.model.components.FunctionPropertyValue;
 import alien4cloud.model.components.ScalarPropertyValue;
 import alien4cloud.model.components.constraints.AbstractPropertyConstraint;
@@ -275,5 +277,16 @@ public class ToscaSerializerUtils {
         args.put("arg1", "value1");
         args.put("arg2", "value2");
         return args;
+    }
+    
+    public boolean importsAreNotEmpty(Set<CSARDependency> dependencies) {
+        if (collectionIsNotEmpty(dependencies)) {
+            for (CSARDependency dependency : dependencies) {
+                if (!dependency.isToscaDefinitionDependency()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
