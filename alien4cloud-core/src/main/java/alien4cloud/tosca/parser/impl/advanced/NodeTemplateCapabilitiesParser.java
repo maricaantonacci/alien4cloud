@@ -87,6 +87,8 @@ public class NodeTemplateCapabilitiesParser extends DefaultDeferredParser<Void> 
                         String legacyKey = legacyEntry.getKey();
                         AbstractPropertyValue v = parsedCapabilitiesProperties.remove(legacyKey);
                         if (v != null) {
+                            //Set this property to be printed because it belongs to the original template
+                            v.setPrintable(true);
                             legacyEntry.setValue(v);
                         }
                     }

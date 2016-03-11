@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 
+import alien4cloud.model.components.IPrintable;
 import alien4cloud.tosca.parser.INodeParser;
 import alien4cloud.tosca.parser.ParserUtils;
 import alien4cloud.tosca.parser.ParsingContextExecution;
@@ -67,6 +68,9 @@ public class MapParser<T> extends DefaultParser<Map<String, T>> {
                     valueWrapper.setPropertyValue(keyPath, key);
                 }
                 map.put(key, value);
+                if (value instanceof IPrintable) {
+                    ((IPrintable)value).setPrintable(true);
+                }
             }
         }
         return map;

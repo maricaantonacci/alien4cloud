@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import alien4cloud.model.components.AbstractPropertyValue;
 import alien4cloud.model.components.CSARDependency;
 import alien4cloud.model.components.FunctionPropertyValue;
+import alien4cloud.model.components.IPrintable;
 import alien4cloud.model.components.ScalarPropertyValue;
 import alien4cloud.model.components.constraints.AbstractPropertyConstraint;
 import alien4cloud.model.components.constraints.EqualConstraint;
@@ -65,8 +66,10 @@ public class ToscaSerializerUtils {
         }
     }
 
-    public boolean isAbstractPropertyValueNotNull(AbstractPropertyValue value) {
+    public boolean isAbstractPropertyValueNotNullAndPrintable(AbstractPropertyValue value) {
         if (value == null) {
+            return false;
+        } else if (!value.isPrintable()) {
             return false;
         } else if (value instanceof ScalarPropertyValue) {
             return ((ScalarPropertyValue) value).getValue() != null;
@@ -133,6 +136,13 @@ public class ToscaSerializerUtils {
                         }
                     } else if (o instanceof ScalarPropertyValue) {
                         if (((ScalarPropertyValue) o).getValue() != null) {
+                            //Check if the property is to be printed
+                            if (((ScalarPropertyValue) o).isPrintable()) {
+                                return true;
+                            }
+                        }
+                    } else if (o instanceof IPrintable) {
+                        if (((IPrintable) o).isPrintable()) {
                             return true;
                         }
                     } else {
