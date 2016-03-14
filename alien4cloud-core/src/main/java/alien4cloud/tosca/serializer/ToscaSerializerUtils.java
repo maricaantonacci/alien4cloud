@@ -17,6 +17,7 @@ import alien4cloud.model.components.CSARDependency;
 import alien4cloud.model.components.ConcatPropertyValue;
 import alien4cloud.model.components.FunctionPropertyValue;
 import alien4cloud.model.components.IPrintable;
+import alien4cloud.model.components.ListPropertyValue;
 import alien4cloud.model.components.ScalarPropertyValue;
 import alien4cloud.model.components.constraints.AbstractPropertyConstraint;
 import alien4cloud.model.components.constraints.EqualConstraint;
@@ -154,6 +155,10 @@ public class ToscaSerializerUtils {
         return o instanceof ScalarPropertyValue;
     }
 
+    public boolean isListPropertyValue(Object o) {
+        return o instanceof ListPropertyValue;
+    }
+    
     public boolean isFunctionPropertyValue(Object o) {
         return o instanceof FunctionPropertyValue;
     }

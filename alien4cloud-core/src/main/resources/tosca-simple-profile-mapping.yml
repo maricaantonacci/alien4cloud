@@ -314,7 +314,7 @@
     get_property: tosca_function
     get_attribute: tosca_function
     __: complex_property_value
-  default: scalar_property_value
+  default: complex_property_value
 
 - input: __discriminator
   keys:

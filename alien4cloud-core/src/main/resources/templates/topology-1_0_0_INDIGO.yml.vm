@@ -12,6 +12,8 @@
 $utils.renderScalar($v.value)
 #elseif($utils.isFunctionPropertyValue($v) || $utils.isConcatPropertyValue($v))
 { $utils.renderFunctionAndConcat($v) }
+#elseif($utils.isListPropertyValue($v))
+[ $utils.getCsvToString($v.value, true) ]
 #end
 #end## macro serializeAbtractPropertyValue
 ## --------------------------------------------
