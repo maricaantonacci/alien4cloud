@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import alien4cloud.model.components.AbstractPropertyValue;
 import alien4cloud.model.components.CSARDependency;
+import alien4cloud.model.components.ConcatPropertyValue;
 import alien4cloud.model.components.FunctionPropertyValue;
 import alien4cloud.model.components.IPrintable;
 import alien4cloud.model.components.ScalarPropertyValue;
@@ -134,15 +137,8 @@ public class ToscaSerializerUtils {
                         if (!((Collection<?>) o).isEmpty()) {
                             return true;
                         }
-                    } else if (o instanceof ScalarPropertyValue) {
-                        if (((ScalarPropertyValue) o).getValue() != null) {
-                            //Check if the property is to be printed
-                            if (((ScalarPropertyValue) o).isPrintable()) {
-                                return true;
-                            }
-                        }
-                    } else if (o instanceof IPrintable) {
-                        if (((IPrintable) o).isPrintable()) {
+                    } else if (o instanceof AbstractPropertyValue) {
+                        if (isAbstractPropertyValueNotNullAndPrintable((AbstractPropertyValue) o)) {
                             return true;
                         }
                     } else {
@@ -154,12 +150,16 @@ public class ToscaSerializerUtils {
         return false;
     }
 
-    public boolean isScalarPropertyValue(AbstractPropertyValue apv) {
-        return apv instanceof ScalarPropertyValue;
+    public boolean isScalarPropertyValue(Object o) {
+        return o instanceof ScalarPropertyValue;
     }
 
-    public boolean isFunctionPropertyValue(AbstractPropertyValue apv) {
-        return apv instanceof FunctionPropertyValue;
+    public boolean isFunctionPropertyValue(Object o) {
+        return o instanceof FunctionPropertyValue;
+    }
+    
+    public boolean isConcatPropertyValue(Object o) {
+        return o instanceof ConcatPropertyValue;
     }
 
     public String getCsvToString(Collection<?> list) {
@@ -176,11 +176,23 @@ public class ToscaSerializerUtils {
                 } else {
                     sb.append(", ");
                 }
-                if (renderScalar) {
-                    sb.append(renderScalar(o.toString()));
+                if (isFunctionPropertyValue(o) || isConcatPropertyValue(o)) {
+                    sb.append(renderFunctionAndConcat((AbstractPropertyValue) o));
+                } else if (isScalarPropertyValue(o)) {
+                    String stringValue = ((ScalarPropertyValue) o).getValue();
+                    if (renderScalar) {
+                        sb.append(renderScalar(stringValue));
+                    } else {
+                        sb.append(stringValue);
+                    }
                 } else {
-                    sb.append(o.toString());
+                    if (renderScalar) {
+                        sb.append(renderScalar(o.toString()));
+                    } else {
+                        sb.append(o.toString());
+                    }
                 }
+
             }
         }
         return sb.toString();
@@ -202,6 +214,25 @@ public class ToscaSerializerUtils {
         return false;
     }
 
+    public String renderFunctionAndConcat(AbstractPropertyValue apv) {
+        StringBuilder builder = new StringBuilder();
+        String functionName;
+        List<?> parameters = new ArrayList<>();
+        if (isFunctionPropertyValue(apv)) {
+            FunctionPropertyValue fpv = (FunctionPropertyValue) apv;
+            functionName = fpv.getFunction();
+            parameters = fpv.getParameters();
+        } else if (isConcatPropertyValue(apv)) {
+            ConcatPropertyValue cpv = (ConcatPropertyValue) apv;
+            functionName = cpv.getFunction_concat();
+            parameters = cpv.getParameters();
+        } else {
+            return builder.toString();
+        }
+        builder.append(functionName).append(": [ ").append(getCsvToString(parameters, true)).append(" ]");
+        return builder.toString();
+    }
+    
     public String renderConstraint(AbstractPropertyConstraint c) {
         StringBuilder builder = new StringBuilder();
         if (c instanceof GreaterOrEqualConstraint) {

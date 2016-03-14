@@ -90,10 +90,10 @@
     map: nodeTemplates
     type: node_template
   outputs:
-    reference: void # means : do the parsing but do not set anything
+    map: outputs
     deferred: true
     deferredOrder: 1001 # we want this to be the very last executed
-    type: outputs_type
+    type: output_definition
   groups:
     map: groups
     key: name
@@ -256,6 +256,22 @@
     reference: nodeFilter
     type: node_filter_type
 
+- output_definition: alien4cloud.model.components.OutputDefinition
+  description: description
+  value:
+    reference: value
+    type: output_value
+
+- output_value: __discriminator
+  keys:
+    type: output_definition
+    get_input: tosca_function
+    get_property: tosca_function
+    get_attribute: tosca_function
+    get_operation_output: tosca_function
+    concat: tosca_concat
+  default: complex_property_value
+  
 - deployment_artifact: alien4cloud.model.components.DeploymentArtifact
   __0:
     value: artifactRef

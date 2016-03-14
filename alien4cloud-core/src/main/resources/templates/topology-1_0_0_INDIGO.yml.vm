@@ -10,12 +10,8 @@
 #if($utils.isScalarPropertyValue($v))
 ## TODO: manage integer, boolean ... by looking into property definition
 $utils.renderScalar($v.value)
-#elseif($utils.isFunctionPropertyValue($v))
-#if($v.function=="get_input")
-{ ${v.function}: ${v.parameters.get(0)} }
-#else
-{ ${v.function}: [ $utils.getCsvToString($v.parameters) ] }
-#end## if
+#elseif($utils.isFunctionPropertyValue($v) || $utils.isConcatPropertyValue($v))
+{ $utils.renderFunctionAndConcat($v) }
 #end
 #end## macro serializeAbtractPropertyValue
 ## --------------------------------------------
@@ -48,7 +44,7 @@ repositories:
   ${repositoryEntry.key}:
     url: ${repositoryEntry.value.url}
 #if($repositoryEntry.value.description)
-    description: $utils.renderDescription($description, "      ")
+    description: $utils.renderDescription($repositoryEntry.value.description, "      ")
 #end## if
 #end
 #end## if
@@ -159,29 +155,16 @@ topology_template:
 #end## if $groupEntry.value.policies not empty      
 #end## of groupEntry iteration  
 #end## if $topology.groups not empty
-#if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputProperties) || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputAttributes)  || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputCapabilityProperties))
+#if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputs))
   outputs:
-#foreach($outputPropertyEntry in ${topology.outputProperties.entrySet()})
-#foreach($outputProperty in ${outputPropertyEntry.value})
-    ${outputPropertyEntry.key}_${outputProperty}:
-      value: { get_property: [ ${outputPropertyEntry.key}, ${outputProperty} ] }
-#end## of outputProperty iteration
-#end## of outputPropertyEntry iteration
-#foreach($outputAttributeEntry in ${topology.outputAttributes.entrySet()})
-#foreach($outputAttribute in ${outputAttributeEntry.value})
-    ${outputAttributeEntry.key}_${outputAttribute}:
-      value: { get_attribute: [ ${outputAttributeEntry.key}, ${outputAttribute} ] }
-#end## of outputProperty iteration
-#end## of outputAttributeEntry iteration   
-#foreach($outputCapaPropEntry in ${topology.outputCapabilityProperties.entrySet()})
-#foreach($outputCapaPropSubEntry in ${outputCapaPropEntry.value.entrySet()})
-#foreach($outputCapaProp in ${outputCapaPropSubEntry.value})
-    ${outputCapaPropEntry.key}_${outputCapaPropSubEntry.key}_${outputCapaProp}:
-      value: { get_property: [ ${outputCapaPropEntry.key}, ${outputCapaPropSubEntry.key}, ${outputCapaProp} ] }
-#end## of outputCapaProp iteration
-#end## of outputCapaPropSubEntry iteration
-#end## of outputCapaPropEntry iteration   
-#end## if maps are not empty
+#foreach($outputEntry in ${topology.outputs.entrySet()})
+    ${outputEntry.key}:
+      value: #serializeAbtractPropertyValue(${outputEntry.value.value})
+#if($outputEntry.value.description)
+      description: $utils.renderDescription($outputEntry.value.description, "        ")
+#end## if
+#end
+#end## if
 #if($utils.mapIsNotEmpty($topology.workflows))
   workflows:
 #foreach($wfEntry in ${topology.workflows.entrySet()})

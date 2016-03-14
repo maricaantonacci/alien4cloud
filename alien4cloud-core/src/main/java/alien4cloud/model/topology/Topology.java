@@ -16,6 +16,7 @@ import org.elasticsearch.annotation.query.TermFilter;
 
 import alien4cloud.model.components.CSARDependency;
 import alien4cloud.model.components.DeploymentArtifact;
+import alien4cloud.model.components.OutputDefinition;
 import alien4cloud.model.components.PropertyDefinition;
 import alien4cloud.model.components.Repository;
 import alien4cloud.paas.wf.Workflow;
@@ -65,6 +66,8 @@ public class Topology implements IManagedSecuredResource {
     private Map<String, NodeTemplate> nodeTemplates;
 
     private Map<String, PropertyDefinition> inputs;
+    
+    private Map<String, OutputDefinition> outputs;
 
     /**
      * Outputs coming from node properties:
