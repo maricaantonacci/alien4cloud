@@ -273,10 +273,23 @@ public class ToscaSerializerUtilsTest {
 
     @Test
     public void testIsAbstractPropertyValueNotNull() {
-        Assert.assertFalse(utils.isAbstractPropertyValueNotNull(null));
-        Assert.assertFalse(utils.isAbstractPropertyValueNotNull(new ScalarPropertyValue()));
-        Assert.assertTrue(utils.isAbstractPropertyValueNotNull(new ScalarPropertyValue("value")));
-        Assert.assertTrue(utils.isAbstractPropertyValueNotNull(new FunctionPropertyValue()));
+        Assert.assertFalse(utils.isAbstractPropertyValueNotNullAndPrintable(null));
+        {
+            ScalarPropertyValue testScalarPropertyValue = new ScalarPropertyValue();
+            Assert.assertFalse(utils.isAbstractPropertyValueNotNullAndPrintable(testScalarPropertyValue));
+            testScalarPropertyValue.setValue("value");
+            Assert.assertFalse(utils.isAbstractPropertyValueNotNullAndPrintable(testScalarPropertyValue));
+            testScalarPropertyValue.setPrintable(true);
+            Assert.assertTrue(utils.isAbstractPropertyValueNotNullAndPrintable(testScalarPropertyValue));
+            testScalarPropertyValue.setValue(null);
+            Assert.assertFalse(utils.isAbstractPropertyValueNotNullAndPrintable(testScalarPropertyValue));
+        }
+        {
+            FunctionPropertyValue testFunctionPropertyValue = new FunctionPropertyValue();
+            Assert.assertFalse(utils.isAbstractPropertyValueNotNullAndPrintable(testFunctionPropertyValue));
+            testFunctionPropertyValue.setPrintable(true);
+            Assert.assertTrue(utils.isAbstractPropertyValueNotNullAndPrintable(testFunctionPropertyValue));
+        }
         Assert.assertFalse(utils.isFunctionPropertyValue(new AbstractPropertyValue() {
         }));
     }
