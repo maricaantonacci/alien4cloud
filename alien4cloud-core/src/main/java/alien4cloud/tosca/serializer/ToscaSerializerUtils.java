@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import alien4cloud.model.components.AbstractPropertyValue;
 import alien4cloud.model.components.CSARDependency;
+import alien4cloud.model.components.ComplexPropertyValue;
 import alien4cloud.model.components.ConcatPropertyValue;
 import alien4cloud.model.components.FunctionPropertyValue;
 import alien4cloud.model.components.IPrintable;
@@ -167,6 +168,10 @@ public class ToscaSerializerUtils {
         return o instanceof ConcatPropertyValue;
     }
 
+    public boolean isComplexPropertyValue(Object o) {
+        return o instanceof ComplexPropertyValue;
+    }
+    
     public String getCsvToString(Collection<?> list) {
         return getCsvToString(list, false);
     }

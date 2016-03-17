@@ -6,7 +6,7 @@
 ## - topology
 ## --------------------------------------------
 ## -- Serialize an AbstractPropertyValue 
-#macro(serializeAbtractPropertyValue $v)
+#macro(serializeAbtractPropertyValue $v $tab)
 #if($utils.isScalarPropertyValue($v))
 ## TODO: manage integer, boolean ... by looking into property definition
 $utils.renderScalar($v.value)
@@ -14,6 +14,9 @@ $utils.renderScalar($v.value)
 { $utils.renderFunctionAndConcat($v) }
 #elseif($utils.isListPropertyValue($v))
 [ $utils.getCsvToString($v.value, true) ]
+#elseif($utils.isComplexPropertyValue($v))
+
+#serializeAbtractPropertyValues( $v.value, "$tab  ")
 #end
 #end## macro serializeAbtractPropertyValue
 ## --------------------------------------------
@@ -21,7 +24,7 @@ $utils.renderScalar($v.value)
 #macro(serializeAbtractPropertyValues $map $tab)
 #foreach($mapEntry in $map.entrySet())
 #if($utils.isAbstractPropertyValueNotNullAndPrintable($mapEntry.value))
-$tab${mapEntry.key}: #serializeAbtractPropertyValue(${mapEntry.value})
+$tab${mapEntry.key}: #serializeAbtractPropertyValue(${mapEntry.value}, $tab)
 #end## if
 #end## of mapEntry iteration  
 #end## macro serializeAbtractPropertyValues
