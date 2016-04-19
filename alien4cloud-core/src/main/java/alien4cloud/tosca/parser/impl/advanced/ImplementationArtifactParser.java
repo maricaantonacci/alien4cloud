@@ -31,9 +31,13 @@ public class ImplementationArtifactParser extends DefaultDeferredParser<Implemen
     public ImplementationArtifact parse(Node node, ParsingContextExecution context) {
         if (node instanceof ScalarNode) {
             String artifactReference = ((ScalarNode) node).getValue();
-
-            Path artifactPath = Paths.get(artifactReference);
-            String extension = Files.getFileExtension(artifactPath.getFileName().toString());
+            String extension;
+            try {
+                Path artifactPath = Paths.get(artifactReference);
+                extension = Files.getFileExtension(artifactPath.getFileName().toString());
+            } catch (Exception ex) {
+                extension = artifactReference.substring(artifactReference.lastIndexOf(".") + 1);
+            }
 
             String type = null;
             ArchiveRoot archiveRoot = (ArchiveRoot) context.getRoot().getWrappedInstance();
