@@ -139,6 +139,7 @@
   implementation:
     reference: artifactRef
     type: artifact_ref_parser
+  file: file
   description: artifactName
 
 - node_group: alien4cloud.model.topology.NodeGroup
@@ -279,6 +280,7 @@
   type:
     reference: artifactType
     type: artifact_type_reference
+  file: file
   mimeType: mimeType
 
 - tosca_function: alien4cloud.model.components.FunctionPropertyValue
@@ -373,7 +375,7 @@
     reference: interfaces
     type: interfaces
   artifacts:
-    sequence_to_map: artifacts
+    map: artifacts
     type: deployment_artifact
 
 - data_type: alien4cloud.model.components.IndexedDataType|toscaElementChecker

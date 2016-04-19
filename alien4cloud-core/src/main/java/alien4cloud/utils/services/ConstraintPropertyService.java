@@ -15,6 +15,7 @@ import alien4cloud.exception.InvalidArgumentException;
 import alien4cloud.model.components.IndexedDataType;
 import alien4cloud.model.components.PropertyConstraint;
 import alien4cloud.model.components.PropertyDefinition;
+import alien4cloud.model.components.ScalarPropertyValue;
 import alien4cloud.tosca.model.ArchiveRoot;
 import alien4cloud.tosca.normative.IPropertyType;
 import alien4cloud.tosca.normative.ToscaType;
@@ -41,19 +42,21 @@ public class ConstraintPropertyService {
     private ICSARRepositorySearchService searchService;
 
     public void checkPropertyConstraint(String propertyName, Object propertyValue, PropertyDefinition propertyDefinition, ArchiveRoot archive)
-            throws ConstraintValueDoNotMatchPropertyTypeException, ConstraintViolationException {
-        if (propertyValue instanceof String) {
-            checkSimplePropertyConstraint(propertyName, (String) propertyValue, propertyDefinition);
-        } else if (propertyValue instanceof Map) {
-            checkComplexPropertyConstraint(propertyName, (Map<String, Object>) propertyValue, propertyDefinition, archive);
-        } else if (propertyValue instanceof List) {
-            checkListPropertyConstraint(propertyName, (List<Object>) propertyValue, propertyDefinition, archive);
-        } else {
-            throw new InvalidArgumentException("Not expecting to receive constraint validation for other types than String, Map or List as "
-                    + propertyValue.getClass().getName());
-        }
+      throws ConstraintValueDoNotMatchPropertyTypeException, ConstraintViolationException {
+    if (propertyValue instanceof String) {
+      checkSimplePropertyConstraint(propertyName, (String) propertyValue, propertyDefinition);
+    } else if (propertyValue instanceof Map) {
+         checkComplexPropertyConstraint(propertyName, (Map<String, Object>) propertyValue, propertyDefinition, archive);
+    } else if (propertyValue instanceof List) {
+         checkListPropertyConstraint(propertyName, (List<Object>) propertyValue, propertyDefinition, archive);
+    } else if (propertyValue instanceof ScalarPropertyValue) {
+      checkSimplePropertyConstraint(propertyName, ((ScalarPropertyValue) propertyValue).getValue(),
+          propertyDefinition);
+    } else {
+      throw new InvalidArgumentException("Not expecting to receive constraint validation for other types than String, Map or List as "
+              + propertyValue.getClass().getName());
     }
-
+  }
     /**
      * Check constraints defined on a property for a specified value
      *

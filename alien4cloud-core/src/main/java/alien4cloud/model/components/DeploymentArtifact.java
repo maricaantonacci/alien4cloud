@@ -15,6 +15,9 @@ public class DeploymentArtifact implements IArtifact {
     /** Specifies the display name of the artifact. */
     private String artifactName;
 
+    @Getter
+    private String file;
+    
     /**
      * Non TOSCA compliant property, the artifactRepository indicate where the artifact is stored. It might be in the archive it-self (in this case this
      * property is null), in alien's internal artifact repository (alien) or nexus, git, svn ...
