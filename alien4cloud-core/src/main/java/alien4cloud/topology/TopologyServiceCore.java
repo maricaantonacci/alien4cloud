@@ -254,6 +254,11 @@ public class TopologyServiceCore {
                     }
                 }
             }
+            else
+            {
+              // Also merge deploymentArtifactsToMerge if indexedNodeType does not contain any
+              deploymentArtifacts = Maps.newLinkedHashMap(deploymentArtifactsToMerge);
+            }
         } else if (indexedNodeType.getArtifacts() != null) {
             deploymentArtifacts = Maps.newLinkedHashMap(indexedNodeType.getArtifacts());
         }
