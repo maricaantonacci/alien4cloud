@@ -71,6 +71,7 @@ topology_template:
 #if($application_description)
   description: ${utils.renderDescription(${application_description}, "    ")}
 #end## if application_description defined
+
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.inputs))
   inputs:
 #foreach($inputEntry in $topology.inputs.entrySet())   
@@ -117,8 +118,11 @@ topology_template:
 #end##foreach($substitutionRequirementEntry in $topology.substitutionMapping.requirements.entrySet())
 #end##if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.substitutionMapping.requirements))
 #end##if($topology.substitutionMapping)
+
+
   node_templates:
 #foreach($nodeTemplateEntry in ${topology.nodeTemplates.entrySet()})
+
     ${nodeTemplateEntry.key}:
       type: ${nodeTemplateEntry.value.type}
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($nodeTemplateEntry.value.properties))      
@@ -131,7 +135,7 @@ topology_template:
         - ${relationship.requirementName}: ${relationship.target}
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($relationship.properties))
             properties:
-#serializeAbtractPropertyValues($relationship.properties "              ")          
+#serializeAbtractPropertyValues($relationship.properties "              ")
 #end## if        
 #end## of relationship iteration    
 #end## if
@@ -145,6 +149,14 @@ topology_template:
 #end## if capability properties not empty
 #end## of capabilityEntry iteration
 #end## if hasCapabilitiesContainingNotNullProperties
+#if($utils.hasArtifactsContainingNotNullValues($nodeTemplateEntry.value))
+      artifacts:
+#foreach($artifactEntry in ${nodeTemplateEntry.value.artifacts.entrySet()})
+        ${artifactEntry.key}:
+          type: ${artifactEntry.value.artifactType}
+          file: #serializeAbtractPropertyValue($artifactEntry.value.file "            ")
+#end## of artifactEntry iteration
+#end## if hasArtifactsContainingNotNullProperties
 #end## of nodeTemplateEntry iteration
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.groups))
   groups:

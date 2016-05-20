@@ -139,7 +139,9 @@
   implementation:
     reference: artifactRef
     type: artifact_ref_parser
-  file: file
+  file:
+    reference: file
+    type: file_property
   description: artifactName
 
 - node_group: alien4cloud.model.topology.NodeGroup
@@ -289,6 +291,13 @@
     value:
       list: parameters
       type: scalar
+
+- file_property: __discriminator
+  keys:
+    get_input: tosca_function
+    get_property: tosca_function
+    get_attribute: tosca_function
+  default: scalar_property_value
 
 - template_property: __discriminator
   keys:
