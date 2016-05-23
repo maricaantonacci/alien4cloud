@@ -14,6 +14,7 @@ import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 
+import alien4cloud.model.components.IPrintable;
 import alien4cloud.tosca.parser.AbstractTypeNodeParser;
 import alien4cloud.tosca.parser.DefferedParsingValueExecutor;
 import alien4cloud.tosca.parser.INodeParser;
@@ -101,6 +102,10 @@ public class TypeNodeParser<T> extends AbstractTypeNodeParser implements INodePa
         try {
             if (instance == null) {
                 instance = type.newInstance();
+            }
+            
+            if (type.isAssignableFrom(IPrintable.class)) {
+                ((IPrintable)instance).setPrintable(true);
             }
 
             BeanWrapper instanceWrapper = new BeanWrapperImpl(instance);

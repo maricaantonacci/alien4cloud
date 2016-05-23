@@ -271,9 +271,7 @@ public class ToscaSerializerUtils {
       return false;
     }
     for (DeploymentArtifact artifact : artifacts.values()) {
-      if (artifact == null) {
-        continue;
-      } else {
+      if (artifact != null && artifact.isPrintable()) {
         return true;
       }
     }

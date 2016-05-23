@@ -1,11 +1,13 @@
 package alien4cloud.model.components;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class DeploymentArtifact implements IArtifact {
+public class DeploymentArtifact implements IArtifact, IPrintable {
     /** This attribute specifies the type of this artifact. */
     @Getter
     private String artifactType;
@@ -41,4 +43,8 @@ public class DeploymentArtifact implements IArtifact {
     public String getArtifactName() {
         return artifactName != null ? artifactName : artifactRef;
     }
+    
+    @JsonIgnore
+    @Getter
+    private boolean printable;
 }
