@@ -28,6 +28,7 @@ $tab${mapEntry.key}: #serializeAbtractPropertyValue(${mapEntry.value}, $tab)
 #end## if
 #end## of mapEntry iteration  
 #end## macro serializeAbtractPropertyValues
+## ---------------------------------------------
 ## BEGINING OF DOCUMENT
 tosca_definitions_version: ${tosca_definitions_version}
 #if($description)
@@ -132,11 +133,27 @@ topology_template:
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($nodeTemplateEntry.value.relationships)) 
       requirements:
 #foreach($relationship in ${nodeTemplateEntry.value.relationships.values()})
-        - ${relationship.requirementName}: ${relationship.target}
+#if($utils.mapIsNotEmptyAndContainsNotnullValues($relationship.properties) || $utils.hasInterfacesNotNullContainingPrintableOperations($relationship.interfaces))
+        - ${relationship.requirementName}:
+            node: ${relationship.target}
+#if($relationship.requirementType)
+            capability: ${relationship.requirementType}
+#end##
+            relationship:
+#if($relationship.type)
+              type: ${relationship.type}
+#end##  
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($relationship.properties))
-            properties:
-#serializeAbtractPropertyValues($relationship.properties "              ")
-#end## if        
+              properties:
+#serializeAbtractPropertyValues($relationship.properties "                ")
+#end## if properties
+#if($utils.hasInterfacesNotNullContainingPrintableOperations($relationship.interfaces))
+              interfaces:
+$utils.serializeInterfaces($relationship.interfaces, "                ")
+#end## if interfaces
+#else
+        - ${relationship.requirementName}: ${relationship.target}
+#end##
 #end## of relationship iteration    
 #end## if
 #if($utils.hasCapabilitiesContainingNotNullProperties($nodeTemplateEntry.value))

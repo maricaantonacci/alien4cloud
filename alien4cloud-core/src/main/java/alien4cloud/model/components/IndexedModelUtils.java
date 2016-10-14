@@ -168,6 +168,11 @@ public final class IndexedModelUtils {
                         if (!toOperations.containsKey(fromOperationEntry.getKey())) {
                             toOperations.put(fromOperationEntry.getKey(), fromOperationEntry.getValue());
                         }
+                        else {
+                            if (toOperations.get(fromOperationEntry.getKey()) != null) {
+                                toOperations.get(fromOperationEntry.getKey()).setPrintable(true);
+                            }
+                        }
                     }
                 }
             }

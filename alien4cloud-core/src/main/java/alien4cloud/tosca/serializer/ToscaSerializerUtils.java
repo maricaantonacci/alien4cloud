@@ -1,5 +1,6 @@
 package alien4cloud.tosca.serializer;
 
+import org.apache.commons.collections4.MapUtils;
 import org.opensaml.saml2.core.Artifact;
 
 import java.io.BufferedReader;
@@ -11,8 +12,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import com.google.common.base.Strings;
 
 import alien4cloud.model.components.AbstractPropertyValue;
 import alien4cloud.model.components.CSARDependency;
@@ -21,7 +25,10 @@ import alien4cloud.model.components.ConcatPropertyValue;
 import alien4cloud.model.components.DeploymentArtifact;
 import alien4cloud.model.components.FunctionPropertyValue;
 import alien4cloud.model.components.IPrintable;
+import alien4cloud.model.components.IValue;
+import alien4cloud.model.components.Interface;
 import alien4cloud.model.components.ListPropertyValue;
+import alien4cloud.model.components.Operation;
 import alien4cloud.model.components.ScalarPropertyValue;
 import alien4cloud.model.components.constraints.AbstractPropertyConstraint;
 import alien4cloud.model.components.constraints.EqualConstraint;
@@ -277,7 +284,79 @@ public class ToscaSerializerUtils {
     }
     return false;
   }
+  
+    public boolean hasInterfacesNotNullContainingPrintableOperations(Map<String, Interface> interfaces) {
+        if (interfaces == null) {
+            return false;
+        }
+        for (Interface _interface : interfaces.values()) {
+            boolean interfacePrintable = interfaceNotNullContainingPrintableOperations(_interface);
+            if (interfacePrintable) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public boolean interfaceNotNullContainingPrintableOperations(Interface _interface) {
+
+        if (_interface != null) {
+            for (Operation op : _interface.getOperations().values()) {
+                if (op != null && op.isPrintable()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String serializeInterfaces(Map<String, Interface> interfaces, String indentation) {
+        String baseIndentation = indentation == null ? "" : indentation;
+        String operationBaseIndentation = baseIndentation + "  ";
+        String operationFieldsIndentation = operationBaseIndentation + "  ";
+        String operationInputsIndentation = operationFieldsIndentation + "  ";
+
+        StringBuilder builder = new StringBuilder();
+        if (interfaces != null) {
+            for (Entry<String, Interface> _interface : interfaces.entrySet()) {
+                if (_interface.getValue() != null) {
+                    builder.append(baseIndentation).append(_interface.getKey()).append(":\n");
+                    for (Entry<String, Operation> operation : _interface.getValue().getOperations().entrySet()) {
+                        if (operation.getValue() != null && operation.getValue().isPrintable()) {
+                            builder.append(operationBaseIndentation).append(operation.getKey()).append(":\n");
+                            String implementation = null;
+                            if (operation.getValue().getImplementationArtifact() != null) {
+                                implementation = operation.getValue().getImplementationArtifact().getArtifactRef();
+                            }
+                            if (!Strings.isNullOrEmpty(implementation)) {
+                                builder.append(operationFieldsIndentation).append("implementation: ").append(renderScalar(implementation)).append("\n");
+                            }
+                            if (MapUtils.isNotEmpty(operation.getValue().getInputParameters())) {
+                                builder.append(operationFieldsIndentation).append("inputs:\n");
+                                for (Entry<String, IValue> input : operation.getValue().getInputParameters().entrySet()) {
+                                    if (input.getValue() != null) {
+                                        builder.append(operationInputsIndentation).append(input.getKey()).append(": ");
+                                        if (isScalarPropertyValue(input.getValue())) {
+                                            String value = ((ScalarPropertyValue) input.getValue()).getValue();
+                                            builder.append(renderScalar(value)).append("\n");
+                                        } else if (isFunctionPropertyValue(input.getValue()) || isConcatPropertyValue(input.getValue())) {
+                                            String value = this.renderFunctionAndConcat((AbstractPropertyValue) input.getValue());
+                                            builder.append("{ ").append(value).append(" }\n");
+                                        } else {
+                                            // can this happen??
+                                            builder.append(renderScalar(String.valueOf(input.getValue()))).append("\n");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return builder.toString();
+    }
+    
   public String renderFunctionAndConcat(AbstractPropertyValue apv) {
     StringBuilder builder = new StringBuilder();
     String functionName;

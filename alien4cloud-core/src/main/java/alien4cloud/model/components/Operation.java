@@ -26,7 +26,7 @@ import com.google.common.collect.Sets;
 @NoArgsConstructor
 @SuppressWarnings("PMD.UnusedPrivateField")
 @FormProperties({ "description" })
-public class Operation {
+public class Operation  implements IPrintable{
     /** Implementation artifact for the interface. */
     private ImplementationArtifact implementationArtifact;
     /** Description of the operation. */
@@ -76,5 +76,17 @@ public class Operation {
         } else {
             outputs.add(output);
         }
+    }
+
+    private boolean printable;
+    
+    @Override
+    public boolean isPrintable() {
+        return printable;
+    }
+
+    @Override
+    public void setPrintable(boolean printable) {
+        this.printable = printable;
     }
 }
