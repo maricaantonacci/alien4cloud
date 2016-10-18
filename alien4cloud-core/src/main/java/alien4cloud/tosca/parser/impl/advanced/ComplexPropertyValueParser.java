@@ -45,7 +45,9 @@ public class ComplexPropertyValueParser extends DefaultParser<AbstractPropertyVa
     } else if (node instanceof SequenceNode) {
       List<Object> result = Lists.newArrayList();
       for (Node innernode : ((SequenceNode) node).getValue()) {
-        AbstractPropertyValue parsedInnerValue = parse(innernode, context);
+        INodeParser<AbstractPropertyValue> parser = context.getRegistry().get("node_template_property");
+        AbstractPropertyValue parsedInnerValue = parser.parse(innernode, context);
+        parsedInnerValue.setPrintable(true);
         result.add(parsedInnerValue);
       }
       parsedValue = new ListPropertyValue(result);
