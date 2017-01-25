@@ -1,6 +1,7 @@
 package alien4cloud.model.topology;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -123,4 +124,9 @@ public class Topology implements IManagedSecuredResource {
      * All the workflows associated with this topology.
      */
     private Map<String, Workflow> workflows;
+    
+    /**
+     * All the policies associated with this topology.
+     */
+    private List<AbstractPolicy> policies;
 }

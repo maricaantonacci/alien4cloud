@@ -26,6 +26,7 @@
 - sustitution_mapping_parser: alien4cloud.tosca.parser.impl.advanced.SustitutionMappingParser
 - constraint: alien4cloud.tosca.parser.impl.advanced.ConstraintParser
 - tosca_definitions_version_parser: alien4cloud.tosca.parser.impl.advanced.ToscaDefinitionsVersionParser
+- topology_template_policy: alien4cloud.tosca.parser.impl.advanced.PolicyParser
 
 # declare standard mapping based parsers
 - definition: alien4cloud.tosca.model.ArchiveRoot
@@ -92,7 +93,7 @@
   outputs:
     map: outputs
     deferred: true
-    deferredOrder: 1001 # we want this to be the very last executed
+    deferredOrder: 1002 # we want this to be the very last executed
     type: output_definition
   groups:
     map: groups
@@ -102,6 +103,11 @@
     map: workflows
     key: name
     type: workflow
+  policies:
+    list: policies
+    deferred: true
+    deferredOrder: 1001 # we want this to be the last executed, just before the outputs
+    type: topology_template_policy
 
 - workflow: alien4cloud.paas.wf.Workflow
   description: description
