@@ -13,7 +13,7 @@ public class PlacementPolicy extends AbstractPolicy {
 
     @Override
     public String getType() {
-        return PLACEMENT_ID_PROPERTY;
+        return PLACEMENT_POLICY;
     }
 
     @Override

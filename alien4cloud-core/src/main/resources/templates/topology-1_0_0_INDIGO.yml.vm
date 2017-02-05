@@ -189,6 +189,18 @@ $utils.serializeInterfaces($relationship.interfaces, "                ")
 #end## if $groupEntry.value.policies not empty      
 #end## of groupEntry iteration  
 #end## if $topology.groups not empty
+#if($utils.collectionIsNotEmpty($topology.policies))
+  policies:
+#foreach($policy in ${topology.policies})
+    - ${policy.name}:
+        type: ${policy.type}
+#if($utils.mapIsNotEmptyAndContainsNotnullValues($policy.properties))
+        properties:
+#serializeAbtractPropertyValues($policy.properties "          ")
+#end## if properties non empty
+        targets: [ $utils.getCsvToString($policy.targets) ]
+#end## foreach policy
+#end## if policies not empty
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputs))
   outputs:
 #foreach($outputEntry in ${topology.outputs.entrySet()})

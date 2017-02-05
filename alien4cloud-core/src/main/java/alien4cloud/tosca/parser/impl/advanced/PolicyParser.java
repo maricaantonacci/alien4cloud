@@ -100,8 +100,8 @@ public class PolicyParser extends DefaultDeferredParser<AbstractPolicy> {
             final ArchiveRoot archiveRoot = (ArchiveRoot) context.getRoot().getWrappedInstance();
             for (String target : targets) {
                 if (!archiveRoot.getTopology().getNodeTemplates().containsKey(target)) {
-                    context.getParsingErrors().add(new ParsingError(ErrorCode.SYNTAX_ERROR, null, node.getStartMark(), null,
-                            node.getEndMark(), null));
+                    context.getParsingErrors().add(new ParsingError(ErrorCode.SYNTAX_ERROR, "Policy parsing", node.getStartMark(), "Unknown target",
+                            node.getEndMark(), target));
                     return null;
                 }
             }
