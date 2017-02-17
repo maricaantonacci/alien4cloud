@@ -271,7 +271,12 @@ public class TopologyServiceCore {
         nodeTemplate.setRequirements(requirements);
         nodeTemplate.setProperties(properties);
         nodeTemplate.setAttributes(indexedNodeType.getAttributes());
-        nodeTemplate.setInterfaces(indexedNodeType.getInterfaces());
+        if (templateToMerge == null || MapUtils.isEmpty(templateToMerge.getInterfaces())) {
+            nodeTemplate.setInterfaces(indexedNodeType.getInterfaces());
+        } else {
+            nodeTemplate.setInterfaces(templateToMerge.getInterfaces());
+            IndexedModelUtils.mergeInterfaces(indexedNodeType.getInterfaces(), nodeTemplate.getInterfaces(), true);
+        }
         nodeTemplate.setArtifacts(deploymentArtifacts);
         if (templateToMerge != null && templateToMerge.getRelationships() != null) {
             nodeTemplate.setRelationships(templateToMerge.getRelationships());

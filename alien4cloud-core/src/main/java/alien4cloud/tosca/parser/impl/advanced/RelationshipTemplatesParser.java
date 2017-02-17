@@ -376,7 +376,7 @@ public class RelationshipTemplatesParser
     relationshipTemplate.setAttributes(indexedRelationshipType.getAttributes());
 
     Map<String, Interface> interfaces = IndexedModelUtils
-        .mergeInterfaces(indexedRelationshipType.getInterfaces(), relationshipInterfaces);
+        .mergeInterfaces(indexedRelationshipType.getInterfaces(), relationshipInterfaces, true);
     relationshipTemplate.setInterfaces(interfaces);
     return relationshipTemplate;
   }

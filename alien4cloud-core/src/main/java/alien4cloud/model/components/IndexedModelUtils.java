@@ -117,7 +117,7 @@ public final class IndexedModelUtils {
     private static void mergeNodeType(IndexedNodeType from, IndexedNodeType to) {
         to.setCapabilities(CollectionUtils.merge(from.getCapabilities(), to.getCapabilities()));
         to.setRequirements(CollectionUtils.merge(from.getRequirements(), to.getRequirements()));
-        to.setInterfaces(mergeInterfaces(from.getInterfaces(), to.getInterfaces()));
+        to.setInterfaces(mergeInterfaces(from.getInterfaces(), to.getInterfaces(), false));
         to.setArtifacts(CollectionUtils.merge(from.getArtifacts(), to.getArtifacts(), false));
         if (from.getAttributes() != null) {
             to.setAttributes(CollectionUtils.merge(from.getAttributes(), to.getAttributes(), false));
@@ -137,14 +137,14 @@ public final class IndexedModelUtils {
             to.setAttributes(CollectionUtils.merge(from.getAttributes(), to.getAttributes(), false));
         }
 
-        to.setInterfaces(mergeInterfaces(from.getInterfaces(), to.getInterfaces()));
+        to.setInterfaces(mergeInterfaces(from.getInterfaces(), to.getInterfaces(), false));
         to.setArtifacts(CollectionUtils.merge(from.getArtifacts(), to.getArtifacts(), false));
     }
 
     /**
      * Merge interface & operations.
      */
-    public static Map<String, Interface> mergeInterfaces(Map<String, Interface> from, Map<String, Interface> to) {
+    public static Map<String, Interface> mergeInterfaces(Map<String, Interface> from, Map<String, Interface> to, boolean setPrintable) {
         Map<String, Interface> target = to;
         if (target == null) {
             return from;
@@ -169,7 +169,7 @@ public final class IndexedModelUtils {
                             toOperations.put(fromOperationEntry.getKey(), fromOperationEntry.getValue());
                         }
                         else {
-                            if (toOperations.get(fromOperationEntry.getKey()) != null) {
+                            if (toOperations.get(fromOperationEntry.getKey()) != null && setPrintable) {
                                 toOperations.get(fromOperationEntry.getKey()).setPrintable(true);
                             }
                         }
