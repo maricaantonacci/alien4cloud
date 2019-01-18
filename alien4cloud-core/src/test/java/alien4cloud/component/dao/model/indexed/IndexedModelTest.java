@@ -211,13 +211,13 @@ public class IndexedModelTest {
 
     @Test
     public void testMergeInterfacesNull() {
-        assertNull(IndexedModelUtils.mergeInterfaces(null, null));
+        assertNull(IndexedModelUtils.mergeInterfaces(null, null, false));
         Map<String, Interface> from = Maps.newHashMap();
-        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, null);
+        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, null, false);
         assertNotNull(merged);
         assertSame(from, merged);
         Map<String, Interface> to = from;
-        merged = IndexedModelUtils.mergeInterfaces(null, to);
+        merged = IndexedModelUtils.mergeInterfaces(null, to, false);
         assertNotNull(merged);
         assertSame(to, merged);
     }
@@ -230,7 +230,7 @@ public class IndexedModelTest {
         Map<String, Interface> to = Maps.newHashMap();
         Interface i2 = new Interface();
         to.put("i2", i2);
-        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to);
+        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to, false);
         assertEquals(2, merged.size());
         assertSame(merged.get("i1"), i1);
         assertSame(merged.get("i2"), i2);
@@ -253,7 +253,7 @@ public class IndexedModelTest {
         ios2.put("o1", o2);
         i2.setOperations(ios2);
         to.put("i1", i2);
-        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to);
+        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to, false);
         assertEquals(1, merged.size());
         assertSame(merged.get("i1").getOperations().get("o1"), o2);
     }
@@ -271,7 +271,7 @@ public class IndexedModelTest {
         Map<String, Interface> to = Maps.newHashMap();
         Interface i2 = new Interface();
         to.put("i1", i2);
-        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to);
+        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to, false);
         assertEquals(1, merged.size());
         assertSame(merged.get("i1").getOperations().get("o1"), o1);
     }
@@ -289,7 +289,7 @@ public class IndexedModelTest {
         ios2.put("o1", o2);
         i2.setOperations(ios2);
         to.put("i1", i2);
-        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to);
+        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to, false);
         assertEquals(1, merged.size());
         assertSame(merged.get("i1").getOperations().get("o1"), o2);
     }
@@ -311,7 +311,7 @@ public class IndexedModelTest {
         ios2.put("o2", o2);
         i2.setOperations(ios2);
         to.put("i1", i2);
-        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to);
+        Map<String, Interface> merged = IndexedModelUtils.mergeInterfaces(from, to, false);
         assertEquals(1, merged.size());
         assertEquals(2, merged.get("i1").getOperations().size());
         assertSame(merged.get("i1").getOperations().get("o1"), o1);
