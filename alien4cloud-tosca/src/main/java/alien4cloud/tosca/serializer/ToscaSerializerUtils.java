@@ -6,8 +6,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -15,7 +17,9 @@ import java.util.stream.Collectors;
 
 import org.alien4cloud.tosca.model.definitions.AbstractArtifact;
 import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
+import org.alien4cloud.tosca.model.definitions.ConcatPropertyValue;
 import org.alien4cloud.tosca.model.definitions.DeploymentArtifact;
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.Interface;
 import org.alien4cloud.tosca.model.definitions.Operation;
 import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
@@ -50,8 +54,25 @@ import com.google.common.collect.Sets;
 
 /**
  * Tools for serializing in YAML/TOSCA. ALl methods should be static but did not found how to use statics from velocity.
+ * Modified with info from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
  */
 public class ToscaSerializerUtils {
+	
+	/**
+	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
+	 */
+    public boolean isAbstractPropertyValueNotNullAndPrintable(AbstractPropertyValue value) {
+        if (value == null) {
+            return false;
+            // IPrintable has disappeared
+//        } else if (!value.isPrintable()) {
+//            return false;
+        } else if (value instanceof ScalarPropertyValue) {
+            return ((ScalarPropertyValue) value).getValue() != null;
+        } else {
+            return true;
+        }
+    }
 
     public boolean collectionIsNotEmpty(Collection<?> c) {
         return c != null && !c.isEmpty();
@@ -109,8 +130,12 @@ public class ToscaSerializerUtils {
                         if (!((Collection<?>) o).isEmpty()) {
                             return true;
                         }
-                    } else if (o instanceof ScalarPropertyValue) {
-                        if (((ScalarPropertyValue) o).getValue() != null) {
+//                    } else if (o instanceof ScalarPropertyValue) {
+//                        if (((ScalarPropertyValue) o).getValue() != null) {
+//                            return true;
+//                        }
+                    } else if (o instanceof AbstractPropertyValue) {
+                        if (isAbstractPropertyValueNotNullAndPrintable((AbstractPropertyValue) o)) {
                             return true;
                         }
                     } else {
@@ -121,11 +146,35 @@ public class ToscaSerializerUtils {
         }
         return false;
     }
+    
+	/**
+	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
+	 */
+    public static boolean isScalarPropertyValue(Object o) {
+        return o instanceof ScalarPropertyValue;
+    }
+
+	/**
+	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
+	 */
+    public static boolean isFunctionPropertyValue(Object o) {
+        return o instanceof FunctionPropertyValue;
+    }
+    
+	/**
+	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
+	 */
+    public static boolean isConcatPropertyValue(Object o) {
+        return o instanceof ConcatPropertyValue;
+    }
 
     public static String getCsvToString(Collection<?> list) {
         return getCsvToString(list, false);
     }
-
+    
+	/**
+	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
+	 */
     public static String getCsvToString(Collection<?> list, boolean renderScalar) {
         StringBuilder sb = new StringBuilder();
         boolean isFirst = true;
@@ -136,10 +185,27 @@ public class ToscaSerializerUtils {
                 } else {
                     sb.append(", ");
                 }
-                if (renderScalar) {
-                    sb.append(ToscaPropertySerializerUtils.renderScalar(o.toString()));
+                // Replace the scalar checking
+//                if (renderScalar) {
+//                    sb.append(ToscaPropertySerializerUtils.renderScalar(o.toString()));
+//                } else {
+//                    sb.append(o.toString());
+//                }
+                if (isFunctionPropertyValue(o) || isConcatPropertyValue(o)) {
+                    sb.append(renderFunctionAndConcat((AbstractPropertyValue) o));
+                } else if (isScalarPropertyValue(o)) {
+                    String stringValue = ((ScalarPropertyValue) o).getValue();
+                    if (renderScalar) {
+                        sb.append(ToscaPropertySerializerUtils.renderScalar(stringValue));
+                    } else {
+                        sb.append(stringValue);
+                    }
                 } else {
-                    sb.append(o.toString());
+                    if (renderScalar) {
+                        sb.append(ToscaPropertySerializerUtils.renderScalar(o.toString()));
+                    } else {
+                        sb.append(o.toString());
+                    }
                 }
             }
         }
@@ -160,6 +226,28 @@ public class ToscaSerializerUtils {
             }
         }
         return false;
+    }
+    
+	/**
+	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
+	 */
+    public static String renderFunctionAndConcat(AbstractPropertyValue apv) {
+        StringBuilder builder = new StringBuilder();
+        String functionName;
+        List<?> parameters = new ArrayList<>();
+        if (isFunctionPropertyValue(apv)) {
+            FunctionPropertyValue fpv = (FunctionPropertyValue) apv;
+            functionName = fpv.getFunction();
+            parameters = fpv.getParameters();
+        } else if (isConcatPropertyValue(apv)) {
+            ConcatPropertyValue cpv = (ConcatPropertyValue) apv;
+            functionName = cpv.getFunction_concat();
+            parameters = cpv.getParameters();
+        } else {
+            return builder.toString();
+        }
+        builder.append(functionName).append(": [ ").append(getCsvToString(parameters, true)).append(" ]");
+        return builder.toString();
     }
 
     public boolean doesInterfacesContainsImplementedOperation(Map<String, Interface> interfaces) {

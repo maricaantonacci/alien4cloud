@@ -79,6 +79,16 @@ public class CsarService {
             throw new AlreadyExistException("CSAR: " + name + ", Version: " + version + " already exists in the repository.");
         }
     }
+    
+    /**
+     * Return the first match in the list for a given CSAR name
+     * @param name The name of the CSAR that we need. 
+     *   The returned CSAR is the first in the list if multiple CSARs with the searched name are found. 
+     * @return the first match in the list for a given CSAR name or null
+     */
+    public Csar getFirst(String name) {
+      return csarDAO.buildQuery(Csar.class).setFilters(fromKeyValueCouples("name", name)).prepareSearch().find();
+    }
 
     /**
      * Get a cloud service archive.

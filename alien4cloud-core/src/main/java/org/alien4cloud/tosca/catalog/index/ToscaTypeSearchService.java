@@ -20,12 +20,15 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static alien4cloud.dao.FilterUtil.fromKeyValueCouples;
 import static alien4cloud.dao.FilterUtil.singleKeyFilter;
@@ -202,5 +205,14 @@ public class ToscaTypeSearchService extends AbstractToscaIndexSearchService<Abst
     @Override
     protected String getAggregationField() {
         return "rawElementId";
+    }
+
+    @Override
+    public List<Csar> getCsarsByName(String archiveName, int numResults) {      
+      return Arrays.stream(searchDAO.buildQuery(Csar.class)
+          //.setFilters(fromKeyValueCouples("archiveName", archiveName))
+          .prepareSearch().search(0, numResults).getData())
+          .filter(csar -> csar.getName().compareTo(archiveName) == 0)
+          .collect(Collectors.toList());
     }
 }

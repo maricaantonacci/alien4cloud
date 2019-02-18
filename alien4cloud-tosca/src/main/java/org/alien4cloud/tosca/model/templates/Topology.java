@@ -12,6 +12,7 @@ import alien4cloud.model.common.IMetaProperties;
 import org.alien4cloud.tosca.model.CSARDependency;
 import org.alien4cloud.tosca.model.Csar;
 import org.alien4cloud.tosca.model.definitions.DeploymentArtifact;
+import org.alien4cloud.tosca.model.definitions.OutputDefinition;
 import org.alien4cloud.tosca.model.definitions.PropertyDefinition;
 import org.alien4cloud.tosca.model.workflow.Workflow;
 import org.elasticsearch.annotation.ESObject;
@@ -97,6 +98,10 @@ public class Topology implements IDatableResource, IWorkspaceResource, IMetaProp
     @ObjectField(enabled = false)
     @FetchContext(contexts = { SUMMARY }, include = { false })
     private Map<String, PropertyDefinition> inputs;
+    
+    @ObjectField(enabled = false)
+    @FetchContext(contexts = { SUMMARY }, include = { false })
+    private Map<String, OutputDefinition> outputs;
 
     /**
      * Outputs coming from node properties:

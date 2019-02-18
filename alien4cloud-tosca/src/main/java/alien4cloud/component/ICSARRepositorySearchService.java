@@ -1,5 +1,6 @@
 package alien4cloud.component;
 
+import java.util.List;
 import java.util.Set;
 
 import org.alien4cloud.tosca.model.CSARDependency;
@@ -22,6 +23,8 @@ public interface ICSARRepositorySearchService {
      */
     Csar getArchive(String archiveName, String archiveVersion);
 
+    List<Csar> getCsarsByName(String archiveName, int numResults);
+    
     /**
      * Check if an element exists in the given dependencies.
      *

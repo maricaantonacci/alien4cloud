@@ -184,6 +184,9 @@
       "LOCATION_UNAUTHORIZED_MESSAGE" : "Vous n'avez plus l'authorisation de déployer sur la location précédament selectionnée pour cet environnement (location: <{{locationName}}>, orchestrateur: <{{orchestratorName}}>). \n Veuillez contacter votre administrateur.",
       "NODE_INFO" : "Noeud sélectionné",
       "NO_OUTPUTS" : "Aucune propriété ou attribut en sortie",
+	  "OUTPUTS": {
+		 "VALUE": "value"
+	   }, 
       "ORCHESTRATOR_PROPERTIES" : "Propriétés de l'orchestrateur",
       "PARSING_ERROR" : "La topologie n'est pas valide",
       "PRECONFIGURED_PROPERTIES_INPUTS" : "Propriétés d'entrée préconfigurées",

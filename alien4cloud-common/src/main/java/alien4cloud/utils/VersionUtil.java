@@ -31,7 +31,9 @@ public final class VersionUtil {
      * @return True if the version is a SNAPSHOT version, false if not (RELEASE version).
      */
     public static boolean isSnapshot(String version) {
-        return version.toUpperCase().contains(SNAPSHOT_IDENTIFIER);
+        // Check if the version exists
+        // TODO Deep: this method shouldn't be called
+          return version != null && version.toUpperCase().contains(SNAPSHOT_IDENTIFIER);
     }
 
     /**
