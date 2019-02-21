@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 
 import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
+import org.alien4cloud.tosca.model.definitions.OutputDefinition;
 import org.alien4cloud.tosca.model.templates.Topology;
 import alien4cloud.tosca.parser.INodeParser;
 import alien4cloud.tosca.parser.ParsingContextExecution;
@@ -34,6 +35,7 @@ public class OuputsParser implements INodeParser<Void> {
         Map<String, Set<String>> outputAttributes = null;
         Map<String, Set<String>> outputProperties = null;
         Map<String, Map<String, Set<String>>> ouputCapabilityProperties = null;
+        Map<String, OutputDefinition> outputsByName = null;
 
         List<NodeTuple> children = mappingNode.getValue();
         for (NodeTuple child : children) {
@@ -63,19 +65,23 @@ public class OuputsParser implements INodeParser<Void> {
                         case "get_property":
                             outputProperties = addToMapOfSet(nodeTemplateName, nodeTemplatePropertyOrAttributeName, outputProperties);
                             break;
-                        default:
-                            context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_UNKNOWN_FUNCTION, null,
-                                    outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), functionName));
+                        default: break;
+//                            context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_UNKNOWN_FUNCTION, null,
+//                                    outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), functionName));
                         }
+                        outputsByName = addOutput(child, outputValueNode, outputsByName);
                     } else if (params.size() == 3 && functionName.equals("get_property")) {
                         // in case of 3 parameters we only manage capabilities outputs for the moment
                         String nodeTemplateName = params.get(0);
                         String capabilityName = params.get(1);
                         String propertyName = params.get(2);
                         ouputCapabilityProperties = addToMapOfMapOfSet(nodeTemplateName, capabilityName, propertyName, ouputCapabilityProperties);
+                        outputsByName = addOutput(child, outputValueNode, outputsByName);
                     } else {
-                        context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_BAD_PARAMS_COUNT, null,
-                                outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), null));
+
+                      outputsByName = addOutput(child, outputValueNode, outputsByName);
+//                        context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_BAD_PARAMS_COUNT, null,
+//                                outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), null));
                     }
 
                 }
@@ -86,8 +92,36 @@ public class OuputsParser implements INodeParser<Void> {
         topology.setOutputProperties(outputProperties);
         topology.setOutputAttributes(outputAttributes);
         topology.setOutputCapabilityProperties(ouputCapabilityProperties);
+        topology.setOutputs(outputsByName);
 
         return null;
+    }
+    
+    protected Map<String, OutputDefinition> addOutput(NodeTuple output, Node outputValue, Map<String, OutputDefinition> outputsByName) {
+      if (output.getKeyNode() instanceof ScalarNode) {
+        
+        String outputId = ((ScalarNode) output.getKeyNode()).getValue();
+        String outputExpression = null;
+        if (outputValue instanceof ScalarNode) {
+
+          outputExpression = ((ScalarNode)outputValue).getValue();
+         
+        } else if (outputValue instanceof MappingNode) {
+          
+          outputExpression = ((MappingNode)outputValue).getValue().get(0).toString();
+        } else {
+          log.warn("outputValue type " + outputValue.getClass().toString() + " not supported in outputs parsing");
+          
+        }
+
+        if (outputExpression != null) {
+          if (outputsByName == null) {
+            outputsByName = new HashMap<>();
+          }
+          outputsByName.put(outputId, new OutputDefinition(outputId, "", outputExpression));
+        }
+      }
+      return outputsByName;
     }
 
     private Map<String, Set<String>> addToMapOfSet(String key, String value, Map<String, Set<String>> map) {

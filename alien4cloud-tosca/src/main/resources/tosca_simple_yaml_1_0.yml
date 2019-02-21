@@ -225,6 +225,11 @@
     value:
       list: parameters
       type: scalar
+  __1:
+    key: function
+    value:
+      list: parameters
+      type: scalar
 
 - get_attribute: alien4cloud.tosca.parser.impl.advanced.GetAttributeParser
 

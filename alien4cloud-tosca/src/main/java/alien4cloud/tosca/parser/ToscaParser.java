@@ -9,6 +9,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
+import org.alien4cloud.tosca.model.templates.NodeTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.error.Mark;
@@ -98,6 +101,17 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
 
     @Override
     protected void postParsing(ArchiveRoot result) {
+//      Map<String, NodeTemplate> nts = result.getTopology().getNodeTemplates();
+//      if (nts!= null ) {
+//        for (Map.Entry<String, NodeTemplate> nt: nts.entrySet()) {
+//          Map<String, AbstractPropertyValue> abstractPropertyValues = nt.getValue().getProperties();
+//          if (abstractPropertyValues != null) {
+//            for (Map.Entry<String, AbstractPropertyValue> abstractPropertyValue: abstractPropertyValues.entrySet()) {
+//              abstractPropertyValue.getValue().
+//            }
+//          }
+//        }
+//      }
         // Perform post processing model manipulation and validations.
         archiveRootPostProcessor.process(result);
     }

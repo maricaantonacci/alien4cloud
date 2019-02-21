@@ -17,20 +17,33 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @FormProperties({ "function", "parameters" })
 public class FunctionPropertyValue extends AbstractPropertyValue {
     private String function;
 
-    private List<String> parameters;
+    private List<Object> parameters;
+    
+    public FunctionPropertyValue() {
+      this.function = null;
+    }
+    
+    public FunctionPropertyValue(String function, List<Object> parameters) {
+      this.function = function;
+      this.parameters = parameters;
+    }
 
     /**
      * Get the modelable entity's (node or relationship template) name related to the function, represented by the first parameter.
      */
     @JsonIgnore
     public String getTemplateName() {
-        return parameters.get(0);
+      Object el = parameters.get(0);
+      if (el instanceof String)
+        return el.toString();
+      else
+        return null;
     }
 
     /**
@@ -38,7 +51,11 @@ public class FunctionPropertyValue extends AbstractPropertyValue {
      */
     @JsonIgnore
     public String getElementNameToFetch() {
-        return parameters.get(parameters.size() - 1);
+      Object el = parameters.get(parameters.size() - 1);
+      if (el instanceof String)
+        return el.toString();
+      else
+        return null;
     }
 
     /**
@@ -51,7 +68,7 @@ public class FunctionPropertyValue extends AbstractPropertyValue {
             case ToscaFunctionConstants.GET_PROPERTY:
             case ToscaFunctionConstants.GET_ATTRIBUTE:
             case ToscaFunctionConstants.GET_INPUT:
-                return parameters.get(1);
+                return parameters.get(1).toString();
             default:
                 return null;
             }
@@ -67,7 +84,14 @@ public class FunctionPropertyValue extends AbstractPropertyValue {
         if (function != null) {
             switch (function) {
             case ToscaFunctionConstants.GET_OPERATION_OUTPUT:
-                return parameters.size() > 2 ? ToscaNormativeUtil.getLongInterfaceName(parameters.get(1)) : null;
+              if (parameters.size() > 2) {
+                Object el = parameters.get(parameters.size() - 1);
+                if (el instanceof String)
+                  return ToscaNormativeUtil.getLongInterfaceName(parameters.get(1).toString());
+                else
+                  return null;
+              } else
+                return null;
             default:
                 return null;
             }
@@ -83,7 +107,14 @@ public class FunctionPropertyValue extends AbstractPropertyValue {
         if (function != null) {
             switch (function) {
             case ToscaFunctionConstants.GET_OPERATION_OUTPUT:
-                return parameters.size() > 3 ? parameters.get(2) : null;
+              if (parameters.size() > 3) {
+                Object el = parameters.get(2);
+                if (el instanceof String)
+                  return el.toString();
+                else
+                  return null;
+              } else
+                return null;
             default:
                 return null;
             }

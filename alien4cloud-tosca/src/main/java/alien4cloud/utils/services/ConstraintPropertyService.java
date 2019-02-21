@@ -222,30 +222,33 @@ public final class ConstraintPropertyService {
     private static void checkDataTypePropertyConstraint(String propertyName, Map<String, Object> complexPropertyValue, PropertyDefinition propertyDefinition,
             Consumer<String> missingPropertyConsumer) throws ConstraintViolationException, ConstraintValueDoNotMatchPropertyTypeException {
         DataType dataType = ToscaContext.get(DataType.class, propertyDefinition.getType());
-        if (dataType == null) {
-            throw new ConstraintViolationException("Complex type " + propertyDefinition.getType()
-                    + " is not complex or it cannot be found in the archive nor in Alien");
-        }
-        for (Map.Entry<String, Object> complexPropertyValueEntry : complexPropertyValue.entrySet()) {
-            if (!safe(dataType.getProperties()).containsKey(complexPropertyValueEntry.getKey())) {
-                throw new ConstraintViolationException("Complex type <" + propertyDefinition.getType() + "> do not have nested property with name <"
-                        + complexPropertyValueEntry.getKey() + "> for property <" + propertyName + ">");
-            } else {
-                Object nestedPropertyValue = complexPropertyValueEntry.getValue();
-                PropertyDefinition nestedPropertyDefinition = dataType.getProperties().get(complexPropertyValueEntry.getKey());
-                checkPropertyConstraint(propertyName + "." + complexPropertyValueEntry.getKey(), nestedPropertyValue, nestedPropertyDefinition,
-                        missingPropertyConsumer);
-            }
-        }
-        // check if the data type has required missing properties
-        if (missingPropertyConsumer != null) {
-            for (Map.Entry<String, PropertyDefinition> dataTypeDefinition : safe(dataType.getProperties()).entrySet()) {
-                if (dataTypeDefinition.getValue().isRequired() && !complexPropertyValue.containsKey(dataTypeDefinition.getKey())) {
-                    // A required property is missing
-                    String missingPropertyName = propertyName + "." + dataTypeDefinition.getKey();
-                    missingPropertyConsumer.accept(missingPropertyName);
-                }
-            }
+        // TODO DEEP: add a new type for functions 
+        if (dataType != null) {
+//        if (dataType == null) {
+//            throw new ConstraintViolationException("Complex type " + propertyDefinition.getType()
+//                    + " is not complex or it cannot be found in the archive nor in Alien");
+//        }
+          for (Map.Entry<String, Object> complexPropertyValueEntry : complexPropertyValue.entrySet()) {
+              if (!safe(dataType.getProperties()).containsKey(complexPropertyValueEntry.getKey())) {
+                  throw new ConstraintViolationException("Complex type <" + propertyDefinition.getType() + "> do not have nested property with name <"
+                          + complexPropertyValueEntry.getKey() + "> for property <" + propertyName + ">");
+              } else {
+                  Object nestedPropertyValue = complexPropertyValueEntry.getValue();
+                  PropertyDefinition nestedPropertyDefinition = dataType.getProperties().get(complexPropertyValueEntry.getKey());
+                  checkPropertyConstraint(propertyName + "." + complexPropertyValueEntry.getKey(), nestedPropertyValue, nestedPropertyDefinition,
+                          missingPropertyConsumer);
+              }
+          }
+          // check if the data type has required missing properties
+          if (missingPropertyConsumer != null) {
+              for (Map.Entry<String, PropertyDefinition> dataTypeDefinition : safe(dataType.getProperties()).entrySet()) {
+                  if (dataTypeDefinition.getValue().isRequired() && !complexPropertyValue.containsKey(dataTypeDefinition.getKey())) {
+                      // A required property is missing
+                      String missingPropertyName = propertyName + "." + dataTypeDefinition.getKey();
+                      missingPropertyConsumer.accept(missingPropertyName);
+                  }
+              }
+          }
         }
     }
 

@@ -143,11 +143,13 @@ public abstract class YamlParser<T> {
      *
      * @param result The object resulting of the parsing.
      */
-    protected void postParsing(T result) {
-      log.info("Check if metadata is available, add default if not");
-      if (result  instanceof TypeNodeParser) {
-        TypeNodeParser<T> nodeParser = ((TypeNodeParser<T>) result);
-        nodeParser.getYamlToObjectMapping().entrySet().forEach(el -> log.info(el.getKey()));
-      }
-    };
+    protected void postParsing(T result) {}
+//    {
+//      log.info("Check if metadata is available, add default if not");
+//      if (result  instanceof TypeNodeParser) {
+//        TypeNodeParser<T> nodeParser = ((TypeNodeParser<T>) result);
+//        nodeParser.getYamlToObjectMapping().entrySet().forEach(el -> log.info(el.getKey()));
+//      }
+//    }
+    
 }
