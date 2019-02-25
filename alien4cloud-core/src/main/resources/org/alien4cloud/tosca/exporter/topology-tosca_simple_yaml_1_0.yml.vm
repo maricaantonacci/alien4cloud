@@ -215,6 +215,14 @@ ${utils.formatArtifact($artifactEntry.value, 5)}
 #end## of outputCapaProp iteration
 #end## of outputCapaPropSubEntry iteration
 #end## of outputCapaPropEntry iteration
+
+#foreach($outputDefinitionEntry in ${topology.outputs.entrySet()})
+#foreach($outputDefinition in ${outputDefinitionEntry.value})
+    ${outputDefinition.name}:
+      value: $utils.formatFunction(7, ${outputDefinition.value})
+#end## of outputDefinition iteration
+#end## of outputDefinitionEntry iteration
+
 #end## if maps are not empty
 
 #if($utils.mapIsNotEmpty($topology.workflows) && $generateWorkflow)

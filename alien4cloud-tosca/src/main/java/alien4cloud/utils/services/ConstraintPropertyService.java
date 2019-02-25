@@ -9,6 +9,7 @@ import org.alien4cloud.tosca.exceptions.ConstraintTechnicalException;
 import org.alien4cloud.tosca.exceptions.ConstraintValueDoNotMatchPropertyTypeException;
 import org.alien4cloud.tosca.exceptions.ConstraintViolationException;
 import org.alien4cloud.tosca.exceptions.InvalidPropertyValueException;
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.PropertyConstraint;
 import org.alien4cloud.tosca.model.definitions.PropertyDefinition;
 import org.alien4cloud.tosca.model.definitions.PropertyValue;
@@ -103,6 +104,10 @@ public final class ConstraintPropertyService {
             } else {
                 checkListPropertyConstraint(propertyName, (List<Object>) value, propertyDefinition, missingPropertyConsumer);
             }
+        } else if (value instanceof FunctionPropertyValue) {
+            checkToscaFunctionConstraint(propertyName, (FunctionPropertyValue) value, 
+                    propertyDefinition, missingPropertyConsumer);
+           
         } else {
             throw new InvalidArgumentException(
                     "Not expecting to receive constraint validation for other types than String, Map or List, but got "
@@ -115,6 +120,12 @@ public final class ConstraintPropertyService {
         ConstraintInformation consInformation = new ConstraintInformation(propertyName, null, value.toString(), type);
         throw new ConstraintValueDoNotMatchPropertyTypeException(message, null, consInformation);
     }
+    
+    private static void checkToscaFunctionConstraint(final String propertyName, final FunctionPropertyValue function,
+        PropertyDefinition propertyDefinition,
+        Consumer<String> missingPropertyConsumer) {
+      // TODO DEEP: implement some checks, although it is not necessary to check them now
+    }
 
     /**
      * Check constraints defined on a property for a specified value
@@ -125,7 +136,8 @@ public final class ConstraintPropertyService {
      * @throws ConstraintViolationException
      * @throws ConstraintValueDoNotMatchPropertyTypeException
      */
-    private static void checkSimplePropertyConstraint(final String propertyName, final String stringValue, final PropertyDefinition propertyDefinition)
+    private static void checkSimplePropertyConstraint(final String propertyName, final String stringValue, 
+        final PropertyDefinition propertyDefinition)
             throws ConstraintViolationException, ConstraintValueDoNotMatchPropertyTypeException {
         ConstraintInformation consInformation = null;
 
@@ -266,7 +278,8 @@ public final class ConstraintPropertyService {
         }
     }
 
-    private static void checkListPropertyConstraint(String propertyName, List<Object> listPropertyValue, PropertyDefinition propertyDefinition,
+    private static void checkListPropertyConstraint(String propertyName, List<Object> listPropertyValue, 
+        PropertyDefinition propertyDefinition,
             Consumer<String> missingPropertyConsumer) throws ConstraintValueDoNotMatchPropertyTypeException, ConstraintViolationException {
         if (!ToscaTypes.LIST.equals(propertyDefinition.getType())) {
             throwConstraintValueDoNotMatchPropertyTypeException("The property definition should be a list but we found " + propertyDefinition.getType(),

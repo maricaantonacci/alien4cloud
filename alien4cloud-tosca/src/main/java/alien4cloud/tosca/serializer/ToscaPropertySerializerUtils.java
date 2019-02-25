@@ -56,9 +56,11 @@ public class ToscaPropertySerializerUtils {
             return formatValue(appendLf, indentLevel, ((PropertyValue) propertyValue).getValue());
         } else if (propertyValue instanceof FunctionPropertyValue) {
             return formatFunctionPropertyValue(indentLevel, ((FunctionPropertyValue) propertyValue));
-        } else if (propertyValue instanceof ConcatPropertyValue) {
-            return formatConcatPropertyValue(indentLevel, ((ConcatPropertyValue) propertyValue));
-        } else {
+        } 
+//        else if (propertyValue instanceof ConcatPropertyValue) {
+//            return formatConcatPropertyValue(indentLevel, ((ConcatPropertyValue) propertyValue));
+//        } 
+        else {
             throw new NotSupportedException("Do not support other types than PropertyValue or FunctionPropertyValue");
         }
     }
@@ -89,28 +91,29 @@ public class ToscaPropertySerializerUtils {
         if (value.getFunction().equals("get_input")) {
             buffer.append("{ ").append(value.getFunction()).append(": ").append(value.getParameters().get(0)).append(" }");
         } else {
-            buffer.append("{ ").append(value.getFunction()).append(": [").append(ToscaSerializerUtils.getCsvToString(value.getParameters())).append("] }");
+          buffer.append("{ ").append(value.getFunction()).append("}");
+            //buffer.append("{ ").append(value.getFunction()).append(": [").append(ToscaSerializerUtils.getCsvToString(value.getParameters())).append("] }");
         }
         return buffer.toString();
     }
 
-    private static String formatConcatPropertyValue(int indentLevel, ConcatPropertyValue value) {
-        indentLevel++;
-        StringBuilder buffer = new StringBuilder().append("{ concat: [ ");
-
-        boolean first = true;
-        for (AbstractPropertyValue concatElement : value.getParameters()) {
-            if (first) {
-                first = false;
-            } else {
-                buffer.append(", ");
-            }
-            buffer.append(formatPropertyValue(0, concatElement));
-        }
-
-        buffer.append(" ] }");
-        return buffer.toString();
-    }
+//    private static String formatConcatPropertyValue(int indentLevel, ConcatPropertyValue value) {
+//        indentLevel++;
+//        StringBuilder buffer = new StringBuilder().append("{ concat: [ ");
+//
+//        boolean first = true;
+//        for (AbstractPropertyValue concatElement : value.getParameters()) {
+//            if (first) {
+//                first = false;
+//            } else {
+//                buffer.append(", ");
+//            }
+//            buffer.append(formatPropertyValue(0, concatElement));
+//        }
+//
+//        buffer.append(" ] }");
+//        return buffer.toString();
+//    }
 
     private static String formatMapValue(boolean appendFirstLf, int indentLevel, Map<String, Object> value) {
         indentLevel++;

@@ -617,6 +617,7 @@
       "INVALID_NAME" : "无效 {{context}} 问题名称： [{{problem}}]。 重命名到 [{{note}}]。",
       "INVALID_SCALAR_UNIT" : "类型必须是TOSCA标量单位，需要单位和数值。",
       "INVALID_YAML" : "文件不符合YAML格式，\n({{problem}})。",
+      "INVALID_TOSCA_FUNCTION_DECLARATION": "The TOSCA function declaration doesn't respect the standard [{{problem}}]",
       "LABEL" : "错误",
       "MISSING_DEPENDENCY" : "依赖 [{{note}}] 在Alien4Cloud存储库中找不到。",
       "MISSING_FILE" : "引用文件 {{note}} 无法在工件内找到.",

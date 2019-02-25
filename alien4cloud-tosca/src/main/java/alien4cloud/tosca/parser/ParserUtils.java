@@ -2,7 +2,12 @@ package alien4cloud.tosca.parser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
+import org.alien4cloud.tosca.utils.ToscaTypeUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
@@ -12,6 +17,7 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
 
 import alien4cloud.exception.InvalidArgumentException;
 import alien4cloud.tosca.parser.impl.ErrorCode;
+import alien4cloud.tosca.parser.impl.advanced.FunctionParser;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -20,7 +26,6 @@ import com.google.common.collect.Maps;
  * Utility class to help with parsing.
  */
 public final class ParserUtils {
-
     /**
      * Utility to get a scalar.
      * 
@@ -68,33 +73,37 @@ public final class ParserUtils {
         return result;
     }
 
-    public static Object parse(Node node) {
+    public static Object parse(Node node, ParsingContextExecution context) {
         if (node == null) {
             return null;
         } else if (node instanceof ScalarNode) {
             return ((ScalarNode) node).getValue();
         } else if (node instanceof SequenceNode) {
-            return parseSequence((SequenceNode) node);
+            return parseSequence((SequenceNode) node, context);
         } else if (node instanceof MappingNode) {
-            return parseMap((MappingNode) node);
+          if (ToscaTypeUtils.isFunctionNode(node)) {
+            INodeParser<?> p = context.getRegistry().get("tosca_function_parser");
+            return (FunctionPropertyValue) p.parse(node, context);
+          } else
+            return parseMap((MappingNode) node, context);
         } else {
             throw new InvalidArgumentException("Unknown type of node " + node.getClass().getName());
         }
     }
 
-    public static List<Object> parseSequence(SequenceNode sequenceNode) {
+    public static List<Object> parseSequence(SequenceNode sequenceNode, ParsingContextExecution context) {
         List<Object> result = Lists.newArrayList();
         for (Node node : sequenceNode.getValue()) {
-            result.add(parse(node));
+            result.add(parse(node, context));
         }
         return result;
     }
 
-    public static Map<String, Object> parseMap(MappingNode mappingNode) {
+    public static Map<String, Object> parseMap(MappingNode mappingNode, ParsingContextExecution context) {
         Map<String, Object> result = Maps.newHashMap();
         for (NodeTuple entry : mappingNode.getValue()) {
             String key = ((ScalarNode) entry.getKeyNode()).getValue();
-            result.put(key, parse(entry.getValueNode()));
+            result.put(key, parse(entry.getValueNode(), context));
         }
         return result;
     }

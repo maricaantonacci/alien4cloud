@@ -19,6 +19,7 @@
 - tosca_definitions_version: alien4cloud.tosca.parser.impl.advanced.ToscaDefinitionVersionParser
 - string_list: alien4cloud.tosca.parser.impl.advanced.StringListParser
 - relationship_template: alien4cloud.tosca.parser.impl.advanced.RelationshipTemplateParser
+- tosca_function_parser: alien4cloud.tosca.parser.impl.advanced.FunctionParser
 
 # declare standard mapping based parsers
 - definition: alien4cloud.tosca.model.ArchiveRoot
@@ -218,33 +219,36 @@
     type: occurrences
   relationship: relationshipType
   capability_name: capabilityName
+  
+- tosca_function_parameter: java.lang.Object
 
 - tosca_function: org.alien4cloud.tosca.model.definitions.FunctionPropertyValue
   __0:
     key: function
     value:
       list: parameters
-      type: scalar
+      type: tosca_function_parameter
 
-- get_attribute: alien4cloud.tosca.parser.impl.advanced.GetAttributeParser
+#- get_attribute: alien4cloud.tosca.parser.impl.advanced.GetAttributeParser
 
 - scalar_property_value: org.alien4cloud.tosca.model.definitions.ScalarPropertyValue
 
 - complex_property_value: alien4cloud.tosca.parser.impl.advanced.ComplexPropertyValueParser
 
-- tosca_concat: org.alien4cloud.tosca.model.definitions.ConcatPropertyValue
-  __0:
-    key: function_concat
-    value:
-      list: parameters
-      type: input
+#- tosca_concat: org.alien4cloud.tosca.model.definitions.ConcatPropertyValue
+#  __0:
+#    key: function_concat
+#    value:
+#      list: parameters
+#      type: input
 
 - node_template_property: __discriminator
   keys:
     type: property_definition
     get_input: tosca_function
     get_property: tosca_function
-    get_attribute: get_attribute
+    get_attribute: tosca_function
+    concat: tosca_function
   default: abstract_property_value
 
 - input: __discriminator
@@ -252,7 +256,7 @@
     type: property_definition
     get_input: tosca_function
     get_property: tosca_function
-    get_attribute: get_attribute
+    get_attribute: tosca_function
     get_operation_output: tosca_function
     concat: tosca_concat
   default: abstract_property_value
@@ -262,8 +266,10 @@
     type: attribute_definition
     concat: tosca_concat
     get_operation_output: tosca_function
-    get_attribute: get_attribute
+    get_attribute: tosca_function
     get_property: tosca_function
+    concat: tosca_concat
+    get_input: tosca_function
   default: attribute_definition
 
 - deployment_artifact: org.alien4cloud.tosca.model.definitions.DeploymentArtifact

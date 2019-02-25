@@ -121,6 +121,12 @@ public class FunctionPropertyValue extends AbstractPropertyValue {
         }
         return null;
     }
+    
+    @Override
+    @JsonIgnore
+    public boolean isDefinition() {
+        return false;
+    }
 
     public void replaceAllParamsExceptTemplateNameWith(String... replacements) {
         if (parameters.size() > 0) {

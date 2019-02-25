@@ -8,7 +8,10 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
 import alien4cloud.exception.InvalidArgumentException;
 import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ComplexPropertyValue;
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ListPropertyValue;
+import org.alien4cloud.tosca.utils.ToscaTypeUtils;
+
 import alien4cloud.tosca.parser.INodeParser;
 import alien4cloud.tosca.parser.ParserUtils;
 import alien4cloud.tosca.parser.ParsingContextExecution;
@@ -19,9 +22,13 @@ public class ComplexPropertyValueParser implements INodeParser<AbstractPropertyV
     @Override
     public AbstractPropertyValue parse(Node node, ParsingContextExecution context) {
         if (node instanceof MappingNode) {
-            return new ComplexPropertyValue(ParserUtils.parseMap((MappingNode) node));
+          if (ToscaTypeUtils.isFunctionNode(node)) {
+            INodeParser<?> p = context.getRegistry().get("tosca_function_parser");
+            return (FunctionPropertyValue) p.parse(node, context);
+          } else
+            return new ComplexPropertyValue(ParserUtils.parseMap((MappingNode) node, context));
         } else if (node instanceof SequenceNode) {
-            return new ListPropertyValue(ParserUtils.parseSequence((SequenceNode) node));
+            return new ListPropertyValue(ParserUtils.parseSequence((SequenceNode) node, context));
         } else {
             throw new InvalidArgumentException("Do not expect other node than MappingNode or SequenceNode here " + node.getClass().getName());
         }

@@ -101,7 +101,7 @@ public class Topology implements IDatableResource, IWorkspaceResource, IMetaProp
     
     @ObjectField(enabled = false)
     @FetchContext(contexts = { SUMMARY }, include = { false })
-    private Map<String, OutputDefinition> outputs;
+    private Map<String, OutputDefinition<?>> outputs;
 
     /**
      * Outputs coming from node properties:

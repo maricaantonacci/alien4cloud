@@ -57,7 +57,7 @@ public class FunctionEvaluator {
             FunctionPropertyValue evaluatedFunction = (FunctionPropertyValue) evaluatedProperty;
             switch (evaluatedFunction.getFunction()) {
             case ToscaFunctionConstants.GET_INPUT:
-                String inputName = evaluatedFunction.getParameters().get(0);
+                String inputName = evaluatedFunction.getParameters().get(0).toString();
                 return evaluatorContext.getInputs().get(inputName);
             case ToscaFunctionConstants.GET_PROPERTY:
                 // Perform the get property evaluation.
@@ -108,7 +108,7 @@ public class FunctionEvaluator {
             Set<NodeTemplate> targetNodes = TopologyNavigationUtil.getTargetNodes(evaluatorContext.getTopology(), (NodeTemplate) template, function.getCapabilityOrRequirementName());
             if (targetNodes != null && targetNodes.size() == 1) {
                 NodeTemplate firstNode = targetNodes.iterator().next();
-                List<String> params = new ArrayList<>();
+                List<Object> params = new ArrayList<>();
                 params.add(ToscaFunctionConstants.SELF);
                 params.addAll(function.getParameters().subList(2, function.getParameters().size()));
                 FunctionPropertyValue newFunc = new FunctionPropertyValue(function.getFunction(), params);

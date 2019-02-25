@@ -62,7 +62,13 @@ public class TypeNodeParser<T> extends AbstractTypeNodeParser implements INodePa
                 // try to use instance default constructor based on string if any
                 Constructor<T> constructor;
                 try {
-                    constructor = type.getConstructor(String.class);
+                  // TODO DEEP: had to change to object because of methods
+                    Class<?> typeNew = null;
+                    if (type.getSimpleName().equals("Object"))
+                      typeNew = String.class;
+                    else
+                      typeNew = type;
+                    constructor = (Constructor<T>) typeNew.getConstructor(String.class);
                 } catch (NoSuchMethodException e) {
                     // scalar value is not allowed to parse the node.
                     ParserUtils.addTypeError(node, context.getParsingErrors(), getToscaType());

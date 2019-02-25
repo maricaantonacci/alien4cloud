@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 
 import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
+import org.alien4cloud.tosca.model.definitions.IValue;
 import org.alien4cloud.tosca.model.definitions.OutputDefinition;
 import org.alien4cloud.tosca.model.templates.Topology;
 import alien4cloud.tosca.parser.INodeParser;
@@ -35,7 +36,7 @@ public class OuputsParser implements INodeParser<Void> {
         Map<String, Set<String>> outputAttributes = null;
         Map<String, Set<String>> outputProperties = null;
         Map<String, Map<String, Set<String>>> ouputCapabilityProperties = null;
-        Map<String, OutputDefinition> outputsByName = null;
+        Map<String, OutputDefinition<?>> outputsByName = null;
 
         List<NodeTuple> children = mappingNode.getValue();
         for (NodeTuple child : children) {
@@ -49,14 +50,15 @@ public class OuputsParser implements INodeParser<Void> {
                     // we are only interested by the 'value' node
                     Node outputValueNode = childChild.getValueNode();
                     // now we have to parse this node
-                    INodeParser<?> p = context.getRegistry().get("tosca_function");
+                    INodeParser<?> p = //new FunctionParser();
+                      context.getRegistry().get("tosca_function_parser");
                     FunctionPropertyValue functionPropertyValue = (FunctionPropertyValue) p.parse(outputValueNode, context);
                     String functionName = functionPropertyValue.getFunction();
-                    List<String> params = functionPropertyValue.getParameters();
+                    List<Object> params = functionPropertyValue.getParameters();
                     if (params.size() == 2) {
                         // we need exactly 2 params to be able to do the job : node name & property or attribute name
-                        String nodeTemplateName = params.get(0);
-                        String nodeTemplatePropertyOrAttributeName = params.get(1);
+                        String nodeTemplateName = params.get(0).toString();
+                        String nodeTemplatePropertyOrAttributeName = params.get(1).toString();
                         // TODO: should we check they exist ?
                         switch (functionName) {
                         case "get_attribute":
@@ -65,21 +67,21 @@ public class OuputsParser implements INodeParser<Void> {
                         case "get_property":
                             outputProperties = addToMapOfSet(nodeTemplateName, nodeTemplatePropertyOrAttributeName, outputProperties);
                             break;
-                        default: break;
+                        default: outputsByName = addOutput(child, functionPropertyValue, outputsByName);
 //                            context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_UNKNOWN_FUNCTION, null,
 //                                    outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), functionName));
                         }
-                        outputsByName = addOutput(child, outputValueNode, outputsByName);
+                        //outputsByName = addOutput(child, functionPropertyValue, outputsByName);
                     } else if (params.size() == 3 && functionName.equals("get_property")) {
                         // in case of 3 parameters we only manage capabilities outputs for the moment
-                        String nodeTemplateName = params.get(0);
-                        String capabilityName = params.get(1);
-                        String propertyName = params.get(2);
+                        String nodeTemplateName = params.get(0).toString();
+                        String capabilityName = params.get(1).toString();
+                        String propertyName = params.get(2).toString();
                         ouputCapabilityProperties = addToMapOfMapOfSet(nodeTemplateName, capabilityName, propertyName, ouputCapabilityProperties);
-                        outputsByName = addOutput(child, outputValueNode, outputsByName);
+                        //outputsByName = addOutput(child, functionPropertyValue, outputsByName);
                     } else {
 
-                      outputsByName = addOutput(child, outputValueNode, outputsByName);
+                      outputsByName = addOutput(child, functionPropertyValue, outputsByName);
 //                        context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_BAD_PARAMS_COUNT, null,
 //                                outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), null));
                     }
@@ -97,28 +99,19 @@ public class OuputsParser implements INodeParser<Void> {
         return null;
     }
     
-    protected Map<String, OutputDefinition> addOutput(NodeTuple output, Node outputValue, Map<String, OutputDefinition> outputsByName) {
+    protected <T> Map<String, OutputDefinition<?>> addOutput(NodeTuple output, T outputValue, Map<String, OutputDefinition<?>> outputsByName) {
       if (output.getKeyNode() instanceof ScalarNode) {
         
         String outputId = ((ScalarNode) output.getKeyNode()).getValue();
-        String outputExpression = null;
-        if (outputValue instanceof ScalarNode) {
 
-          outputExpression = ((ScalarNode)outputValue).getValue();
-         
-        } else if (outputValue instanceof MappingNode) {
-          
-          outputExpression = ((MappingNode)outputValue).getValue().get(0).toString();
-        } else {
-          log.warn("outputValue type " + outputValue.getClass().toString() + " not supported in outputs parsing");
-          
-        }
-
-        if (outputExpression != null) {
+        if (outputValue != null) {
           if (outputsByName == null) {
             outputsByName = new HashMap<>();
           }
-          outputsByName.put(outputId, new OutputDefinition(outputId, "", outputExpression));
+          if (outputValue instanceof FunctionPropertyValue)
+            outputsByName.put(outputId, new OutputDefinition<FunctionPropertyValue>(outputId, "", (FunctionPropertyValue)outputValue));
+          else // Use string for scalar values of the outputs
+            outputsByName.put(outputId, new OutputDefinition<String>(outputId, "", outputValue.toString()));
         }
       }
       return outputsByName;
