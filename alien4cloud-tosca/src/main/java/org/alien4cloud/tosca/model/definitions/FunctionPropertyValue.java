@@ -3,6 +3,7 @@ package org.alien4cloud.tosca.model.definitions;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.alien4cloud.tosca.normative.ToscaNormativeUtil;
 import org.alien4cloud.tosca.normative.constants.ToscaFunctionConstants;
@@ -20,9 +21,12 @@ import lombok.Setter;
 //@NoArgsConstructor
 //@AllArgsConstructor
 @FormProperties({ "function", "parameters" })
+@JsonDeserialize(using = alien4cloud.json.deserializer.PropertyValueDeserializer.class)
 public class FunctionPropertyValue extends AbstractPropertyValue {
     private String function;
 
+
+    //@JsonDeserialize(using = alien4cloud.json.deserializer.PropertyValueDeserializer.class)
     private List<Object> parameters;
     
     public FunctionPropertyValue() {

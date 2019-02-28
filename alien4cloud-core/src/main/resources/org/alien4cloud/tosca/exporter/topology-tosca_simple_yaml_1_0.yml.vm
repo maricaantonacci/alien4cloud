@@ -193,7 +193,7 @@ ${utils.formatArtifact($artifactEntry.value, 5)}
 #end## if $groupEntry.value.policies not empty
 #end## of groupEntry iteration
 #end## if $topology.groups not empty
-#if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputProperties) || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputAttributes)  || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputCapabilityProperties))
+#if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputProperties) || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputAttributes)  || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputCapabilityProperties)  || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputs))
   outputs:
 #foreach($outputPropertyEntry in ${topology.outputProperties.entrySet()})
 #foreach($outputProperty in ${outputPropertyEntry.value})
@@ -215,14 +215,11 @@ ${utils.formatArtifact($artifactEntry.value, 5)}
 #end## of outputCapaProp iteration
 #end## of outputCapaPropSubEntry iteration
 #end## of outputCapaPropEntry iteration
-
 #foreach($outputDefinitionEntry in ${topology.outputs.entrySet()})
-#foreach($outputDefinition in ${outputDefinitionEntry.value})
-    ${outputDefinition.name}:
-      value: $utils.formatFunction(7, ${outputDefinition.value})
-#end## of outputDefinition iteration
+    ${outputDefinitionEntry.key}:
+      value:$utils.renderFunctionAndConcat($outputDefinitionEntry.value.value)
+      description: ${outputDefinitionEntry.value.description}
 #end## of outputDefinitionEntry iteration
-
 #end## if maps are not empty
 
 #if($utils.mapIsNotEmpty($topology.workflows) && $generateWorkflow)

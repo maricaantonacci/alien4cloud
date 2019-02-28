@@ -45,6 +45,7 @@ public class VelocityUtil {
         putIfAbsent(context, "importsUtils", new ToscaImportsUtils());
 
         try {
+            // BOOKMARK Velocity starts processing the topology using the topology-tosca_simple_yaml_1_0.yml.vm template
             template.merge(context, outputWriter);
         } finally {
             outputWriter.close();

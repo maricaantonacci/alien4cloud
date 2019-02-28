@@ -20,6 +20,7 @@ import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ConcatPropertyValue;
 import org.alien4cloud.tosca.model.definitions.DeploymentArtifact;
 import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
+import org.alien4cloud.tosca.model.definitions.IValue;
 import org.alien4cloud.tosca.model.definitions.Interface;
 import org.alien4cloud.tosca.model.definitions.Operation;
 import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
@@ -57,6 +58,9 @@ import com.google.common.collect.Sets;
  * Modified with info from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
  */
 public class ToscaSerializerUtils {
+  
+  public static String testStatic() {return "testStatic";}
+  public  String testNonStatic() {return "testNonStatic";}
 	
 	/**
 	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
@@ -168,14 +172,14 @@ public class ToscaSerializerUtils {
         return o instanceof ConcatPropertyValue;
     }
 
-    public static String getCsvToString(Collection<?> list) {
+    public String getCsvToString(Collection<?> list) {
         return getCsvToString(list, false);
     }
     
 	/**
 	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
 	 */
-    public static String getCsvToString(Collection<?> list, boolean renderScalar) {
+    public String getCsvToString(Collection<?> list, boolean renderScalar) {
         StringBuilder sb = new StringBuilder();
         boolean isFirst = true;
         if (list != null) {
@@ -228,11 +232,43 @@ public class ToscaSerializerUtils {
         return false;
     }
     
+    
 	/**
 	 * Method from https://github.com/ConceptReplyIT/alien4cloud/commit/44a8c68293b2e6ad076e798690bfbd3fcdf7db24
 	 */
-    public static String renderFunctionAndConcat(AbstractPropertyValue apv) {
-        StringBuilder builder = new StringBuilder();
+    public String renderFunctionAndConcat(Object apv) {
+      StringBuilder result = new StringBuilder();
+      if (apv instanceof Map) {
+        result.append(" { ");
+        Map<String, Object> node = ((Map<String, Object>) apv);
+        result.append(node.get("function").toString())
+          .append(": ")
+          .append(renderFunctionAndConcat(node.get("parameters")))
+          .append(" } ");
+      } else if (apv instanceof List) {
+        List<Object> node = (List<Object>) apv;
+        
+        if (node.size() > 1) {
+          result.append(" [ ");
+          for (Object el: node)
+            result.append(renderFunctionAndConcat(el)).append(", ");
+          result.delete(result.length() - 2, result.length());
+          result.append(" ] ");
+        } else if (node.size() == 1) {
+          result.append(renderFunctionAndConcat(node.get(0)));
+        }
+      } else {
+        if (apv instanceof String)
+          result
+            .append("\"")
+            .append(apv.toString())
+            .append("\"");
+        else
+          result.append(apv.toString());
+      }
+      return result.toString();
+      
+        /*StringBuilder builder = new StringBuilder();
         String functionName;
         List<?> parameters = new ArrayList<>();
         if (isFunctionPropertyValue(apv)) {
@@ -247,7 +283,8 @@ public class ToscaSerializerUtils {
             return builder.toString();
         }
         builder.append(functionName).append(": [ ").append(getCsvToString(parameters, true)).append(" ]");
-        return builder.toString();
+        return builder.toString();*/
+
     }
 
     public boolean doesInterfacesContainsImplementedOperation(Map<String, Interface> interfaces) {

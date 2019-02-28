@@ -21,7 +21,7 @@ public class ToscaImportsUtils {
             }
             sb.append("  - ");
             sb.append(d.getName());
-            sb.append(":");
+            sb.append(": ");
             sb.append(d.getVersion());
         });
         return sb.toString();

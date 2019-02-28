@@ -41,7 +41,7 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
     public static final String NORMATIVE_DSL_100 = "tosca_simple_yaml_1_0";
     public static final String NORMATIVE_DSL_100_URL = "http://docs.oasis-open.org/tosca/ns/simple/yaml/1.0";
 
-    public static String LATEST_DSL = ALIEN_DSL_200;
+    public static String LATEST_DSL = NORMATIVE_DSL_100;//ALIEN_DSL_200;
 
     private static final String DEFINITION_TYPE = "definition";
     private Map<String, Map<String, INodeParser>> parserRegistriesByVersion = Maps.newHashMap();
@@ -65,18 +65,18 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
     @PostConstruct
     public void initialize() throws ParsingException {
         // Initialize the supported DSL in alien4cloud.
-        Map<String, INodeParser> registry = mappingGenerator.process("classpath:alien-dsl-1.2.0-mapping.yml");
-        parserRegistriesByVersion.put(ALIEN_DSL_120, registry);
-        registry = mappingGenerator.process("classpath:alien-dsl-1.3.0-mapping.yml");
-        parserRegistriesByVersion.put(ALIEN_DSL_130, registry);
-        // 1.4.0
-        registry = mappingGenerator.process("classpath:alien-dsl-1.4.0-mapping.yml");
-        parserRegistriesByVersion.put(ALIEN_DSL_140, registry);
-        // 2.0.0
-        registry = mappingGenerator.process("classpath:alien-dsl-2.0.0-mapping.yml");
-        parserRegistriesByVersion.put(ALIEN_DSL_200, registry);
+//        Map<String, INodeParser> registry = mappingGenerator.process("classpath:alien-dsl-1.2.0-mapping.yml");
+//        parserRegistriesByVersion.put(ALIEN_DSL_120, registry);
+//        registry = mappingGenerator.process("classpath:alien-dsl-1.3.0-mapping.yml");
+//        parserRegistriesByVersion.put(ALIEN_DSL_130, registry);
+//        // 1.4.0
+//        registry = mappingGenerator.process("classpath:alien-dsl-1.4.0-mapping.yml");
+//        parserRegistriesByVersion.put(ALIEN_DSL_140, registry);
+//        // 2.0.0
+//        registry = mappingGenerator.process("classpath:alien-dsl-2.0.0-mapping.yml");
+//        parserRegistriesByVersion.put(ALIEN_DSL_200, registry);
         // experimental
-        registry = mappingGenerator.process("classpath:tosca_simple_yaml_1_0.yml");
+        Map<String, INodeParser> registry = mappingGenerator.process("classpath:tosca_simple_yaml_1_0.yml");
         parserRegistriesByVersion.put(NORMATIVE_DSL_100, registry);
         parserRegistriesByVersion.put(NORMATIVE_DSL_100_URL, registry);
     }

@@ -1,17 +1,33 @@
 package alien4cloud.json.deserializer;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ComplexPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ConcatPropertyValue;
 import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ListPropertyValue;
+import org.alien4cloud.tosca.model.definitions.PropertyValue;
 import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import alien4cloud.rest.utils.RestMapper;
 import alien4cloud.utils.jackson.ConditionalAttributes;
@@ -46,5 +62,53 @@ public class PropertyValueDeserializer extends AbstractDiscriminatorPolymorphicD
             }
         }
         return super.getNullValue(ctxt);
+    }
+    
+    @Override
+    public AbstractPropertyValue deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+        ObjectMapper mapper = (ObjectMapper) jp.getCodec();
+        JsonNode root = (JsonNode) mapper.readTree(jp);      
+        
+
+        return doDeserialize(mapper, root);//mapper.treeToValue(root, parameterClass);
+    }
+    
+    protected AbstractPropertyValue doDeserialize(ObjectMapper mapper, JsonNode root) throws JsonProcessingException {
+      if (root.isArray()) {
+        ArrayNode an = ((ArrayNode)root);
+        List<Object> result = new ArrayList<>();
+        for (JsonNode node: an) 
+          result.add(doDeserialize(mapper, node));
+        return new ListPropertyValue(result);
+      } else if (root.isValueNode()) {
+        return new ScalarPropertyValue(root.asText());
+      } else {
+        final List<Boolean> isF = new ArrayList<>();
+        root.fieldNames().forEachRemaining(member -> {
+          if (member.compareTo("function") == 0)
+            isF.add(true);
+        });
+        if (!isF.isEmpty()) {
+          List<Object> params = new ArrayList<>();
+          FunctionPropertyValue result = new FunctionPropertyValue(root.get("function").asText(), params);
+          ArrayNode an = ((ArrayNode)root.get("parameters"));
+          for (JsonNode node: an) {
+            if (node.isValueNode())
+              params.add(node.asText());
+            else
+              params.add(doDeserialize(mapper, node));
+          }
+          return result;
+        } else {
+          Iterator<Map.Entry<String, JsonNode>> elementsIterator = root.fields();
+          Map<String, Object> result = new HashMap<>();
+          while (elementsIterator.hasNext()) {
+              Map.Entry<String, JsonNode> element = elementsIterator.next();
+              Object val = doDeserialize(mapper, element.getValue());
+              result.put(element.getKey(), val);
+          }
+          return new ComplexPropertyValue(result);
+        }
+      }
     }
 }

@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -20,9 +22,10 @@ import com.google.common.collect.Maps;
  * Manages polymorphism deserialization for Jackson through discriminator field (based on field exists).
  */
 public abstract class AbstractDiscriminatorPolymorphicDeserializer<T> extends StdDeserializer<T> {
-    private Map<String, Map<String, Class<? extends T>>> registry = Maps.newHashMap();
-    private Class<? extends T> valueStringClass = null;
-    private Class<? extends T> defaultClass = null;
+    protected Map<String, Map<String, Class<? extends T>>> registry = Maps.newHashMap();
+    protected Map<String, Map<String, Class<FunctionPropertyValue>>> registryF = Maps.newHashMap();
+    protected Class<? extends T> valueStringClass = null;
+    protected Class<? extends T> defaultClass = null;
 
     public AbstractDiscriminatorPolymorphicDeserializer(Class<T> clazz) {
         super(clazz);
@@ -39,6 +42,10 @@ public abstract class AbstractDiscriminatorPolymorphicDeserializer<T> extends St
             registry.put(discriminator, registryForDiscriminator);
         }
         registryForDiscriminator.put(discriminatorNodeType, clazz);
+        
+          Map<String, Class<FunctionPropertyValue>> registryForDiscriminatorF = Maps.newHashMap();
+          registryF.put("function", registryForDiscriminatorF);
+          registryForDiscriminatorF.put("ALL", FunctionPropertyValue.class);
     }
 
     /**
@@ -71,6 +78,7 @@ public abstract class AbstractDiscriminatorPolymorphicDeserializer<T> extends St
         }
         ObjectNode root = mapper.readTree(jp);
         Class<? extends T> parameterClass = null;
+        Class<FunctionPropertyValue> parameterClassF = null;
         Iterator<Map.Entry<String, JsonNode>> elementsIterator = root.fields();
         while (elementsIterator.hasNext()) {
             Map.Entry<String, JsonNode> element = elementsIterator.next();
@@ -86,8 +94,22 @@ public abstract class AbstractDiscriminatorPolymorphicDeserializer<T> extends St
                     parameterClass = registryForDiscriminator.get(nodeType);
                     break;
                 }
-            }
+            } else if (registryF.containsKey(name)) {
+              Map<String, Class<FunctionPropertyValue>> registryForDiscriminatorF = registryF.get(name);
+              if (registryForDiscriminatorF.containsKey("ALL")) {
+                parameterClassF = registryForDiscriminatorF.values().iterator().next();
+                  break;
+              }
+              if (registryForDiscriminatorF.containsKey(nodeType)) {
+                parameterClassF = registryForDiscriminatorF.get(nodeType);
+                  break;
+              }
+          }
         }
+//        if (parameterClassF != null) {
+//          return mapper.treeToValue(root, parameterClassF);
+//        }
+        
         if (parameterClass == null) {
             parameterClass = defaultClass;
         }
