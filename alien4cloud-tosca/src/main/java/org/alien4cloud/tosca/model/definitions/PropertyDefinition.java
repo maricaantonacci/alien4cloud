@@ -83,6 +83,11 @@ public class PropertyDefinition implements IValue {
 
     @BooleanField(index = IndexType.no)
     private boolean isPassword;
+    
+    public PropertyDefinition(String defaultValue) {
+      this.defaultValue = new ScalarPropertyValue(defaultValue);
+      this.type = defaultValue.getClass().getSimpleName().toLowerCase();
+    }
 
     public PropertyDefinition(PropertyDefinition from) {
         this.type = from.type;
