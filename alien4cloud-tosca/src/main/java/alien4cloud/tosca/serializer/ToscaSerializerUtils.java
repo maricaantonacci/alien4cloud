@@ -258,12 +258,12 @@ public class ToscaSerializerUtils {
           result.append(renderFunctionAndConcat(node.get(0)));
         }
       } else {
-        if (apv instanceof String)
-          result
-            .append("\"")
-            .append(apv.toString())
-            .append("\"");
-        else
+//        if (apv instanceof String)
+//          result
+//            .append("\"")
+//            .append(apv.toString())
+//            .append("\"");
+//        else
           result.append(apv.toString());
       }
       return result.toString();
