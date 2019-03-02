@@ -50,6 +50,7 @@ public class TypeNodeParser<T> extends AbstractTypeNodeParser implements INodePa
      * @param instance The instance in which to parse the node (or null to create a new instance).
      * @return The given instance or a new one if none was provided.
      */
+    @SuppressWarnings("unchecked")
     public T parse(Node node, ParsingContextExecution context, T instance) {
         if (node instanceof MappingNode) {
             return doParse((MappingNode) node, context, instance);
