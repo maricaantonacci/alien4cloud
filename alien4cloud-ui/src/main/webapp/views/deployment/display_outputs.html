@@ -13,9 +13,7 @@
     <span ng-if="isEmptyOutpts()" class="empty-place-holder" style="padding: 0px">{{'APPLICATIONS.TOPOLOGY.NO_OUTPUTS' | translate}}</span>
     
     <div ng-if="!isEmptyOutputsValues()">
-		<li ng-repeat="{instanceId, outVals) in outputsValues">
-		  <strong>{{ 'COMMON.PROPERTIES' | translate }}</strong>
-		  <ul>
+		<div ng-repeat="(instanceId, outVals) in outputsValues">
 			<li ng-repeat="(outputKey, outputValue) in outVals">
 			  {{outputKey}} :
 			  <span ng-if="outputValue" class="text-primary" 
@@ -23,8 +21,7 @@
 			  	ng-bind-html="outputValue | linky:'_blank'"></span>
 			  <em class="text-primary" ng-if="!outputValue">N/A</em>
 			</li>
-		  </ul>
-		</li>
+		</div>
 	</div>
     
     

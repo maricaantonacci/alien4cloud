@@ -80,8 +80,8 @@ define(function (require) {
     }
 	
 	function processOutputs(scope) {
+		scope.outputsValues = {};
 		if(_.definedPath(scope.topology, 'topology')){
-			scope.outputsValues = {};
 			console.log("from processOutputs");
 			console.log(scope.topology);
 			
@@ -89,7 +89,7 @@ define(function (require) {
 				_.forEach(instancesInfo, function(instanceInfo, instanceId){
 					scope.outputsValues[instanceId] = {};
 					console.log(instanceInfo);
-					_.forEach(instanceInfo.outputsResults, function(outputId, outputValue){
+					_.forEach(instanceInfo.outputsResults, function(outputValue, outputId){
 						console.log(outputValue);
 						scope.outputsValues[instanceId][outputId] = outputValue;
 					});
