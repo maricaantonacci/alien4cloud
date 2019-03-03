@@ -11,15 +11,32 @@
   </div>
   <div uib-collapse="isoutputsCollapsed" class="content-body">
     <span ng-if="isEmptyOutpts()" class="empty-place-holder" style="padding: 0px">{{'APPLICATIONS.TOPOLOGY.NO_OUTPUTS' | translate}}</span>
-    <table ng-if="!isEmptyOutpts()" class="table table-condensed" id="outputPropertiesTable">
+    
+    <div ng-if="!isEmptyOutputsValues()">
+		<li ng-repeat="{instanceId, outVals) in outputsValues">
+		  <strong>{{ 'COMMON.PROPERTIES' | translate }}</strong>
+		  <ul>
+			<li ng-repeat="(outputKey, outputValue) in outVals">
+			  {{outputKey}} :
+			  <span ng-if="outputValue" class="text-primary" 
+			  	id="property-{{nodeId}}-{{outputKey}}" 
+			  	ng-bind-html="outputValue | linky:'_blank'"></span>
+			  <em class="text-primary" ng-if="!outputValue">N/A</em>
+			</li>
+		  </ul>
+		</li>
+	</div>
+    
+    
+    <!--table ng-if="!isEmptyOutpts()" class="table table-condensed" id="outputPropertiesTable">
       <tr ng-repeat="nodeId in outputNodes" ng-if="somethingToDisplay(nodeId)">
         <td>
           <span>{{nodeId}}</span>
         </td>
         <td>
-          <ul>
+          <ul-->
             <!--Nodes Output properties list -->
-            <li ng-if="outputPropertiesSize > 0 && outputPropertiesValue[nodeId]">
+            <!--li ng-if="outputPropertiesSize > 0 && outputPropertiesValue[nodeId]">
               <strong>{{ 'COMMON.PROPERTIES' | translate }}</strong>
               <ul>
                 <li ng-repeat="(outputPropertyKey, outputPropertyValue) in outputPropertiesValue[nodeId]">
@@ -28,10 +45,10 @@
                   <em class="text-primary" ng-if="!outputPropertyValue.value">N/A</em>
                 </li>
               </ul>
-            </li>
+            </li-->
 
             <!-- capabilities output properties list -->
-            <li ng-repeat="(capabilityId, outputCapabilityPropertyValue) in outputCapabilityPropertiesValue[nodeId]">
+            <!--li ng-repeat="(capabilityId, outputCapabilityPropertyValue) in outputCapabilityPropertiesValue[nodeId]">
               <strong>{{ 'COMMON.CAPABILITIES' | translate }} :</strong>
               <ul>
                 <li><strong>{{capabilityId}} :</strong>
@@ -48,10 +65,10 @@
                   </ul>
                 </li>
               </ul>
-            </li>
+            </li-->
 
             <!-- Output attributes list -->
-            <li ng-if="outputAttributesSize > 0 && outputAttributesValue[nodeId]">
+            <!--li ng-if="outputAttributesSize > 0 && outputAttributesValue[nodeId]">
               <strong>{{ 'COMMON.ATTRIBUTES' | translate }}</strong>
               <ul>
                 <li ng-repeat="(instanceId, instanceAttributes) in outputAttributesValue[nodeId]">
@@ -69,6 +86,6 @@
           </ul>
         </td>
       </tr>
-    </table>
+    </table-->
   </div>
 </div>

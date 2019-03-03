@@ -78,6 +78,26 @@ define(function (require) {
         );
       }
     }
+	
+	function processOutputs(scope) {
+		if(_.definedPath(scope.topology, 'topology')){
+			scope.outputsValues = {};
+			console.log("from processOutputs");
+			console.log(scope.topology);
+			
+			_.forEach(scope.topology.instances, function(instancesInfo, nodeId){
+				_.forEach(instancesInfo, function(instanceInfo, instanceId){
+					scope.outputsValues[instanceId] = {};
+					console.log(instanceInfo);
+					_.forEach(instanceInfo.outputsResults, function(outputId, outputValue){
+						console.log(outputValue);
+						scope.outputsValues[instanceId][outputId] = outputValue;
+					});
+				});
+			  });
+		}
+		
+	}
 
     return {
       restrict: 'E',
@@ -92,16 +112,22 @@ define(function (require) {
           if((_.defined(newValue) && _.undefined(scope.outputNodes)) || !_.isEqual(newValue, oldValue)) {
             processOutputsDef(scope);
             doRefreshOutputProperties(scope);
+			processOutputs(scope);
           }
         });
 
         scope.$watch('topology.instances', function(newValue, oldValue){
           if((_.defined(newValue) && _.undefined(scope.outputAttributesValue)) || !_.isEqual(newValue, oldValue)) {
             refreshOutputAttributes(scope);
+			processOutputs(scope);
           }
         });
 
-        scope.isEmptyOutpts = function(){
+        scope.isEmptyOutputsValues = function() {			
+			return _.isEmpty(scope.outputsValues);
+		}
+		
+		scope.isEmptyOutpts = function(){
           return _.isEmpty(scope.outputAttributesValue) &&
                  _.isEmpty(scope.outputPropertiesValue) &&
                  _.isEmpty(scope.outputCapabilityPropertiesValue);
