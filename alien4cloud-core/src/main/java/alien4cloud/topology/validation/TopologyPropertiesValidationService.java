@@ -234,6 +234,9 @@ public class TopologyPropertiesValidationService {
                 } else if (FunctionEvaluator.containGetSecretFunction(value)) {
                     // this is a get_secret function, we should not validate the get_secret here
                      continue;
+                } else if (value instanceof FunctionPropertyValue) {
+                  // do not validate functions! The orchestrator is supposed to do that
+                  continue;
                 } else if (skipInputProperties) {
                     // this is a get_input funtion.
                     // get_input Will be validated later on

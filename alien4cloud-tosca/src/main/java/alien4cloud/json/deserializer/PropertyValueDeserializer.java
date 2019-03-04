@@ -5,9 +5,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.ComplexPropertyValue;
@@ -36,7 +38,10 @@ import alien4cloud.utils.jackson.ConditionalAttributes;
  * Custom deserializer to handle multiple IOperationParameter types.
  */
 public class PropertyValueDeserializer extends AbstractDiscriminatorPolymorphicDeserializer<AbstractPropertyValue> {
-    public PropertyValueDeserializer() {
+  public static final Integer FUNCTION_PROPERTY_VALUE = 2;
+  public static final Integer NON_FUNCTION_PROPERTY_VALUE = 4;
+  
+  public PropertyValueDeserializer() {
         super(AbstractPropertyValue.class);
         addToRegistry("function_concat", ConcatPropertyValue.class);
         addToRegistry("function", FunctionPropertyValue.class);
@@ -83,12 +88,15 @@ public class PropertyValueDeserializer extends AbstractDiscriminatorPolymorphicD
       } else if (root.isValueNode()) {
         return new ScalarPropertyValue(root.asText());
       } else {
-        final List<Boolean> isF = new ArrayList<>();
+        final Set<Integer> propertyValueType = new HashSet<>();
         root.fieldNames().forEachRemaining(member -> {
           if (member.compareTo("function") == 0)
-            isF.add(true);
+            propertyValueType.add(FUNCTION_PROPERTY_VALUE);
+          else if (member.compareTo("value") == 0) {
+            propertyValueType.add(NON_FUNCTION_PROPERTY_VALUE);
+          }
         });
-        if (!isF.isEmpty()) {
+        if (propertyValueType.contains(FUNCTION_PROPERTY_VALUE)) {
           List<Object> params = new ArrayList<>();
           FunctionPropertyValue result = new FunctionPropertyValue(root.get("function").asText(), params);
           ArrayNode an = ((ArrayNode)root.get("parameters"));
@@ -99,6 +107,8 @@ public class PropertyValueDeserializer extends AbstractDiscriminatorPolymorphicD
               params.add(doDeserialize(mapper, node));
           }
           return result;
+        } else if (propertyValueType.contains(NON_FUNCTION_PROPERTY_VALUE)) {
+          return doDeserialize(mapper, root.get("value"));          
         } else {
           Iterator<Map.Entry<String, JsonNode>> elementsIterator = root.fields();
           Map<String, Object> result = new HashMap<>();
