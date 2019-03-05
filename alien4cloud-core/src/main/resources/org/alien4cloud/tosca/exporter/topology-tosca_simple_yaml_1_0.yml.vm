@@ -162,8 +162,7 @@ ${utils.formatArtifact($operationEntry.value.implementationArtifact, 10)}
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($operationEntry.value.inputParameters))
             input:$propertyUtils.formatProperties(7, $operationEntry.value.inputParameters)
 #end
-            implementation:
-${utils.formatArtifact($operationEntry.value.implementationArtifact, 7)}
+            implementation: ${utils.formatArtifact($operationEntry.value.implementationArtifact, 7)}
 #end## if inputParameters not empty
 #end## if isOperationImplemented
 #end## of operations iteration

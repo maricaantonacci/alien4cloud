@@ -10,7 +10,7 @@
     <i ng-if="collapsable" class="fa" ng-class="{'fa-caret-down' : !isoutputsCollapsed, 'fa-caret-right': isoutputsCollapsed}"></i>
   </div>
   <div uib-collapse="isoutputsCollapsed" class="content-body">
-    <span ng-if="isEmptyOutpts()" class="empty-place-holder" style="padding: 0px">{{'APPLICATIONS.TOPOLOGY.NO_OUTPUTS' | translate}}</span>
+    <span ng-if="isEmptyOutputsValues()" class="empty-place-holder" style="padding: 0px">{{'APPLICATIONS.TOPOLOGY.NO_OUTPUTS' | translate}}</span>
     
     <div ng-if="!isEmptyOutputsValues()">
 		<div ng-repeat="(instanceId, outVals) in outputsValues">

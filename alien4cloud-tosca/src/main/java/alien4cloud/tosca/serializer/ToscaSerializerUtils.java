@@ -498,13 +498,15 @@ public class ToscaSerializerUtils {
     String spaces = ToscaPropertySerializerUtils.indent(indent);
     StringBuilder buffer = new StringBuilder();
     if (StringUtils.isNotBlank(value.getArtifactRef())) {
-      buffer.append(spaces).append("file: ").append(value.getArtifactRef()).append("\n");
+      buffer//.append(spaces).append("file: ")
+        .append("'").append(value.getArtifactRef()).append("'").append("\n");
     }
-    if (StringUtils.isNotBlank(value.getArtifactType())) {
-      buffer.append(spaces).append("type: ").append(value.getArtifactType()).append("\n");
-    }
-    if (StringUtils.isNotBlank(value.getRepositoryName())) {
-      buffer.append(spaces).append("repository: ").append(value.getRepositoryName()).append("\n");
+//    if (StringUtils.isNotBlank(value.getArtifactType())) {
+//      buffer.append(spaces).append("type: ").append(value.getArtifactType()).append("\n");
+//    }
+    else if (StringUtils.isNotBlank(value.getRepositoryName())) {
+      buffer//.append(spaces).append("repository: ")
+        .append("'").append(value.getRepositoryName()).append("'").append("\n");
     }
     if (buffer.length() > 1) {
       buffer.setLength(buffer.length() - 1);
