@@ -513,6 +513,24 @@ public class ToscaSerializerUtils {
     }
     return buffer.toString();
   }
+  
+  public static String formatArtifactNodeTemplateArtifact(AbstractArtifact value, int indent) {
+    String spaces = ToscaPropertySerializerUtils.indent(indent);
+    StringBuilder buffer = new StringBuilder();
+    if (StringUtils.isNotBlank(value.getArtifactRef())) {
+        buffer.append(spaces).append("file: ").append(value.getArtifactRef()).append("\n");
+    }
+    if (StringUtils.isNotBlank(value.getArtifactType())) {
+        buffer.append(spaces).append("type: ").append(value.getArtifactType()).append("\n");
+    }
+    if (StringUtils.isNotBlank(value.getRepositoryName())) {
+        buffer.append(spaces).append("repository: ").append(value.getRepositoryName()).append("\n");
+    }
+    if (buffer.length() > 1) {
+        buffer.setLength(buffer.length() - 1);
+    }
+    return buffer.toString();
+}
 
   public static boolean canUseShortNotationForImplementationArtifact(Operation operation) {
     return MapUtils.isEmpty(operation.getInputParameters())

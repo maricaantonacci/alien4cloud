@@ -174,7 +174,7 @@ ${utils.formatArtifact($operationEntry.value.implementationArtifact, 10)}
       artifacts:
 #foreach($artifactEntry in ${nodeTopologyArtifacts.entrySet()})
         $artifactEntry.key:
-${utils.formatArtifact($artifactEntry.value, 5)}
+${utils.formatArtifactNodeTemplateArtifact($artifactEntry.value, 5)}
 #end## of $artifactEntry iteration
 #end## if has artifacts
 #end## of nodeTemplateEntry iteration
