@@ -23,6 +23,7 @@ import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.IValue;
 import org.alien4cloud.tosca.model.definitions.Interface;
 import org.alien4cloud.tosca.model.definitions.Operation;
+import org.alien4cloud.tosca.model.definitions.OutputDefinition;
 import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
 import org.alien4cloud.tosca.model.definitions.constraints.AbstractPropertyConstraint;
 import org.alien4cloud.tosca.model.definitions.constraints.EqualConstraint;
@@ -292,6 +293,45 @@ public class ToscaSerializerUtils {
      * true)).append(" ]"); return builder.toString();
      */
 
+  }
+  
+  /**
+   * Check if the other output fields in a topology have an ID similar to the one in overall outputs.
+   * Due to the fact that the name of the other outputs is created dynamically during runtime in the TOSCA doc, 
+   * we have to use the same algorithms to generate the name needed to check for the existence of 
+   * duplicate outputs
+   * 
+   * @param topology The topology we want to check the outputs for
+   * @param outputDefinition The overall output that we try to check if it is a duplicate 
+   * @return
+   */
+  public static boolean isOutputUniqueByName(Topology topo, OutputDefinition<?> outputDefinition) {
+    final String name = outputDefinition.getName().toLowerCase();
+    if (topo.getOutputAttributes() != null) {
+      for (Map.Entry<String, Set<String>> outputEntry: topo.getOutputAttributes().entrySet()) {
+        for (String outputParam: outputEntry.getValue())
+          if (name.compareToIgnoreCase(outputEntry.getKey() + "_" + outputParam) == 0)
+            return true;
+      }
+    }
+    if (topo.getOutputCapabilityProperties() != null) {
+      for (Map.Entry<String, Map<String, Set<String>>> nodeTemplate: topo.getOutputCapabilityProperties().entrySet()) {
+        for (Map.Entry<String, Set<String>> capability: nodeTemplate.getValue().entrySet()) {
+          for (String outputProperty: capability.getValue()) {
+            if (name.compareToIgnoreCase(nodeTemplate.getKey() + "_" + capability.getKey() + "_" + outputProperty) == 0)
+              return true;
+          }
+        }
+      }
+    }
+    if (topo.getOutputProperties() != null) { 
+      for (Map.Entry<String, Set<String>> nodeTemplate: topo.getOutputAttributes().entrySet()) {
+        for (String nodeTemplateAttribute: nodeTemplate.getValue())
+          if (name.compareToIgnoreCase(nodeTemplate.getKey() + "_" + nodeTemplateAttribute) == 0)
+            return true;
+      }
+    }
+    return false;
   }
 
   public boolean doesInterfacesContainsImplementedOperation(Map<String, Interface> interfaces) {

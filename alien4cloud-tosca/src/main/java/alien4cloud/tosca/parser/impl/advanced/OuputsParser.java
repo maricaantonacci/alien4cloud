@@ -69,11 +69,16 @@ public class OuputsParser implements INodeParser<Void> {
                         switch (functionName) {
                         case "get_attribute":
                             outputAttributes = addToMapOfSet(nodeTemplateName, nodeTemplatePropertyOrAttributeName, outputAttributes);
+                            outputsByName = addOutput(child, 
+                                functionPropertyValue, description, true, outputsByName);
                             break;
                         case "get_property":
                             outputProperties = addToMapOfSet(nodeTemplateName, nodeTemplatePropertyOrAttributeName, outputProperties);
+                            outputsByName = addOutput(child, 
+                                functionPropertyValue, description, true, outputsByName);
                             break;
-                        default: outputsByName = addOutput(child, functionPropertyValue, description, outputsByName);
+                        default: outputsByName = addOutput(child, 
+                            functionPropertyValue, description, false, outputsByName);
 //                            context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_UNKNOWN_FUNCTION, null,
 //                                    outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), functionName));
                         }
@@ -83,11 +88,15 @@ public class OuputsParser implements INodeParser<Void> {
                         String nodeTemplateName = params.get(0).toString();
                         String capabilityName = params.get(1).toString();
                         String propertyName = params.get(2).toString();
-                        ouputCapabilityProperties = addToMapOfMapOfSet(nodeTemplateName, capabilityName, propertyName, ouputCapabilityProperties);
+                        ouputCapabilityProperties = addToMapOfMapOfSet(nodeTemplateName, 
+                            capabilityName, propertyName, ouputCapabilityProperties);
+                        outputsByName = addOutput(child, 
+                            functionPropertyValue, description, true, outputsByName);
                         //outputsByName = addOutput(child, functionPropertyValue, outputsByName);
                     } else {
 
-                      outputsByName = addOutput(child, functionPropertyValue, description, outputsByName);
+                      outputsByName = addOutput(child, 
+                          functionPropertyValue, description, false, outputsByName);
 //                        context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_BAD_PARAMS_COUNT, null,
 //                                outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), null));
                     }
@@ -110,7 +119,7 @@ public class OuputsParser implements INodeParser<Void> {
     }
     
     protected <T> Map<String, OutputDefinition<?>> addOutput(NodeTuple output, 
-        T outputValue, String description, Map<String, OutputDefinition<?>> outputsByName) {
+        T outputValue, String description, boolean handledByA4C, Map<String, OutputDefinition<?>> outputsByName) {
       if (output.getKeyNode() instanceof ScalarNode) {
         
         String outputId = ((ScalarNode) output.getKeyNode()).getValue();
@@ -121,10 +130,10 @@ public class OuputsParser implements INodeParser<Void> {
           }
           if (outputValue instanceof FunctionPropertyValue)
             outputsByName.put(outputId, new OutputDefinition<FunctionPropertyValue>(outputId, description, 
-                (FunctionPropertyValue)outputValue));
+                (FunctionPropertyValue)outputValue, handledByA4C));
           else // Use string for scalar values of the outputs
             outputsByName.put(outputId, new OutputDefinition<ScalarPropertyValue>(outputId, description, 
-                new ScalarPropertyValue(outputValue.toString())));
+                new ScalarPropertyValue(outputValue.toString()), handledByA4C));
         }
       }
       return outputsByName;

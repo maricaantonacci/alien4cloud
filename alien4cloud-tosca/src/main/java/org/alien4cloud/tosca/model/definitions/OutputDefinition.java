@@ -31,6 +31,11 @@ public class OutputDefinition<T>  implements IValue {
 
   @JsonDeserialize(contentUsing = PropertyValueDeserializer.class)
   protected T value;
+  
+  /**
+   * Is this property handled by A4C auto rendering
+   */
+  protected boolean handledByA4C;
 
   @Override
   @JsonIgnore

@@ -215,10 +215,13 @@ ${utils.formatArtifactNodeTemplateArtifact($artifactEntry.value, 5)}
 #end## of outputCapaPropSubEntry iteration
 #end## of outputCapaPropEntry iteration
 #foreach($outputDefinitionEntry in ${topology.outputs.entrySet()})
+#if($utils.isOutputUniqueByName($topology, $outputDefinitionEntry.value))
     ${outputDefinitionEntry.key}:
       value:$utils.renderFunctionAndConcat($outputDefinitionEntry.value.value)
       description: ${outputDefinitionEntry.value.description}
+#end## if output is unique
 #end## of outputDefinitionEntry iteration
+
 #end## if maps are not empty
 
 #if($utils.mapIsNotEmpty($topology.workflows) && $generateWorkflow)
