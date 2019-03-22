@@ -215,7 +215,7 @@ ${utils.formatArtifactNodeTemplateArtifact($artifactEntry.value, 5)}
 #end## of outputCapaPropSubEntry iteration
 #end## of outputCapaPropEntry iteration
 #foreach($outputDefinitionEntry in ${topology.outputs.entrySet()})
-#if($utils.isOutputUniqueByName($topology, $outputDefinitionEntry.value))
+#if(!$utils.isOutputUniqueByName($topology, $outputDefinitionEntry.value))
     ${outputDefinitionEntry.key}:
       value:$utils.renderFunctionAndConcat($outputDefinitionEntry.value.value)
       description: ${outputDefinitionEntry.value.description}

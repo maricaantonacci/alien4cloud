@@ -77,12 +77,14 @@ public class OuputsParser implements INodeParser<Void> {
                             outputsByName = addOutput(child, 
                                 functionPropertyValue, description, true, outputsByName);
                             break;
-                        default: outputsByName = addOutput(child, 
-                            functionPropertyValue, description, false, outputsByName);
+                        default: break;
+                          //outputsByName = addOutput(child, 
+                          //  functionPropertyValue, description, false, outputsByName);
 //                            context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.OUTPUTS_UNKNOWN_FUNCTION, null,
 //                                    outputValueNode.getStartMark(), null, outputValueNode.getEndMark(), functionName));
                         }
-                        //outputsByName = addOutput(child, functionPropertyValue, outputsByName);
+                        outputsByName = addOutput(child, 
+                              functionPropertyValue, description, false, outputsByName);
                     } else if (params.size() == 3 && functionName.equals("get_property")) {
                         // in case of 3 parameters we only manage capabilities outputs for the moment
                         String nodeTemplateName = params.get(0).toString();
