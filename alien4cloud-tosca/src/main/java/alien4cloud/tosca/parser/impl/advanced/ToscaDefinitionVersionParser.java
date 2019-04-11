@@ -27,28 +27,30 @@ public class ToscaDefinitionVersionParser implements INodeParser<String> {
             CSARDependency dependency = ToscaNormativeImports.IMPORTS.get(toscaDefinitionVersion);
             if (dependency != null) {
                 // File based parsing implementation of the requirement of normative types will load them from file (meaning basically that we will loop here)
-                if (loadingNormative.get() == null) {
-                    loadingNormative.set(true);
+                if (loadingNormative.get() != null) {
+                    return toscaDefinitionVersion;
                 } else {
-                    return toscaDefinitionVersion;
-                }
+                    try {
+                        loadingNormative.set(true);
+                        Csar csar = ToscaContext.get().getArchive(dependency.getName(), dependency.getVersion());
+                        if (csar == null) {
+                            return toscaDefinitionVersion;
+                        }
 
-                Csar csar = ToscaContext.get().getArchive(dependency.getName(), dependency.getVersion());
-                if (csar == null) {
-                    return toscaDefinitionVersion;
-                }
+                        // Normative imports are automatically injected and supposed to be accessible, no specific validation is performed here.
+                        dependency.setHash(csar.getHash());
+                        ToscaContext.get().addDependency(dependency);
 
-                // Normative imports are automatically injected and supposed to be accessible, no specific validation is performed here.
-                dependency.setHash(csar.getHash());
-                ToscaContext.get().addDependency(dependency);
-
-                Set<CSARDependency> dependencies = archiveRoot.getArchive().getDependencies();
-                if (dependencies == null) {
-                    dependencies = new HashSet<>();
-                    archiveRoot.getArchive().setDependencies(dependencies);
+                        Set<CSARDependency> dependencies = archiveRoot.getArchive().getDependencies();
+                        if (dependencies == null) {
+                            dependencies = new HashSet<>();
+                            archiveRoot.getArchive().setDependencies(dependencies);
+                        }
+                        dependencies.add(dependency);
+                    } finally {
+                        loadingNormative.remove();
+                    }
                 }
-                dependencies.add(dependency);
-                loadingNormative.remove();
             }
         }
         return toscaDefinitionVersion;
