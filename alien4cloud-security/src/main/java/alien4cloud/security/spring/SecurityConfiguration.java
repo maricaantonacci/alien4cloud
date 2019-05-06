@@ -90,8 +90,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // configure the HttpSecurity
         AuthorizationUtil.configure(http, null);
 
-        if (env.acceptsProfiles("github-auth")) {
-            log.info("GitHub profile is active - enabling Spring Social features");
+        if (env.acceptsProfiles("github-auth", "oidc-auth")) {
+            log.info("GitHub or OIDC profile is active - enabling Spring Social features");
             http.apply(new SpringSocialConfigurer().postLoginUrl("/").alwaysUsePostLoginUrl(true));
         }
     }
