@@ -165,6 +165,8 @@ public class ToscaPropertySerializerUtils {
             return "\"" + escapeDoubleQuote(scalar) + "\"";
         } else if (scalar.startsWith(" ") || scalar.endsWith(" ")) {
             return "\"" + escapeDoubleQuote(scalar) + "\"";
+        } else if (scalar.isEmpty()) {
+            return "\"\"";
         } else {
             return scalar;
         }
