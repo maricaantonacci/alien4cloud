@@ -60,6 +60,10 @@
     map: artifactTypes
     key: elementId
     type: artifact_type
+  policy_types:
+    map: policyTypes
+    key: elementId
+    type: policy_type
     # inputs:
   topology_template:
     reference: topology
@@ -86,6 +90,10 @@
     map: groups
     key: name
     type: node_group
+  policies:
+    sequence_to_map: policies
+    node_is_value: false
+    type: policy_template
 #  workflows:
 #    map: workflows
 #    key: name
@@ -414,3 +422,25 @@
   url: url
   credentials: credentials
   type: type
+
+- policy_type: org.alien4cloud.tosca.model.types.PolicyType
+  description: description
+  derived_from:
+    reference: derivedFrom
+    type: string_list
+  properties:
+    map: properties
+    type: property_definition
+  targets:
+    set: targets
+    type: scalar
+
+- policy_template: org.alien4cloud.tosca.model.templates.PolicyTemplate
+  type: type
+  description: description
+  properties:
+    map: properties
+    type: node_template_property
+  targets:
+    set: targets
+    type: scalar
