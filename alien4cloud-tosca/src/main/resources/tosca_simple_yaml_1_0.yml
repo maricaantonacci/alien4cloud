@@ -271,7 +271,7 @@
   file:
     reference: artifactRef
     type: artifact_ref_parser
-  repository: artifactRepository
+  repository: repositoryName
   description: description
   deploy_path: deployPath
 
@@ -280,7 +280,7 @@
     reference: artifactRef
     type: artifact_ref_parser
   type: artifactType
-  repository: artifactRepository
+  repository: repositoryName
   dependencies:
     list: ../dependencies
     type: deployment_artifact

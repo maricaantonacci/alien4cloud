@@ -345,7 +345,9 @@ public class ToscaSerializerUtils {
         if (StringUtils.isNotBlank(value.getRepositoryURL())) {
             buffer.append(spaces).append("url: ").append(value.getRepositoryURL());
         }
-        buffer.append("\n").append(spaces).append("type: ").append(value.getArtifactRepository());
+        if (StringUtils.isNotBlank(value.getArtifactRepository())) {
+            buffer.append("\n").append(spaces).append("type: ").append(value.getArtifactRepository());
+        }
         if (value.getRepositoryCredential() != null && value.getRepositoryCredential().containsKey("token")) {
             buffer.append("\n").append(spaces).append("credential:");
             spaces += "  ";
