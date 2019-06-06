@@ -79,9 +79,22 @@
         </div>
       </div>
     </div>
+    
+    <!-- Outputs -->
+    <div id="outputs-box" ng-show="displays.outputs.active" class="topology-column ui-resizable" style="width: {{displays.outputs.size}}px;">
+      <div class="topology-column-box">
+        <resizable-bar
+          id="outputs-box-handler"
+          classes="topology-column-menu-left">
+        </resizable-bar>
+        <div class="topology-column-content" ng-if="displays.outputs.active">
+          <ng-include src="'views/topology/includes/outputs.html'"></ng-include>
+        </div>
+      </div>
+    </div>
 
     <!-- Policies -->
-    <div id="policies-box" ng-show="displays.policies.active" class="topology-column ui-resizable" style="width: {{displays.policies.size}}px;">
+    <!--div id="policies-box" ng-show="displays.policies.active" class="topology-column ui-resizable" style="width: {{displays.policies.size}}px;">
       <div class="topology-column-box">
         <resizable-bar
           id="policies-box-handler"
@@ -91,10 +104,10 @@
           <ng-include src="'views/topology/includes/policies.html'"></ng-include>
         </div>
       </div>
-    </div>
+    </div-->
 
     <!-- Policies catalog -->
-    <div id="policiescatalog-box" ng-show="displays.policiescatalog.active" class="topology-column ui-resizable" style="width: {{displays.policiescatalog.size}}px;">
+    <!--div id="policiescatalog-box" ng-show="displays.policiescatalog.active" class="topology-column ui-resizable" style="width: {{displays.policiescatalog.size}}px;">
       <div class="topology-column-box">
         <resizable-bar
           id="policiescatalog-box-handler"
@@ -104,7 +117,7 @@
           <ng-include src="'views/topology/includes/policiescatalog.html'"></ng-include>
         </div>
       </div>
-    </div>
+    </div-->
 
     <!-- Node Groups -->
     <div id="groups-box" ng-show="displays.groups.active" class="topology-column ui-resizable" style="width: {{displays.groups.size}}px;">
@@ -143,6 +156,11 @@
         <li ng-class="{'active': displays.inputs.active}">
           <span id="topology-inputs" ng-click="display.toggle('inputs')">
             <i class="fa fa-sign-in"></i> Inputs
+          </span>
+        </li>
+        <li ng-class="{'active': displays.outputs.active}">
+          <span id="topology-outputs" ng-click="display.toggle('outputs')">
+            <i class="fa fa-sign-in"></i> Outputs
           </span>
         </li>
         <li ng-class="{'active': displays.policies.active}">

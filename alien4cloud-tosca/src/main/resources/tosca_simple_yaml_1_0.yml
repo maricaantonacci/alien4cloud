@@ -440,3 +440,13 @@
   targets:
     set: targets
     type: scalar
+
+- output_property: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+    - get_operation_output
+  parser: abstractPropertyValueParser_v10_normative

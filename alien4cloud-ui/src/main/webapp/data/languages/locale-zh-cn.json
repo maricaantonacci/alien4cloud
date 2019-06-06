@@ -185,6 +185,9 @@
       "NODE_INFO" : "选中的节点",
       "NO_OUTPUTS" : "没有输出属性或特性",
       "ORCHESTRATOR_PROPERTIES" : "编排工具属性",
+	  "OUTPUTS": {
+		 "VALUE": "value"
+	   }, 
       "PARSING_ERROR" : "拓扑不是合法的。",
       "PRECONFIGURED_PROPERTIES_INPUTS" : "预配置输入属性",
       "PROPERTIES_INPUTS" : "输入属性",

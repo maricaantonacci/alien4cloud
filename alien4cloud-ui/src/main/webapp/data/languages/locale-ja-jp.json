@@ -185,6 +185,9 @@
       "NODE_INFO" : "選択ノード",
       "NO_OUTPUTS" : "プロパティ、属性の出力なし",
       "ORCHESTRATOR_PROPERTIES" : "オーケストレータのプロパティ",
+	  "OUTPUTS": {
+		 "VALUE": "value"
+	   }, 
       "PARSING_ERROR" : "Topology is not valid",
       "PRECONFIGURED_PROPERTIES_INPUTS" : "Preconfigured input properties",
       "PROPERTIES_INPUTS" : "プロパティの入力",

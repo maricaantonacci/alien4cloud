@@ -34,4 +34,11 @@ public class InstanceInformation {
     /** do not serialize */
     @JsonIgnore
     private Map<String, String> operationsOutputs;
+    
+    /**
+     * The results returned from an Orchestrator grouped by the ID
+     * of the output
+     */
+    private Map<String, String> outputsResults;
+    
 }

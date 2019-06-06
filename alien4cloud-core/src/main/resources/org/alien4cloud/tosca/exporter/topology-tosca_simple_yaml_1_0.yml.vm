@@ -209,28 +209,16 @@ ${utils.formatArtifact($artifactEntry.value, 5)}
 #end## if capability properties not empty
 #end## of policyEntry iteration
 #end## if $topology.policies not empty
-#if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputProperties) || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputAttributes)  || $utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputCapabilityProperties))
+#if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.outputs))
   outputs:
-#foreach($outputPropertyEntry in ${topology.outputProperties.entrySet()})
-#foreach($outputProperty in ${outputPropertyEntry.value})
-    ${outputPropertyEntry.key}_${outputProperty}:
-      value: { get_property: [ ${outputPropertyEntry.key}, ${outputProperty} ] }
-#end## of outputProperty iteration
-#end## of outputPropertyEntry iteration
-#foreach($outputAttributeEntry in ${topology.outputAttributes.entrySet()})
-#foreach($outputAttribute in ${outputAttributeEntry.value})
-    ${outputAttributeEntry.key}_${outputAttribute}:
-      value: { get_attribute: [ ${outputAttributeEntry.key}, ${outputAttribute} ] }
-#end## of outputProperty iteration
-#end## of outputAttributeEntry iteration
-#foreach($outputCapaPropEntry in ${topology.outputCapabilityProperties.entrySet()})
-#foreach($outputCapaPropSubEntry in ${outputCapaPropEntry.value.entrySet()})
-#foreach($outputCapaProp in ${outputCapaPropSubEntry.value})
-    ${outputCapaPropEntry.key}_${outputCapaPropSubEntry.key}_${outputCapaProp}:
-      value: { get_property: [ ${outputCapaPropEntry.key}, ${outputCapaPropSubEntry.key}, ${outputCapaProp} ] }
-#end## of outputCapaProp iteration
-#end## of outputCapaPropSubEntry iteration
-#end## of outputCapaPropEntry iteration
+#foreach($outputDefinitionEntry in ${topology.outputs.entrySet()})
+    ${outputDefinitionEntry.key}:
+      value: $propertyUtils.formatPropertyValue(0, $outputDefinitionEntry.value.value)
+#if($outputDefinitionEntry.value.description)
+      description: ${outputDefinitionEntry.value.description}
+#end## output description defined
+#end## of outputDefinitionEntry iteration
+
 #end## if maps are not empty
 
 #if($utils.mapIsNotEmpty($topology.workflows) && $generateWorkflow)
