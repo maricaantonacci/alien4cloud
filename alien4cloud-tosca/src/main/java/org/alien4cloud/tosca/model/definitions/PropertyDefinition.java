@@ -56,7 +56,7 @@ public class PropertyDefinition implements IValue {
     @JsonProperty("default")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private PropertyValue defaultValue;
+    private AbstractPropertyValue defaultValue;
 
     @StringField(indexType = IndexType.no)
     private String description;
@@ -97,7 +97,7 @@ public class PropertyDefinition implements IValue {
 
     @JsonDeserialize(using = PropertyValueDeserializer.class)
     @ObjectField(enabled = false)
-    public PropertyValue getDefault() {
+    public AbstractPropertyValue getDefault() {
         return this.defaultValue;
     }
 

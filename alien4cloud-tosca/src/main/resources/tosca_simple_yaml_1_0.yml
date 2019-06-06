@@ -178,7 +178,7 @@
   description: description
   default:
     reference: default
-    type: abstract_property_value
+    type: node_template_property
   constraints:
     list: constraints
     type: constraint
