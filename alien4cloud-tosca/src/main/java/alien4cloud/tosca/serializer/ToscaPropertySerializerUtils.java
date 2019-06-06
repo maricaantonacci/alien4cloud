@@ -76,17 +76,17 @@ public class ToscaPropertySerializerUtils {
             return formatListValue(indentLevel, Arrays.asList((Object[]) value));
         } else if (value instanceof List) {
             return formatListValue(indentLevel, (List<Object>) value);
-        } else if (value instanceof PropertyValue) {
-            return formatPropertyValue(indentLevel, (PropertyValue) value);
+        } else if (value instanceof AbstractPropertyValue) {
+            return formatPropertyValue(indentLevel, (AbstractPropertyValue) value);
         } else {
             throw new NotSupportedException("Do not support other types than string map and list");
         }
     }
 
-    private static String formatFunctionPropertyValue(int indentLevel, FunctionPropertyValue value) {
+    public static String formatFunctionPropertyValue(int indentLevel, FunctionPropertyValue value) {
         indentLevel++;
         StringBuilder buffer = new StringBuilder();
-        if (value.getFunction().equals("get_input")) {
+        if (value.getParameters().size() == 1) {
             buffer.append("{ ").append(value.getFunction()).append(": ").append(value.getParameters().get(0)).append(" }");
         } else {
             buffer.append("{ ").append(value.getFunction()).append(": [").append(ToscaSerializerUtils.getCsvToString(value.getParameters())).append("] }");

@@ -13,7 +13,6 @@
 - artifact_ref_parser: alien4cloud.tosca.parser.impl.advanced.ArtifactReferenceParser
 - sustitution_mapping_parser: alien4cloud.tosca.parser.impl.advanced.SustitutionMappingParser
 - constraint: alien4cloud.tosca.parser.impl.advanced.ConstraintParser
-- abstract_property_value: alien4cloud.tosca.parser.impl.advanced.AbstractPropertyValueParser
 - meta_data: alien4cloud.tosca.parser.impl.advanced.MetaDataParser
 - tag: alien4cloud.tosca.parser.impl.advanced.TagParser
 - tosca_definitions_version: alien4cloud.tosca.parser.impl.advanced.ToscaDefinitionVersionParser
@@ -195,7 +194,7 @@
     type: scalar
   properties:
     map: properties
-    type: node_template_property
+    type: property_definition
 
 - constraint_list: list # This element must be parsed as a list
   type: constraint # the elements in the list are constraints
@@ -234,45 +233,45 @@
       list: parameters
       type: scalar
 
-- get_attribute: alien4cloud.tosca.parser.impl.advanced.GetAttributeParser
-
 - scalar_property_value: org.alien4cloud.tosca.model.definitions.ScalarPropertyValue
 
 - complex_property_value: alien4cloud.tosca.parser.impl.advanced.ComplexPropertyValueParser
 
-- tosca_concat: org.alien4cloud.tosca.model.definitions.ConcatPropertyValue
-  __0:
-    key: function_concat
-    value:
-      list: parameters
-      type: input
-
-- node_template_property: __discriminator
-  keys:
-    type: property_definition
-    get_input: tosca_function
-    get_property: tosca_function
-    get_attribute: get_attribute
-  default: abstract_property_value
+- node_template_property: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+  parser: abstractPropertyValueParser_v10_normative
 
 - input: __discriminator
   keys:
     type: property_definition
-    get_input: tosca_function
-    get_property: tosca_function
-    get_attribute: get_attribute
-    get_operation_output: tosca_function
-    concat: tosca_concat
-  default: abstract_property_value
+  default: input_property
 
-- attribute: __discriminator
-  keys:
-    type: attribute_definition
-    concat: tosca_concat
-    get_operation_output: tosca_function
-    get_attribute: get_attribute
-    get_property: tosca_function
-  default: attribute_definition
+- input_property: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+    - get_artifact
+    - get_operation_output
+  parser: abstractPropertyValueParser_v10_normative
+
+- attribute: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+    - get_artifact
+    - get_operation_output
+  parser: abstractPropertyValueParser_v10_normative
 
 - deployment_artifact: org.alien4cloud.tosca.model.definitions.DeploymentArtifact
   type: artifactType
@@ -318,7 +317,7 @@
     type: property_definition
   attributes:
     map: attributes
-    type: attribute
+    type: attribute_definition
   requirements:
     list: requirements
     key: id
@@ -375,7 +374,7 @@
     type: property_definition
   attributes:
     map: attributes
-    type: attribute
+    type: attribute_definition
   valid_source_types:
     list: validSources
     type: scalar
@@ -393,7 +392,7 @@
     type: property_definition
   attributes:
     map: attributes
-    type: attribute
+    type: attribute_definition
   interfaces:
     reference: interfaces
     type: interfaces
@@ -409,9 +408,6 @@
   derived_from:
     reference: derivedFrom
     type: string_list
-  properties:
-    map: properties
-    type: property_definition
   mime_type: mimeType
   file_ext:
     list: fileExt

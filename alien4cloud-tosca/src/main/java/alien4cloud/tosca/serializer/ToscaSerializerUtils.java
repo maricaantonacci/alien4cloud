@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -16,8 +17,10 @@ import java.util.stream.Collectors;
 import org.alien4cloud.tosca.model.definitions.AbstractArtifact;
 import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.DeploymentArtifact;
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.Interface;
 import org.alien4cloud.tosca.model.definitions.Operation;
+import org.alien4cloud.tosca.model.definitions.PropertyValue;
 import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
 import org.alien4cloud.tosca.model.definitions.constraints.AbstractPropertyConstraint;
 import org.alien4cloud.tosca.model.definitions.constraints.EqualConstraint;
@@ -109,8 +112,8 @@ public class ToscaSerializerUtils {
                         if (!((Collection<?>) o).isEmpty()) {
                             return true;
                         }
-                    } else if (o instanceof ScalarPropertyValue) {
-                        if (((ScalarPropertyValue) o).getValue() != null) {
+                    } else if (o instanceof AbstractPropertyValue) {
+                        if (isAbstractPropertyValueNotNull((AbstractPropertyValue) o)) {
                             return true;
                         }
                     } else {
@@ -136,10 +139,21 @@ public class ToscaSerializerUtils {
                 } else {
                     sb.append(", ");
                 }
-                if (renderScalar) {
-                    sb.append(ToscaPropertySerializerUtils.renderScalar(o.toString()));
+                if (isFunctionPropertyValue(o)) {
+                    sb.append(ToscaPropertySerializerUtils.formatFunctionPropertyValue(0, (FunctionPropertyValue) o));
+                } else if (isScalarPropertyValue(o)) {
+                    String stringValue = ((ScalarPropertyValue) o).getValue();
+                    if (renderScalar) {
+                        sb.append(ToscaPropertySerializerUtils.renderScalar(stringValue));
+                    } else {
+                        sb.append(stringValue);
+                    }
                 } else {
-                    sb.append(o.toString());
+                    if (renderScalar) {
+                        sb.append(ToscaPropertySerializerUtils.renderScalar(o.toString()));
+                    } else {
+                        sb.append(o.toString());
+                    }
                 }
             }
         }
@@ -423,4 +437,24 @@ public class ToscaSerializerUtils {
     public static boolean isNull(Object o) {
         return o == null;
     }
+
+
+    public boolean isAbstractPropertyValueNotNull(AbstractPropertyValue value) {
+        if (value == null) {
+            return false;
+        } else if (value instanceof PropertyValue) {
+            return ((PropertyValue) value).getValue() != null;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean isScalarPropertyValue(Object o) {
+        return o instanceof ScalarPropertyValue;
+    }
+
+    public static boolean isFunctionPropertyValue(Object o) {
+        return o instanceof FunctionPropertyValue;
+    }
+
 }
