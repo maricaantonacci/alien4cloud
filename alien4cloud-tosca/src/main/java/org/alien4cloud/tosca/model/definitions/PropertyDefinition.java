@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import alien4cloud.model.components.IncompatiblePropertyDefinitionException;
+
+import org.alien4cloud.tosca.normative.types.ToscaTypes;
 import org.elasticsearch.annotation.BooleanField;
 import org.elasticsearch.annotation.ObjectField;
 import org.elasticsearch.annotation.StringField;
@@ -83,6 +85,11 @@ public class PropertyDefinition implements IValue {
 
     @BooleanField(index = IndexType.no)
     private boolean isPassword;
+    
+    public PropertyDefinition(String defaultValue) {
+      this.defaultValue = new ScalarPropertyValue(defaultValue);
+      this.type = ToscaTypes.STRING;
+    }
 
     public PropertyDefinition(PropertyDefinition from) {
         this.type = from.type;

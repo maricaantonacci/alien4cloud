@@ -3,6 +3,7 @@ package org.alien4cloud.tosca.model.definitions;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.alien4cloud.tosca.normative.ToscaNormativeUtil;
 import org.alien4cloud.tosca.normative.constants.ToscaFunctionConstants;
@@ -17,12 +18,22 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @FormProperties({ "function", "parameters" })
+@JsonDeserialize(using = alien4cloud.json.deserializer.PropertyValueDeserializer.class)
 public class FunctionPropertyValue extends AbstractPropertyValue {
     private String function;
 
+
     private List<Object> parameters;
+    
+    public FunctionPropertyValue() {
+      this.function = null;
+    }
+    
+    public FunctionPropertyValue(String function, List<Object> parameters) {
+      this.function = function;
+      this.parameters = parameters;
+    }
 
     /**
      * Get the modelable entity's (node or relationship template) name related to the function, represented by the first parameter.
