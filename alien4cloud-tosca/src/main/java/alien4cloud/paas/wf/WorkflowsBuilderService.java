@@ -66,10 +66,10 @@ public class WorkflowsBuilderService {
         this.defaultDeclarativeWorkflowsPerDslVersion = new HashMap<>();
         this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.NORMATIVE_DSL_100, loadDefaultDeclarativeWorkflow("declarative-workflows-2.0.0.yml"));
         this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.NORMATIVE_DSL_100_URL, loadDefaultDeclarativeWorkflow("declarative-workflows-2.0.0.yml"));
-        //this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_200, loadDefaultDeclarativeWorkflow("declarative-workflows-2.0.0-jobs.yml"));
-        //this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_120, loadDefaultDeclarativeWorkflow("declarative-workflows-old.yml"));
-        //this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_130, loadDefaultDeclarativeWorkflow("declarative-workflows-old.yml"));
-        //this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_140, loadDefaultDeclarativeWorkflow("declarative-workflows-old.yml"));
+        this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_200, loadDefaultDeclarativeWorkflow("declarative-workflows-2.0.0-jobs.yml"));
+        this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_120, loadDefaultDeclarativeWorkflow("declarative-workflows-old.yml"));
+        this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_130, loadDefaultDeclarativeWorkflow("declarative-workflows-old.yml"));
+        this.defaultDeclarativeWorkflowsPerDslVersion.put(ToscaParser.ALIEN_DSL_140, loadDefaultDeclarativeWorkflow("declarative-workflows-old.yml"));
     }
 
     public DefaultDeclarativeWorkflows getDeclarativeWorkflows(String dslVersion) {

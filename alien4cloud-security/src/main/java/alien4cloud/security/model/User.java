@@ -31,7 +31,6 @@ public class User implements SocialUserDetails {
     @Id
     private String username;
     private String password;
-    private String plainPassword;
     private String lastName;
     private String firstName;
     @StringField(includeInAll = false, indexType = IndexType.no)

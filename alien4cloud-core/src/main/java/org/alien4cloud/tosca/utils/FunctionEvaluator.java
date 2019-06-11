@@ -63,8 +63,7 @@ public class FunctionEvaluator {
                 // Perform the get property evaluation.
                 return getProperty(evaluatorContext, template, properties, evaluatedFunction);
             default:
-              return evaluatedProperty;
-                //throw new IllegalArgumentException("GET_ATTRIBUTE or GET_OPERATION_OUTPUT cannot be defined on a property.");
+                return evaluatedProperty;
             }
         }
         if (evaluatedProperty instanceof ConcatPropertyValue) {

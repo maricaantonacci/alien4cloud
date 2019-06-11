@@ -122,8 +122,7 @@ public final class ConstraintPropertyService {
     }
     
     private static void checkToscaFunctionConstraint(final String propertyName, final FunctionPropertyValue function,
-        PropertyDefinition propertyDefinition,
-        Consumer<String> missingPropertyConsumer) {
+        PropertyDefinition propertyDefinition, Consumer<String> missingPropertyConsumer) {
       // TODO DEEP: implement some checks, although it is not necessary to check them now
     }
 
@@ -136,8 +135,7 @@ public final class ConstraintPropertyService {
      * @throws ConstraintViolationException
      * @throws ConstraintValueDoNotMatchPropertyTypeException
      */
-    private static void checkSimplePropertyConstraint(final String propertyName, final String stringValue, 
-        final PropertyDefinition propertyDefinition)
+    private static void checkSimplePropertyConstraint(final String propertyName, final String stringValue, final PropertyDefinition propertyDefinition)
             throws ConstraintViolationException, ConstraintValueDoNotMatchPropertyTypeException {
         ConstraintInformation consInformation = null;
 
@@ -234,33 +232,30 @@ public final class ConstraintPropertyService {
     private static void checkDataTypePropertyConstraint(String propertyName, Map<String, Object> complexPropertyValue, PropertyDefinition propertyDefinition,
             Consumer<String> missingPropertyConsumer) throws ConstraintViolationException, ConstraintValueDoNotMatchPropertyTypeException {
         DataType dataType = ToscaContext.get(DataType.class, propertyDefinition.getType());
-        // TODO DEEP: add a new type for functions 
-        if (dataType != null) {
-//        if (dataType == null) {
-//            throw new ConstraintViolationException("Complex type " + propertyDefinition.getType()
-//                    + " is not complex or it cannot be found in the archive nor in Alien");
-//        }
-          for (Map.Entry<String, Object> complexPropertyValueEntry : complexPropertyValue.entrySet()) {
-              if (!safe(dataType.getProperties()).containsKey(complexPropertyValueEntry.getKey())) {
-                  throw new ConstraintViolationException("Complex type <" + propertyDefinition.getType() + "> do not have nested property with name <"
-                          + complexPropertyValueEntry.getKey() + "> for property <" + propertyName + ">");
-              } else {
-                  Object nestedPropertyValue = complexPropertyValueEntry.getValue();
-                  PropertyDefinition nestedPropertyDefinition = dataType.getProperties().get(complexPropertyValueEntry.getKey());
-                  checkPropertyConstraint(propertyName + "." + complexPropertyValueEntry.getKey(), nestedPropertyValue, nestedPropertyDefinition,
-                          missingPropertyConsumer);
-              }
-          }
-          // check if the data type has required missing properties
-          if (missingPropertyConsumer != null) {
-              for (Map.Entry<String, PropertyDefinition> dataTypeDefinition : safe(dataType.getProperties()).entrySet()) {
-                  if (dataTypeDefinition.getValue().isRequired() && !complexPropertyValue.containsKey(dataTypeDefinition.getKey())) {
-                      // A required property is missing
-                      String missingPropertyName = propertyName + "." + dataTypeDefinition.getKey();
-                      missingPropertyConsumer.accept(missingPropertyName);
-                  }
-              }
-          }
+        if (dataType == null) {
+            // TODO DEEP: add a new type for functions
+            return;
+        }
+        for (Map.Entry<String, Object> complexPropertyValueEntry : complexPropertyValue.entrySet()) {
+            if (!safe(dataType.getProperties()).containsKey(complexPropertyValueEntry.getKey())) {
+                throw new ConstraintViolationException("Complex type <" + propertyDefinition.getType() + "> do not have nested property with name <"
+                        + complexPropertyValueEntry.getKey() + "> for property <" + propertyName + ">");
+            } else {
+                Object nestedPropertyValue = complexPropertyValueEntry.getValue();
+                PropertyDefinition nestedPropertyDefinition = dataType.getProperties().get(complexPropertyValueEntry.getKey());
+                checkPropertyConstraint(propertyName + "." + complexPropertyValueEntry.getKey(), nestedPropertyValue, nestedPropertyDefinition,
+                        missingPropertyConsumer);
+            }
+        }
+        // check if the data type has required missing properties
+        if (missingPropertyConsumer != null) {
+            for (Map.Entry<String, PropertyDefinition> dataTypeDefinition : safe(dataType.getProperties()).entrySet()) {
+                if (dataTypeDefinition.getValue().isRequired() && !complexPropertyValue.containsKey(dataTypeDefinition.getKey())) {
+                    // A required property is missing
+                    String missingPropertyName = propertyName + "." + dataTypeDefinition.getKey();
+                    missingPropertyConsumer.accept(missingPropertyName);
+                }
+            }
         }
     }
 
@@ -278,8 +273,7 @@ public final class ConstraintPropertyService {
         }
     }
 
-    private static void checkListPropertyConstraint(String propertyName, List<Object> listPropertyValue, 
-        PropertyDefinition propertyDefinition,
+    private static void checkListPropertyConstraint(String propertyName, List<Object> listPropertyValue, PropertyDefinition propertyDefinition,
             Consumer<String> missingPropertyConsumer) throws ConstraintValueDoNotMatchPropertyTypeException, ConstraintViolationException {
         if (!ToscaTypes.LIST.equals(propertyDefinition.getType())) {
             throwConstraintValueDoNotMatchPropertyTypeException("The property definition should be a list but we found " + propertyDefinition.getType(),

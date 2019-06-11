@@ -202,14 +202,9 @@ public class ToscaArchiveParser {
         }
     }
 
-    private String t() {
-      return "t";
-    }
-    
     private <T> ParsingResult<T> parseFromRootDefinitions(FileSystem csarFS, YamlParser<T> parser) throws ParsingException {
         // load definitions from the archive root
         try {
-            log.info(t());
             DefinitionVisitor visitor = new DefinitionVisitor(csarFS);
             Files.walkFileTree(csarFS.getPath(csarFS.getSeparator()), EnumSet.noneOf(FileVisitOption.class), 1, visitor);
             if (visitor.getDefinitionFiles().size() == 1) {

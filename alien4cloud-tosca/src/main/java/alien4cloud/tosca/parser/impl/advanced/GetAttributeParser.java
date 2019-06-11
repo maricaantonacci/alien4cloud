@@ -19,7 +19,7 @@ public class GetAttributeParser implements INodeParser<FunctionPropertyValue> {
 
     @Override
     public FunctionPropertyValue parse(Node node, ParsingContextExecution context) {
-        FunctionPropertyValue functionPropertyValue = (FunctionPropertyValue) ParsingContextExecution.get().getRegistry().get("tosca_function_parser").parse(node,
+        FunctionPropertyValue functionPropertyValue = (FunctionPropertyValue) ParsingContextExecution.get().getRegistry().get("tosca_function").parse(node,
                 context);
         if (functionPropertyValue.getParameters().size() > 0 && TARGET.equals(functionPropertyValue.getParameters().get(0))) {
             functionPropertyValue.getParameters().set(0, R_TARGET);

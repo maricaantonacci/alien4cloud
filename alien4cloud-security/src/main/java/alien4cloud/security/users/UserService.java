@@ -107,7 +107,6 @@ public class UserService {
         user.setLastName(lastName);
         user.setRoles(roles);
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        user.setPlainPassword(password);
         user.setInternalDirectory(true);
         user.setEnabled(true);
         user.setAccountNonExpired(true);
@@ -126,7 +125,6 @@ public class UserService {
         User user = retrieveUser(userName);
         ReflectionUtil.mergeObject(userUpdateRequest, user);
         if (userUpdateRequest.getPassword() != null) {
-          user.setPlainPassword(userUpdateRequest.getPassword());
             user.setPassword(BCrypt.hashpw(userUpdateRequest.getPassword(), BCrypt.gensalt()));
         }
         alienUserDao.save(user);

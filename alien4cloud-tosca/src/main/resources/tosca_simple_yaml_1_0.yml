@@ -13,13 +13,11 @@
 - artifact_ref_parser: alien4cloud.tosca.parser.impl.advanced.ArtifactReferenceParser
 - sustitution_mapping_parser: alien4cloud.tosca.parser.impl.advanced.SustitutionMappingParser
 - constraint: alien4cloud.tosca.parser.impl.advanced.ConstraintParser
-- abstract_property_value: alien4cloud.tosca.parser.impl.advanced.AbstractPropertyValueParser
 - meta_data: alien4cloud.tosca.parser.impl.advanced.MetaDataParser
 - tag: alien4cloud.tosca.parser.impl.advanced.TagParser
 - tosca_definitions_version: alien4cloud.tosca.parser.impl.advanced.ToscaDefinitionVersionParser
 - string_list: alien4cloud.tosca.parser.impl.advanced.StringListParser
 - relationship_template: alien4cloud.tosca.parser.impl.advanced.RelationshipTemplateParser
-- tosca_function_parser: alien4cloud.tosca.parser.impl.advanced.FunctionParser
 
 # declare standard mapping based parsers
 - definition: alien4cloud.tosca.model.ArchiveRoot
@@ -61,6 +59,10 @@
     map: artifactTypes
     key: elementId
     type: artifact_type
+  policy_types:
+    map: policyTypes
+    key: elementId
+    type: policy_type
     # inputs:
   topology_template:
     reference: topology
@@ -87,6 +89,10 @@
     map: groups
     key: name
     type: node_group
+  policies:
+    sequence_to_map: policies
+    node_is_value: false
+    type: policy_template
 #  workflows:
 #    map: workflows
 #    key: name
@@ -171,7 +177,7 @@
   description: description
   default:
     reference: default
-    type: abstract_property_value
+    type: node_template_property
   constraints:
     list: constraints
     type: constraint
@@ -188,7 +194,7 @@
     type: scalar
   properties:
     map: properties
-    type: node_template_property
+    type: property_definition
 
 - constraint_list: list # This element must be parsed as a list
   type: constraint # the elements in the list are constraints
@@ -219,65 +225,60 @@
     type: occurrences
   relationship: relationshipType
   capability_name: capabilityName
-  
-- tosca_function_parameter: java.lang.Object
 
 - tosca_function: org.alien4cloud.tosca.model.definitions.FunctionPropertyValue
   __0:
     key: function
     value:
       list: parameters
-      type: tosca_function_parameter
-
-#- get_attribute: alien4cloud.tosca.parser.impl.advanced.GetAttributeParser
+      type: scalar
 
 - scalar_property_value: org.alien4cloud.tosca.model.definitions.ScalarPropertyValue
 
 - complex_property_value: alien4cloud.tosca.parser.impl.advanced.ComplexPropertyValueParser
 
-#- tosca_concat: org.alien4cloud.tosca.model.definitions.ConcatPropertyValue
-#  __0:
-#    key: function_concat
-#    value:
-#      list: parameters
-#      type: input
-
-- node_template_property: __discriminator
-  keys:
-    type: property_definition
-    get_input: tosca_function
-    get_property: tosca_function
-    get_attribute: tosca_function
-    concat: tosca_function
-  default: abstract_property_value
+- node_template_property: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+  parser: abstractPropertyValueParser_v10_normative
 
 - input: __discriminator
   keys:
     type: property_definition
-    get_input: tosca_function
-    get_property: tosca_function
-    get_attribute: tosca_function
-    get_operation_output: tosca_function
-    concat: tosca_concat
-  default: abstract_property_value
+  default: input_property
 
-- attribute: __discriminator
-  keys:
-    type: attribute_definition
-    concat: tosca_concat
-    get_operation_output: tosca_function
-    get_attribute: tosca_function
-    get_property: tosca_function
-    concat: tosca_concat
-    get_input: tosca_function
-  default: attribute_definition
+- input_property: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+    - get_artifact
+    - get_operation_output
+  parser: abstractPropertyValueParser_v10_normative
+
+- attribute: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+    - get_artifact
+    - get_operation_output
+  parser: abstractPropertyValueParser_v10_normative
 
 - deployment_artifact: org.alien4cloud.tosca.model.definitions.DeploymentArtifact
   type: artifactType
   file:
     reference: artifactRef
     type: artifact_ref_parser
-  repository: artifactRepository
+  repository: repositoryName
   description: description
   deploy_path: deployPath
 
@@ -286,7 +287,7 @@
     reference: artifactRef
     type: artifact_ref_parser
   type: artifactType
-  repository: artifactRepository
+  repository: repositoryName
   dependencies:
     list: ../dependencies
     type: deployment_artifact
@@ -316,7 +317,7 @@
     type: property_definition
   attributes:
     map: attributes
-    type: attribute
+    type: attribute_definition
   requirements:
     list: requirements
     key: id
@@ -373,7 +374,7 @@
     type: property_definition
   attributes:
     map: attributes
-    type: attribute
+    type: attribute_definition
   valid_source_types:
     list: validSources
     type: scalar
@@ -391,7 +392,7 @@
     type: property_definition
   attributes:
     map: attributes
-    type: attribute
+    type: attribute_definition
   interfaces:
     reference: interfaces
     type: interfaces
@@ -407,9 +408,6 @@
   derived_from:
     reference: derivedFrom
     type: string_list
-  properties:
-    map: properties
-    type: property_definition
   mime_type: mimeType
   file_ext:
     list: fileExt
@@ -420,3 +418,35 @@
   url: url
   credentials: credentials
   type: type
+
+- policy_type: org.alien4cloud.tosca.model.types.PolicyType
+  description: description
+  derived_from:
+    reference: derivedFrom
+    type: string_list
+  properties:
+    map: properties
+    type: property_definition
+  targets:
+    set: targets
+    type: scalar
+
+- policy_template: org.alien4cloud.tosca.model.templates.PolicyTemplate
+  type: type
+  description: description
+  properties:
+    map: properties
+    type: node_template_property
+  targets:
+    set: targets
+    type: scalar
+
+- output_property: __property_value
+  functions:
+    - get_input
+    - get_property
+    - get_attribute
+    - concat
+    - token
+    - get_operation_output
+  parser: abstractPropertyValueParser_v10_normative

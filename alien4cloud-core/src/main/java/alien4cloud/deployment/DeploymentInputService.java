@@ -59,7 +59,7 @@ public class DeploymentInputService {
             AbstractPropertyValue existingValue = inputValues.get(inputDefinitionEntry.getKey());
             if (existingValue == null) {
                 // If user has not specified a value and there is
-                PropertyValue defaultValue = inputDefinitionEntry.getValue().getDefault();
+                AbstractPropertyValue defaultValue = inputDefinitionEntry.getValue().getDefault();
                 if (defaultValue != null) {
                     inputValues.put(inputDefinitionEntry.getKey(), defaultValue);
                     updated = true;

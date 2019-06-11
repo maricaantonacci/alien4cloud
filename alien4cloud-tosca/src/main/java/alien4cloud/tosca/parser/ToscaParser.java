@@ -9,9 +9,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
-import org.alien4cloud.tosca.model.templates.NodeTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.error.Mark;
@@ -65,18 +62,18 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
     @PostConstruct
     public void initialize() throws ParsingException {
         // Initialize the supported DSL in alien4cloud.
-//        Map<String, INodeParser> registry = mappingGenerator.process("classpath:alien-dsl-1.2.0-mapping.yml");
-//        parserRegistriesByVersion.put(ALIEN_DSL_120, registry);
-//        registry = mappingGenerator.process("classpath:alien-dsl-1.3.0-mapping.yml");
-//        parserRegistriesByVersion.put(ALIEN_DSL_130, registry);
-//        // 1.4.0
-//        registry = mappingGenerator.process("classpath:alien-dsl-1.4.0-mapping.yml");
-//        parserRegistriesByVersion.put(ALIEN_DSL_140, registry);
-//        // 2.0.0
-//        registry = mappingGenerator.process("classpath:alien-dsl-2.0.0-mapping.yml");
-//        parserRegistriesByVersion.put(ALIEN_DSL_200, registry);
+        Map<String, INodeParser> registry = mappingGenerator.process("classpath:alien-dsl-1.2.0-mapping.yml");
+        parserRegistriesByVersion.put(ALIEN_DSL_120, registry);
+        registry = mappingGenerator.process("classpath:alien-dsl-1.3.0-mapping.yml");
+        parserRegistriesByVersion.put(ALIEN_DSL_130, registry);
+        // 1.4.0
+        registry = mappingGenerator.process("classpath:alien-dsl-1.4.0-mapping.yml");
+        parserRegistriesByVersion.put(ALIEN_DSL_140, registry);
+        // 2.0.0
+        registry = mappingGenerator.process("classpath:alien-dsl-2.0.0-mapping.yml");
+        parserRegistriesByVersion.put(ALIEN_DSL_200, registry);
         // experimental
-        Map<String, INodeParser> registry = mappingGenerator.process("classpath:tosca_simple_yaml_1_0.yml");
+        registry = mappingGenerator.process("classpath:tosca_simple_yaml_1_0.yml");
         parserRegistriesByVersion.put(NORMATIVE_DSL_100, registry);
         parserRegistriesByVersion.put(NORMATIVE_DSL_100_URL, registry);
     }
@@ -101,17 +98,6 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
 
     @Override
     protected void postParsing(ArchiveRoot result) {
-//      Map<String, NodeTemplate> nts = result.getTopology().getNodeTemplates();
-//      if (nts!= null ) {
-//        for (Map.Entry<String, NodeTemplate> nt: nts.entrySet()) {
-//          Map<String, AbstractPropertyValue> abstractPropertyValues = nt.getValue().getProperties();
-//          if (abstractPropertyValues != null) {
-//            for (Map.Entry<String, AbstractPropertyValue> abstractPropertyValue: abstractPropertyValues.entrySet()) {
-//              abstractPropertyValue.getValue().
-//            }
-//          }
-//        }
-//      }
         // Perform post processing model manipulation and validations.
         archiveRootPostProcessor.process(result);
     }

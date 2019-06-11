@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -210,7 +209,6 @@ public class ToscaTypeSearchService extends AbstractToscaIndexSearchService<Abst
     @Override
     public List<Csar> getCsarsByName(String archiveName, int numResults) {      
       return Arrays.stream(searchDAO.buildQuery(Csar.class)
-          //.setFilters(fromKeyValueCouples("archiveName", archiveName))
           .prepareSearch().search(0, numResults).getData())
           .filter(csar -> csar.getName().compareTo(archiveName) == 0)
           .collect(Collectors.toList());

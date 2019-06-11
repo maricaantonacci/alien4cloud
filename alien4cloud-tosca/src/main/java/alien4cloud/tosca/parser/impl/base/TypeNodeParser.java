@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -51,7 +50,6 @@ public class TypeNodeParser<T> extends AbstractTypeNodeParser implements INodePa
      * @param instance The instance in which to parse the node (or null to create a new instance).
      * @return The given instance or a new one if none was provided.
      */
-    @SuppressWarnings("unchecked")
     public T parse(Node node, ParsingContextExecution context, T instance) {
         if (node instanceof MappingNode) {
             return doParse((MappingNode) node, context, instance);
@@ -64,13 +62,7 @@ public class TypeNodeParser<T> extends AbstractTypeNodeParser implements INodePa
                 // try to use instance default constructor based on string if any
                 Constructor<T> constructor;
                 try {
-                  // TODO DEEP: had to change to object because of methods
-                    Class<?> typeNew = null;
-                    if (type.getSimpleName().equals("Object"))
-                      typeNew = String.class;
-                    else
-                      typeNew = type;
-                    constructor = (Constructor<T>) typeNew.getConstructor(String.class);
+                    constructor = type.getConstructor(String.class);
                 } catch (NoSuchMethodException e) {
                     // scalar value is not allowed to parse the node.
                     ParserUtils.addTypeError(node, context.getParsingErrors(), getToscaType());

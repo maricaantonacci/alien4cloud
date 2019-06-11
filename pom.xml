@@ -17,7 +17,7 @@
     <module>alien4cloud-core</module>
     <module>alien4cloud-mock-paas-provider-plugin</module>
     <module>alien4cloud-rest-api</module>
-    <!--module>alien4cloud-rest-it</module-->
+    <module>alien4cloud-rest-it</module>
     <module>alien4cloud-ui</module>
   </modules>
 
@@ -561,8 +561,6 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <debug>true</debug>
-          <debuglevel>lines,vars,source</debuglevel> 
         </configuration>
       </plugin>
 
