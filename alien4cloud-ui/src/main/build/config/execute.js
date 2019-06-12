@@ -101,7 +101,7 @@ module.exports = {
               files.forEach( function(file) {
                 source = path.join(dirLanguages, file);
                 target = path.join(dirLanguages, hash + '.' + file.split('.')[1] + '.json');
-                fs.rename(source, target);
+                fs.renameSync(source, target);
               });
 
               // set the hash in a4c-bootstrap to configure angular-translate
