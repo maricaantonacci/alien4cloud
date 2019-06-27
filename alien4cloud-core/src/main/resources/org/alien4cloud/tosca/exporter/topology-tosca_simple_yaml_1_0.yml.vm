@@ -8,10 +8,9 @@
 ## BEGINNING OF DOCUMENT
 tosca_definitions_version: tosca_simple_yaml_1_0
 
-metadata:
-  template_name: ${template_name}
-  template_version: ${template_version}
-  template_author: ${template_author}
+template_name: ${template_name}
+template_version: ${template_version}
+template_author: ${template_author}
 
 description: ${utils.renderDescription(${template_description}, "")}
 #if($utils.collectionIsNotEmpty($topology.dependencies))
