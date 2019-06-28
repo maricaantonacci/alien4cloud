@@ -89,7 +89,7 @@ public class ToscaPropertySerializerUtils {
         if (value.getParameters().size() == 1) {
             buffer.append("{ ").append(value.getFunction()).append(": ").append(value.getParameters().get(0)).append(" }");
         } else {
-            buffer.append("{ ").append(value.getFunction()).append(": [").append(ToscaSerializerUtils.getCsvToString(value.getParameters())).append("] }");
+            buffer.append("{ ").append(value.getFunction()).append(": [ ").append(ToscaSerializerUtils.getCsvToString(value.getParameters(), true)).append(" ] }");
         }
         return buffer.toString();
     }
@@ -131,6 +131,9 @@ public class ToscaPropertySerializerUtils {
     }
 
     private static String formatListValue(int indentLevel, List<Object> value) {
+        if (value.isEmpty()) {
+            return "[]";
+        }
         indentLevel++;
         StringBuilder buffer = new StringBuilder();
         for (Object element : value) {
