@@ -27,38 +27,36 @@ import alien4cloud.tosca.parser.mapping.DefaultParser;
 @Component
 public class ComplexPropertyValueParser extends DefaultParser<AbstractPropertyValue> {
 
-  @Override
-  public AbstractPropertyValue parse(Node node, ParsingContextExecution context) {
-    AbstractPropertyValue parsedValue;
-    if (node instanceof MappingNode) {
-      // get_input, get_property or get_attribute calls the
+    @Override
+    public AbstractPropertyValue parse(Node node, ParsingContextExecution context) {
+      AbstractPropertyValue parsedValue;
+        if (node instanceof MappingNode) {
+            // get_input, get_property or get_attribute calls the
 
-      Map<String, Object> result = Maps.newHashMap();
-      for (NodeTuple innernode : ((MappingNode) node).getValue()) {
-        INodeParser<AbstractPropertyValue> parser =
-            context.getRegistry().get("node_template_property");
-        AbstractPropertyValue parsedInnerValue = parser.parse(innernode.getValueNode(), context);
-        parsedInnerValue.setPrintable(true);
-        result.put(ParserUtils.getScalar(innernode.getKeyNode(), context), parsedInnerValue);
-      }
-      parsedValue = new ComplexPropertyValue(result);
-    } else if (node instanceof SequenceNode) {
-      List<Object> result = Lists.newArrayList();
-      for (Node innernode : ((SequenceNode) node).getValue()) {
-        INodeParser<AbstractPropertyValue> parser = context.getRegistry().get("node_template_property");
-        AbstractPropertyValue parsedInnerValue = parser.parse(innernode, context);
-        parsedInnerValue.setPrintable(true);
-        result.add(parsedInnerValue);
-      }
-      parsedValue = new ListPropertyValue(result);
-    } else if (node instanceof ScalarNode) {
-      parsedValue = new ScalarPropertyValue(((ScalarNode) node).getValue());
-    } else {
-      throw new InvalidArgumentException(
-          "Do not expect other node than MappingNode or SequenceNode here "
-              + node.getClass().getName());
+            Map<String, Object> result = Maps.newHashMap();
+            for (NodeTuple innernode : ((MappingNode) node).getValue()) {
+              INodeParser<AbstractPropertyValue> parser =
+                  context.getRegistry().get("node_template_property");
+              AbstractPropertyValue parsedInnerValue = parser.parse(innernode.getValueNode(), context);
+              parsedInnerValue.setPrintable(true);
+              result.put(ParserUtils.getScalar(innernode.getKeyNode(), context), parsedInnerValue);
+            }
+            parsedValue = new ComplexPropertyValue(result);
+        } else if (node instanceof SequenceNode) {
+            List<Object> result = Lists.newArrayList();
+            for (Node innernode : ((SequenceNode) node).getValue()) {
+              INodeParser<AbstractPropertyValue> parser = context.getRegistry().get("node_template_property");
+              AbstractPropertyValue parsedInnerValue = parser.parse(innernode, context);
+              parsedInnerValue.setPrintable(true);
+              result.add(parsedInnerValue);
+            }
+            parsedValue = new ListPropertyValue(result);
+        } else if (node instanceof ScalarNode) {
+            parsedValue = new ScalarPropertyValue(((ScalarNode) node).getValue());
+        } else {
+            throw new InvalidArgumentException("Do not expect other node than MappingNode or SequenceNode here " + node.getClass().getName());
+        }
+        parsedValue.setPrintable(true);
+        return parsedValue;
     }
-    parsedValue.setPrintable(true);
-    return parsedValue;
-  }
 }

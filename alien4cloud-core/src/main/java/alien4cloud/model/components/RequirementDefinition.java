@@ -39,6 +39,7 @@ public class RequirementDefinition {
     private String capabilityName;
 
     private String relationshipName;
+
     private String nodeName;
     
     /**
