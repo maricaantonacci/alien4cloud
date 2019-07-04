@@ -195,16 +195,16 @@ ${utils.formatArtifact($artifactEntry.value, 5)}
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($topology.policies))
   policies:
 #foreach($policyEntry in ${topology.policies.entrySet()})
-    ${policyEntry.key}:
-      type: ${policyEntry.value.type}
+    - ${policyEntry.key}:
+        type: ${policyEntry.value.type}
 #if($policyEntry.value.description)
-      description: ${policyEntry.value.description}
+        description: ${policyEntry.value.description}
 #end## if policyEntry description
 #if($utils.collectionIsNotEmpty($policyEntry.value.targets))
-      targets: [ $utils.getCsvToString($policyEntry.value.targets) ]
+        targets: [ $utils.getCsvToString($policyEntry.value.targets) ]
 #end## if policyEntry targets not empty
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($policyEntry.value.properties))
-      properties:$propertyUtils.formatProperties(4, $policyEntry.value.properties)
+        properties:$propertyUtils.formatProperties(5, $policyEntry.value.properties)
 #end## if capability properties not empty
 #end## of policyEntry iteration
 #end## if $topology.policies not empty
