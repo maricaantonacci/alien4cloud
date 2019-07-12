@@ -20,7 +20,7 @@ Alien4Cloud is written in java for the backend and requires a JDK 8 or newer (no
 - make sure you have Maven installed (team is using 3.0.5)
 - install Ruby
 - install Python
-- install Node.js to get npm command. Check here http://nodejs.org. Note that you need a recent version of npm (2.7.4) in order to build a4c.
+- install Node.js (team is using 6.14.4) to get npm command. Check here http://nodejs.org. Note that you need a recent version of npm (>= 5.5.x) in order to build a4c.
 - install bower  
 ```sh
 $ sudo npm install -g bower
@@ -86,7 +86,7 @@ where
 - ```issuer_url``` is the URL to the OIDC authentication provider 
 - ```client_id``` is the client identifier configured in the OIDC server
 - ```client_secret``` is the secret for the above client identifier
-- ```user_roles``` are the Alien 4 Cloud roles that each user authenticated by OIDC will have in the Alien4Cloud instance
+- ```user_roles``` is a comma separated list of the Alien 4 Cloud roles that each user authenticated by OIDC will have in the Alien4Cloud instance. It accepts any role described in [the A4C documentation](https://alien4cloud.github.io/#/documentation/2.1.0/concepts/roles.html): that is ```ADMIN```, ```COMPONENTS_MANAGER```, ```ARCHITECTS``` and ```APPLICATIONS_MANAGER```
 
 - Once Alien4Cloud is running, you should see a button in the UI header with the text OpenID Connect authentication. Clicking on it will trigger the authentication flow.
 

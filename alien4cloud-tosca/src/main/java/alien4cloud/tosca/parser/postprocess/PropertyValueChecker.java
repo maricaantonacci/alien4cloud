@@ -60,13 +60,16 @@ public class PropertyValueChecker {
             Map<String, PropertyDefinition> inputs, String templateName) {
         if (propertyValue instanceof FunctionPropertyValue) {
             FunctionPropertyValue function = (FunctionPropertyValue) propertyValue;
-            String parameters = function.getParameters().get(0);
-            // check get_input only
-            if (function.getFunction().equals("get_input")) {
-                if (inputs == null || !inputs.keySet().contains(parameters)) {
-                    ParsingContextExecution.getParsingErrors().add(new ParsingError(ParsingErrorLevel.ERROR, ErrorCode.MISSING_TOPOLOGY_INPUT, templateName,
-                            propertyValueNode.getStartMark(), parameters, propertyValueNode.getEndMark(), propertyName));
-                }
+            Object param = function.getParameters().get(0);
+            if (param instanceof String) {
+              String parameters = param.toString();
+              // check get_input only
+              if (function.getFunction().equals("get_input")) {
+                  if (inputs == null || !inputs.keySet().contains(parameters)) {
+                      ParsingContextExecution.getParsingErrors().add(new ParsingError(ParsingErrorLevel.ERROR, ErrorCode.MISSING_TOPOLOGY_INPUT, templateName,
+                              propertyValueNode.getStartMark(), parameters, propertyValueNode.getEndMark(), propertyName));
+                  }
+              }
             }
         } else if (propertyValue instanceof PropertyValue<?>) {
             checkProperty(propertyName, propertyValueNode, (PropertyValue<?>) propertyValue, propertyDefinition, templateName);

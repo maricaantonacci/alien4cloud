@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +129,7 @@ public abstract class MockPaaSProvider extends AbstractPaaSProvider {
         Map<String, String> runtimeProperties = Maps.newHashMap();
         runtimeProperties.put(PUBLIC_IP, "10.52.0." + i);
         Map<String, String> outputs = Maps.newHashMap();
-        return new InstanceInformation(ToscaNodeLifecycleConstants.INITIAL, InstanceStatus.PROCESSING, attributes, runtimeProperties, outputs);
+        return new InstanceInformation(ToscaNodeLifecycleConstants.INITIAL, InstanceStatus.PROCESSING, attributes, runtimeProperties, outputs, new HashMap<>());
     }
 
     private ScalingPolicy getScalingPolicy(String nodeTemplateId, Map<String, NodeTemplate> nodeTemplates, Topology topology) {

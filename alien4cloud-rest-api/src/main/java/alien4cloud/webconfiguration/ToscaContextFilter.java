@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
+
 import alien4cloud.tosca.context.ToscaContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * {@link Filter} ensure the ToscaContext is empty at the beginning of each request and clean after
  */
 @Slf4j
+@Component
 public class ToscaContextFilter implements Filter {
 
     @Override

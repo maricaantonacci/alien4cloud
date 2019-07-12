@@ -72,7 +72,7 @@ public class PropertyService {
                 }
                 FunctionPropertyValue functionPropertyValue = new FunctionPropertyValue();
                 functionPropertyValue.setFunction((String) valueAsMap.get("function"));
-                functionPropertyValue.setParameters((List<String>) valueAsMap.get("parameters"));
+                functionPropertyValue.setParameters((List<Object>) valueAsMap.get("parameters"));
                 return (T) functionPropertyValue;
             }
         }

@@ -38,7 +38,7 @@ public class ToscaParser extends YamlParser<ArchiveRoot> {
     public static final String NORMATIVE_DSL_100 = "tosca_simple_yaml_1_0";
     public static final String NORMATIVE_DSL_100_URL = "http://docs.oasis-open.org/tosca/ns/simple/yaml/1.0";
 
-    public static String LATEST_DSL = ALIEN_DSL_200;
+    public static String LATEST_DSL = NORMATIVE_DSL_100;//ALIEN_DSL_200;
 
     private static final String DEFINITION_TYPE = "definition";
     private Map<String, Map<String, INodeParser>> parserRegistriesByVersion = Maps.newHashMap();

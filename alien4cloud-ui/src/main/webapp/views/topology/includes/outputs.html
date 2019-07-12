@@ -1,0 +1,120 @@
+<div class="topology-column-content-head">
+  <span>
+    <i class="fa fa-sign-in"></i> Outputs 
+     </span>
+  <span id='closeOutputs' class="btn btn-default btn-xs pull-right close-btn-panel" ng-click="display.toggle('outputs')">
+    <i class="fa fa-remove close-panel"></i>
+  </span>
+</div>
+
+{{topology.topology.outputProperties}}<br><br>
+{{topology.topology.outputCapabilityProperties}}<br><br>
+{{topology.topology.outputAttributes}}
+
+<h3>Output Properties</h3>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>{{'COMMON.NAME' | translate }}</th>
+      <th>{{'COMMON.TYPE' | translate }}</th>
+      <th>{{'APPLICATIONS.TOPOLOGY.OUTPUTS.VALUE' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(outputId, outputDefinition) in topology.topology.outputProperties">
+      <td id="td_name_{{outputId}}">
+        <span id="span_name_{{outputId}}" editable-text="outputDefinition.outputId" buttons="no" 
+        	onaftersave="outputs.update(outputId, outputDefinition.outputId, outputDefinition)" blur="submit">
+          {{outputDefinition.outputId}}
+          <i class="fa fa-pencil-square-o"></i>
+        </span>
+      </td>
+      <td>{{outputDefinition.type}}</td>
+      <td id="td_value_{{outputId}}">
+       <span id="span_value_{{outputId}}" editable-text="outputDefinition.value" buttons="no" 
+        	onaftersave="outputs.update(outputId, outputDefinition.outputId, outputDefinition)" blur="submit">
+          {{outputDefinition.value}}
+          <i class="fa fa-pencil-square-o"></i>
+        </span>
+      </td>
+      <td>
+        <delete-confirm id="{{outputId}}_delete" class="pull-right" func="outputs.remove(outputId)" position="left" bssize="btn-xs" fastyle="fa-trash-o">
+        </delete-confirm>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Output Capabilities</h3>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>{{'COMMON.NAME' | translate }}</th>
+      <th>{{'COMMON.TYPE' | translate }}</th>
+      <th>{{'APPLICATIONS.TOPOLOGY.OUTPUTS.VALUE' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(outputId, outputDefinition) in topology.topology.outputCapabilityProperties">
+      <td id="td_name_capabilities_{{outputId}}">
+        <span id="span_name_capabilities_{{outputId}}" editable-text="outputDefinition.outputId" buttons="no" 
+          onaftersave="outputs.update(outputId, outputDefinition.outputId, outputDefinition)" blur="submit">
+          {{outputDefinition.outputId}}
+          <i class="fa fa-pencil-square-o"></i>
+        </span>
+      </td>
+      <td>{{outputDefinition.type}}</td>
+      <td id="td_value_capabilities_{{outputId}}">
+       <span id="span_value_capabilities_{{outputId}}" editable-text="outputDefinition.value" buttons="no" 
+          onaftersave="outputs.update(outputId, outputDefinition.outputId, outputDefinition)" blur="submit">
+          {{outputDefinition.value}}
+          <i class="fa fa-pencil-square-o"></i>
+        </span>
+      </td>
+      <td>
+        <delete-confirm id="{{outputId}}_capabilities_delete" class="pull-right" 
+          func="outputs.remove(outputId)" position="left" bssize="btn-xs" fastyle="fa-trash-o">
+        </delete-confirm>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Output Attributes</h3>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>{{'COMMON.NAME' | translate }}</th>
+      <th>{{'COMMON.TYPE' | translate }}</th>
+      <th>{{'APPLICATIONS.TOPOLOGY.OUTPUTS.VALUE' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(outputId, outputDefinition) in topology.topology.outputCapabilityProperties">
+      <td id="td_name_attributes_{{outputId}}">
+        <span id="span_name_attributes_{{outputId}}" editable-text="outputDefinition.outputId" buttons="no" 
+          onaftersave="outputs.update(outputId, outputDefinition.outputId, outputDefinition)" blur="submit">
+          {{outputDefinition.outputId}}
+          <i class="fa fa-pencil-square-o"></i>
+        </span>
+      </td>
+      <td>{{outputDefinition.type}}</td>
+      <td id="td_value_attributes_{{outputId}}">
+       <span id="span_value_attributes_{{outputId}}" editable-text="outputDefinition.value" buttons="no" 
+          onaftersave="outputs.update(outputId, outputDefinition.outputId, outputDefinition)" blur="submit">
+          {{outputDefinition.value}}
+          <i class="fa fa-pencil-square-o"></i>
+        </span>
+      </td>
+      <td>
+        <delete-confirm id="{{outputId}}_attributes_delete" class="pull-right" 
+          func="outputs.remove(outputId)" position="left" bssize="btn-xs" fastyle="fa-trash-o">
+        </delete-confirm>
+      </td>
+    </tr>
+  </tbody>
+</table>

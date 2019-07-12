@@ -185,6 +185,9 @@
       "NODE_INFO" : "選択ノード",
       "NO_OUTPUTS" : "プロパティ、属性の出力なし",
       "ORCHESTRATOR_PROPERTIES" : "オーケストレータのプロパティ",
+	  "OUTPUTS": {
+		 "VALUE": "value"
+	   }, 
       "PARSING_ERROR" : "Topology is not valid",
       "PRECONFIGURED_PROPERTIES_INPUTS" : "Preconfigured input properties",
       "PROPERTIES_INPUTS" : "プロパティの入力",
@@ -519,7 +522,8 @@
     "START_DATE" : "Start Date",
     "END_DATE": "End Date",
     "DURATION": "Duration",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "INCLUDE_IN_FILTERS" : "Include in filters"
   },
   "ENTITY" : {
     "EXECUTION" : {
@@ -613,6 +617,7 @@
       "INVALID_NAME" : "{{context}} name [ {{problem}} ] invalid. renamed into [ {{note}} ].",
       "INVALID_SCALAR_UNIT" : "Expected type was a TOSCA scalar unit, both unit and value are required.",
       "INVALID_YAML" : "The File does not respect YAML format.",
+      "INVALID_TOSCA_FUNCTION_DECLARATION": "The TOSCA function declaration doesn't respect the standard [{{problem}}]",
       "LABEL" : "Errors",
       "MISSING_DEPENDENCY" : "Dependency [{{note}}] cannot be found in Alien repository.",
       "MISSING_FILE" : "Reference file {{note}} cannot be found within the archive.",

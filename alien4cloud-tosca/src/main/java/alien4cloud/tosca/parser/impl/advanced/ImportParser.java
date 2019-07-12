@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.alien4cloud.tosca.model.CSARDependency;
 import org.alien4cloud.tosca.model.Csar;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.nodes.Node;
 
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class ImportParser implements INodeParser<CSARDependency> {
 
-    @Resource
+    @Autowired
     private LaxImportParser laxImportParser;
 
     @Override

@@ -218,6 +218,8 @@ public abstract class TopologyModifierSupport implements ITopologyModifier {
                     Object currentPropertyValueObj = currentMap.get(paths[i]);
                     if (currentPropertyValueObj != null && currentPropertyValueObj instanceof Map<?, ?>) {
                         currentPropertyValue = (Map<String, Object>) currentPropertyValueObj;
+                    } else if (currentPropertyValueObj != null && currentPropertyValueObj instanceof ComplexPropertyValue) {
+                        currentPropertyValue = ((ComplexPropertyValue)currentPropertyValueObj).getValue();
                     } else {
                         // FIXME Same as OVERRIDING PROP VALUE above
                         currentPropertyValue = Maps.newHashMap();
@@ -231,6 +233,16 @@ public abstract class TopologyModifierSupport implements ITopologyModifier {
             propertyValues.put(nodePropertyName, propertyValue);
         }
         return nodePropertyName;
+    }
+
+    public static void feedMapOrComplexPropertyEntry(Object map, String name, Object value) {
+        Map rootMap = null;
+        if (map instanceof ComplexPropertyValue) {
+            rootMap = ((ComplexPropertyValue)map).getValue();
+        } else if (map instanceof Map) {
+            rootMap = (Map)map;
+        }
+        rootMap.put(name, value);
     }
 
     public static void setNodeTagValue(AbstractTemplate template, String name, String value) {

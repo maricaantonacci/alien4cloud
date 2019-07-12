@@ -1,6 +1,6 @@
 package alien4cloud.tosca.parser.impl.base;
 
-import java.util.Collection;
+import java.util.Set;
 
 import org.elasticsearch.common.collect.Sets;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -11,7 +11,7 @@ import alien4cloud.tosca.parser.INodeParser;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SetParser<T> extends CollectionParser<T> {
+public class SetParser<T> extends CollectionParser<Set<T>, T> {
 
     public SetParser(INodeParser<T> valueParser, String toscaType) {
         super(valueParser, toscaType, null);
@@ -22,7 +22,7 @@ public class SetParser<T> extends CollectionParser<T> {
     }
 
     @Override
-    protected Collection<T> getCollectionInstance() {
+    protected Set<T> getCollectionInstance() {
         return Sets.newLinkedHashSet();
     }
 }

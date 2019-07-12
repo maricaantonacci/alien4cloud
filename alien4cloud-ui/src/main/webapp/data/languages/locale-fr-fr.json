@@ -184,6 +184,9 @@
       "LOCATION_UNAUTHORIZED_MESSAGE" : "Vous n'avez plus l'authorisation de déployer sur la location précédament selectionnée pour cet environnement (location: <{{locationName}}>, orchestrateur: <{{orchestratorName}}>). \n Veuillez contacter votre administrateur.",
       "NODE_INFO" : "Noeud sélectionné",
       "NO_OUTPUTS" : "Aucune propriété ou attribut en sortie",
+	  "OUTPUTS": {
+		 "VALUE": "value"
+	   }, 
       "ORCHESTRATOR_PROPERTIES" : "Propriétés de l'orchestrateur",
       "PARSING_ERROR" : "La topologie n'est pas valide",
       "PRECONFIGURED_PROPERTIES_INPUTS" : "Propriétés d'entrée préconfigurées",
@@ -521,7 +524,8 @@
     "START_DATE" : "Date de début",
     "END_DATE": "Date de fin",
     "DURATION": "Durée",
-    "STATUS": "Statut"
+    "STATUS": "Statut",
+    "INCLUDE_IN_FILTERS" : "Inclure dans les filtres"
   },
   "ENTITY" : {
     "EXECUTION" : {
@@ -615,6 +619,7 @@
       "INVALID_NAME" : "Nom de {{context}} [{{problem}}] incorrect. Renommé en [{{note}}].",
       "INVALID_SCALAR_UNIT" : "Le type attendu est un Tosca scalar unit. L'unité et la valeur sont nécessaire.",
       "INVALID_YAML" : "Le fichier reférencé n'est pas conforme au format YAML,\n({{problem}}).",
+      "INVALID_TOSCA_FUNCTION_DECLARATION": "The TOSCA function declaration doesn't respect the standard [{{problem}}]",
       "LABEL" : "Erreurs",
       "MISSING_DEPENDENCY" : "La dépendance [{{note}}] est introuvable dans le repository Alien4Cloud.",
       "MISSING_FILE" : "Le fichier référencé {{note}} n'existe pas dans l'archive.",
@@ -1068,7 +1073,7 @@
     "BROWSE_COMPONENTS" : "Consulter les composants",
     "BROWSE_POLICIES" : "Consulter les policies",
     "BROWSE_TOPOLOGIES" : "Consulter les topologies",
-    "MANAGE_ARCHIVES" : "Gerer les archvies",
+    "MANAGE_ARCHIVES" : "Gérer les archives",
     "TOPOLOGIES" : "Topologies"
   },
   "NEXT" : "Suivant",

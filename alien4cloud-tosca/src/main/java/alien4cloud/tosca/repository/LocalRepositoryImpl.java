@@ -1,7 +1,11 @@
 package alien4cloud.tosca.repository;
 
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -18,6 +22,7 @@ import org.alien4cloud.tosca.model.types.AbstractToscaType;
 import alien4cloud.tosca.context.ToscaContext;
 import alien4cloud.tosca.model.ArchiveRoot;
 import alien4cloud.tosca.parser.ParsingContextExecution;
+import alien4cloud.tosca.parser.ParsingException;
 import alien4cloud.tosca.parser.ParsingResult;
 import alien4cloud.tosca.parser.ToscaArchiveParser;
 import lombok.Getter;
@@ -49,6 +54,11 @@ public class LocalRepositoryImpl implements ICSARRepositorySearchService {
         CSARDependency dependency = new CSARDependency(archiveName, archiveVersion);
         ArchiveRoot root = parse(dependency).getResult();
         return root == null ? null : root.getArchive();
+    }
+    
+    @Override
+    public List<Csar> getCsarsByName(String archiveName, int numResults) {
+        return parse(archiveName);
     }
 
     @Override
@@ -110,6 +120,34 @@ public class LocalRepositoryImpl implements ICSARRepositorySearchService {
         ParsingResult<ArchiveRoot> result = parse(dependency);
         ToscaContext.Context context = ToscaContext.get();
         context.register(result.getResult());
+    }
+    
+    @SneakyThrows
+    private List<Csar> parse(String archiveFileName) {
+      List<Csar> result = new ArrayList<>();
+      ParsingContextExecution.Context previousContext = ParsingContextExecution.get();
+        Path archivePath = localRepositoryPath.resolve(archiveFileName);
+        Files.walk(archivePath, 2).filter(path -> Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS))
+          .forEach(versionPath -> {
+            try {
+              ParsingContextExecution.init();
+              ParsingResult<ArchiveRoot> r = toscaArchiveParser.parse(archivePath);
+              if (r != null) {
+                ArchiveRoot ar = r.getResult();
+                if (ar != null)
+                  result.add(ar.getArchive());
+              }
+            } catch (ParsingException e) {
+              // Ignore errors
+            } finally {
+                ParsingContextExecution.destroy();
+                if (previousContext != null) {
+                    ParsingContextExecution.set(previousContext);
+                }
+            }
+          });
+        
+        return result;      
     }
 
     @SneakyThrows

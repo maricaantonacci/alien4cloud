@@ -1,11 +1,5 @@
 package alien4cloud.paas.wf;
 
-import static org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants.INSTALL;
-import static org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants.RUN;
-import static org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants.START;
-import static org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants.STOP;
-import static org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants.UNINSTALL;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +18,7 @@ import org.alien4cloud.tosca.model.types.AbstractToscaType;
 import org.alien4cloud.tosca.model.workflow.Workflow;
 import org.alien4cloud.tosca.model.workflow.activities.AbstractWorkflowActivity;
 import org.alien4cloud.tosca.model.workflow.declarative.DefaultDeclarativeWorkflows;
+import org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants;
 import org.elasticsearch.common.collect.Lists;
 import org.elasticsearch.common.collect.Maps;
 import org.springframework.stereotype.Component;
@@ -41,6 +36,8 @@ import alien4cloud.tosca.parser.ToscaParser;
 import alien4cloud.utils.AlienUtils;
 import alien4cloud.utils.YamlParserUtil;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.alien4cloud.tosca.normative.constants.NormativeWorkflowNameConstants.*;
 
 @Component
 @Slf4j
@@ -100,11 +97,14 @@ public class WorkflowsBuilderService {
         if (!wfs.containsKey(RUN)) {
             initStandardWorkflow(RUN, topologyContext);
         }
+        if (!wfs.containsKey(CANCEL)) {
+            initStandardWorkflow(CANCEL, topologyContext);
+        }
         postProcessTopologyWorkflows(topologyContext);
     }
 
 	public void postProcessTopologyWorkflows(TopologyContext tc) {
-    	postProcessTopologyWorkflows(tc, tc.getTopology().getWorkflows().keySet());
+    	postProcessTopologyWorkflows(tc, NormativeWorkflowNameConstants.STANDARD_WORKFLOWS);
 	}
 
     public void postProcessTopologyWorkflows(TopologyContext topologyContext, Set<String> whiteList) {

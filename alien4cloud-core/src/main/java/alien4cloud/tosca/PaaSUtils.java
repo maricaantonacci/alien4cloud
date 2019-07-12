@@ -200,7 +200,7 @@ public class PaaSUtils {
 
         properties.forEach((name, value) -> {
             interfaces.values().forEach((interfass) -> {
-                List<String> paths = new ArrayList<>();
+                List<Object> paths = new ArrayList<>();
                 paths.add(entity);
                 if (StringUtils.isNotBlank(capabilityName)) {
                     paths.add(capabilityName);
@@ -211,7 +211,7 @@ public class PaaSUtils {
         });
     }
 
-    private static void injectInputIntoOperations(String inputName, List<String> path, AbstractPropertyValue value, Map<String, Operation> operations) {
+    private static void injectInputIntoOperations(String inputName, List<Object> path, AbstractPropertyValue value, Map<String, Operation> operations) {
         if (MapUtils.isEmpty(operations)) {
             return;
         }

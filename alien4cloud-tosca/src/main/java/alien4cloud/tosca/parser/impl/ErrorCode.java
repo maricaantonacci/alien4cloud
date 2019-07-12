@@ -68,6 +68,8 @@ public enum ErrorCode {
     SNAPSHOT_DEPENDENCY,
     /** Scalar unit declaration not well managed. */
     INVALID_SCALAR_UNIT,
+    /**The TOSCA function declaration doesn't respect the standard**/
+    INVALID_TOSCA_FUNCTION_DECLARATION,
     /** Detect a potential bad property value based on precedent inserted values **/
     POTENTIAL_BAD_PROPERTY_VALUE,
     /** Implementation artifact is unknown. */

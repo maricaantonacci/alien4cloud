@@ -267,6 +267,10 @@ public class ToscaContext {
             }
             return archive;
         }
+        
+        public List<Csar> getCsarsByName(String archiveName, int numResults) {
+          return csarRepositorySearchService.getCsarsByName(archiveName, numResults);
+        }
 
         /**
          * Get an element from the local-cache or from ES.

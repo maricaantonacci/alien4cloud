@@ -3,6 +3,7 @@ package alien4cloud.tosca.container.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
 import org.alien4cloud.tosca.model.definitions.PropertyConstraint;
 import org.alien4cloud.tosca.model.definitions.PropertyDefinition;
 import org.alien4cloud.tosca.model.definitions.PropertyValue;
@@ -20,7 +21,7 @@ public class ToscaPropertyDefaultValueConstraintsValidator implements Constraint
 
     @Override
     public boolean isValid(PropertyDefinition value, ConstraintValidatorContext context) {
-        PropertyValue defaultValue = value.getDefault();
+        AbstractPropertyValue defaultValue = value.getDefault();
         if (defaultValue == null) {
             // no default value is specified.
             return true;

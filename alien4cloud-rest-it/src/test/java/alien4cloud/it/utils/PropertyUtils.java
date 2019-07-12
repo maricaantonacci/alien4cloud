@@ -43,7 +43,7 @@ public class PropertyUtils {
         Map<String, Object> propertyMap = JsonUtil.toMap(jsonProperty);
         FunctionPropertyValue propertyValue = new FunctionPropertyValue();
         propertyValue.setFunction(propertyMap.get("function").toString());
-        propertyValue.setParameters((List<String>) propertyMap.get("parameters"));
+        propertyValue.setParameters((List<Object>) propertyMap.get("parameters"));
         return propertyValue;
     }
 }

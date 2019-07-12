@@ -7,6 +7,7 @@ define(function (require) {
 
   require('scripts/topology/directives/editor_inputs');
   require('scripts/topology/directives/editor_variables');
+  require('scripts/topology/directives/editor_outputs');
 
   modules.get('a4c-topology-editor', ['a4c-common', 'ui.ace', 'treeControl']).controller('TopologyInputsVariablesCtrl',
     ['$scope', '$alresource', 'topoEditDisplay', function($scope, $alresource, topoEditDisplay) {

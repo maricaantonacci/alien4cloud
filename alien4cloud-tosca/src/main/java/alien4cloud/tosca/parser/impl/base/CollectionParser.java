@@ -18,7 +18,7 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @Setter
-public abstract class CollectionParser<T> implements INodeParser<Collection<T>> {
+public abstract class CollectionParser<V extends Collection<T>, T> implements INodeParser<V> {
     private INodeParser<T> valueParser;
     /** The tosca type of the list. */
     private String toscaType;
@@ -26,7 +26,7 @@ public abstract class CollectionParser<T> implements INodeParser<Collection<T>> 
     private String keyPath;
 
     @Override
-    public Collection<T> parse(Node node, ParsingContextExecution context) {
+    public V parse(Node node, ParsingContextExecution context) {
         if (node instanceof MappingNode) {
             return doParseFromMap((MappingNode) node, context);
         } else if (node instanceof SequenceNode) {
@@ -39,8 +39,8 @@ public abstract class CollectionParser<T> implements INodeParser<Collection<T>> 
         return null;
     }
 
-    private Collection<T> doParse(ScalarNode node, ParsingContextExecution context) {
-        Collection<T> collection = getCollectionInstance();
+    private V doParse(ScalarNode node, ParsingContextExecution context) {
+        V collection = getCollectionInstance();
         T value = valueParser.parse(node, context);
         if (value != null) {
             collection.add(value);
@@ -48,8 +48,8 @@ public abstract class CollectionParser<T> implements INodeParser<Collection<T>> 
         return collection;
     }
 
-    private Collection<T> doParse(SequenceNode node, ParsingContextExecution context) {
-        Collection<T> collection = getCollectionInstance();
+    private V doParse(SequenceNode node, ParsingContextExecution context) {
+        V collection = getCollectionInstance();
         Object parent = context.getParent();
         for (Node valueNode : node.getValue()) {
             T value;
@@ -68,8 +68,8 @@ public abstract class CollectionParser<T> implements INodeParser<Collection<T>> 
         return collection;
     }
 
-    private Collection<T> doParseFromMap(MappingNode node, ParsingContextExecution context) {
-        Collection<T> collection = getCollectionInstance();
+    private V doParseFromMap(MappingNode node, ParsingContextExecution context) {
+        V collection = getCollectionInstance();
         if (keyPath != null) { // we parse a map into a list and must
             for (NodeTuple entry : node.getValue()) {
                 T value = objectFromTuple(entry, context);
@@ -95,6 +95,6 @@ public abstract class CollectionParser<T> implements INodeParser<Collection<T>> 
         return value;
     }
 
-    protected abstract Collection<T> getCollectionInstance();
+    protected abstract V getCollectionInstance();
 
 }

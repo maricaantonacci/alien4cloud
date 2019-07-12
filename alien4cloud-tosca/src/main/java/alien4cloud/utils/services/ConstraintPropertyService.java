@@ -9,6 +9,7 @@ import org.alien4cloud.tosca.exceptions.ConstraintTechnicalException;
 import org.alien4cloud.tosca.exceptions.ConstraintValueDoNotMatchPropertyTypeException;
 import org.alien4cloud.tosca.exceptions.ConstraintViolationException;
 import org.alien4cloud.tosca.exceptions.InvalidPropertyValueException;
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
 import org.alien4cloud.tosca.model.definitions.PropertyConstraint;
 import org.alien4cloud.tosca.model.definitions.PropertyDefinition;
 import org.alien4cloud.tosca.model.definitions.PropertyValue;
@@ -103,6 +104,10 @@ public final class ConstraintPropertyService {
             } else {
                 checkListPropertyConstraint(propertyName, (List<Object>) value, propertyDefinition, missingPropertyConsumer);
             }
+        } else if (value instanceof FunctionPropertyValue) {
+            checkToscaFunctionConstraint(propertyName, (FunctionPropertyValue) value, 
+                    propertyDefinition, missingPropertyConsumer);
+           
         } else {
             throw new InvalidArgumentException(
                     "Not expecting to receive constraint validation for other types than String, Map or List, but got "
@@ -114,6 +119,11 @@ public final class ConstraintPropertyService {
             String type, Object value) throws ConstraintValueDoNotMatchPropertyTypeException {
         ConstraintInformation consInformation = new ConstraintInformation(propertyName, null, value.toString(), type);
         throw new ConstraintValueDoNotMatchPropertyTypeException(message, null, consInformation);
+    }
+    
+    private static void checkToscaFunctionConstraint(final String propertyName, final FunctionPropertyValue function,
+        PropertyDefinition propertyDefinition, Consumer<String> missingPropertyConsumer) {
+      // TODO DEEP: implement some checks, although it is not necessary to check them now
     }
 
     /**
@@ -223,8 +233,8 @@ public final class ConstraintPropertyService {
             Consumer<String> missingPropertyConsumer) throws ConstraintViolationException, ConstraintValueDoNotMatchPropertyTypeException {
         DataType dataType = ToscaContext.get(DataType.class, propertyDefinition.getType());
         if (dataType == null) {
-            throw new ConstraintViolationException("Complex type " + propertyDefinition.getType()
-                    + " is not complex or it cannot be found in the archive nor in Alien");
+            // TODO DEEP: add a new type for functions
+            return;
         }
         for (Map.Entry<String, Object> complexPropertyValueEntry : complexPropertyValue.entrySet()) {
             if (!safe(dataType.getProperties()).containsKey(complexPropertyValueEntry.getKey())) {
