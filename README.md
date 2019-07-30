@@ -55,7 +55,7 @@ $ cd alien4cloud-ui
 $ grunt serve
 ```
 
-## OpenID Connect integration
+## OpenID Connect and DEEP orchestrator integration
 - In the OpenID Connect server, there must be a client registered with the following callback URL: ```http://<a4c_location>/auth/oidc``` where ```a4c_location``` is the location in which A4C is running. For example: ```localhost:9999``` or ```127.0.0.1:9999``` when testing during development.
 
 - Download and install the Spring Social OIDC project locally
@@ -89,6 +89,23 @@ where
 - ```user_roles``` is a comma separated list of the Alien 4 Cloud roles that each user authenticated by OIDC will have in the Alien4Cloud instance. It accepts any role described in [the A4C documentation](https://alien4cloud.github.io/#/documentation/2.1.0/concepts/roles.html): that is ```ADMIN```, ```COMPONENTS_MANAGER```, ```ARCHITECTS``` and ```APPLICATIONS_MANAGER```
 
 - Once Alien4Cloud is running, you should see a button in the UI header with the text OpenID Connect authentication. Clicking on it will trigger the authentication flow.
+
+For the deep orchestrator integration you need to have also the following properties:
+
+```yaml
+deep:
+  orchestrator:
+    url: <orchestrator_url>
+    keystore:
+      location: <cert_keystore_location>
+      password: <cert_keystore_password>
+```
+
+where
+
+- ```orchestrator_url``` is the base URL of the DEEP orchestrator to use
+- ```cert_keystore_location``` is the location of a JKS keystore containing the certificate used by the orchestrator endpoint.
+- ```cert_keystore_password``` is the password for the above keystore, if any.
 
 ## Accessing the OIDC token from inside an Alien4Cloud plug-in or module
 
