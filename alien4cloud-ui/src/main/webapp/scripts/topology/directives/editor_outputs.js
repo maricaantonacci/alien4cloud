@@ -55,31 +55,30 @@ define(function (require) {
       $scope.createOutput = function() {
     	  var modalInstance = $uibModal.open({
               templateUrl: 'views/topology/outputs/edit_output_modal.html',
-              controller: 'a4cEditorOutputExpCreateCtrl',
+              controller: 'a4cEditorOutputExpEditCtrl',
               scope: $scope,
               size: 'lg',
               resolve: {
                 outputName: function() {
-                  return outputName;
+                  return "";
                 },
                 outputDescription: function() {
-                  return outputDescription;
+                  return "";
                 },
                 outputExpression: function() {
-                  return _.defined($scope.loadedOutputs) && _.defined($scope.loadedOutputs[outputName]) ? 
-                		  yaml.safeDump($scope.loadedOutputs[outputName], {indent: 4}) : '';
+                  return "";
                 }
               }
             });
-            modalInstance.result.then(function(outputExpression) {
-              // ${app_trigram}/${env_name}/demo
-              $scope.execute({
-                type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
-                name: outputName,
-                description: outputExpression.str,
-                expression: outputExpression.str
-              });
-            });
+        modalInstance.result.then(function(outputExpression) {
+          // ${app_trigram}/${env_name}/demo
+          $scope.execute({
+            type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
+            name: outputName,
+            description: outputDescription.str,
+            expression: outputExpression.str
+          });
+        });
       }
       
       $scope.editOutput = function(outputName) {

@@ -3,37 +3,37 @@
 </div>
 <div class="modal-body">
 
-  <uib-tabset active="activeTab">
-    <uib-tab id="value-tab" index="0">
-      <uib-tab-heading>
-        <span><i class="fa fa-code"></i> {{'VALUE' | translate}}</span>
-      </uib-tab-heading>
+<!--  <uib-tabset active="activeTab">-->
+<!--    <uib-tab id="value-tab" index="0">-->
+<!--      <uib-tab-heading>-->
+<!--        <span><i class="fa fa-code"></i> {{'VALUE' | translate}}</span>-->
+<!--      </uib-tab-heading>-->
 
-      <property-display ng-if="!inputExpression.obj || typeMatch"
-        definition="getPropertyDefinition()"
-        property-type="topology.dataTypes[getPropertyDefinition().type]"
-        dependencies="topology.topology.dependencies"
-        property-name="inputName"
-        property-value="inputExpression.obj"
-        on-save="updateLocalExpression(propertyDefinition, propertyName, propertyValue)"
-        editable="true"
-        condensed="true">
-      </property-display>
-      <div ng-if="inputExpression.obj && !typeMatch" class="var-undefined var-scope-item">
-        {{'APPLICATIONS.INPUTS.EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE' | translate}}
-      </div>
+<!--      <property-display ng-if="!outputExpression.obj || typeMatch"-->
+<!--        definition="getPropertyDefinition()"-->
+<!--        property-type="topology.dataTypes[getPropertyDefinition().type]"-->
+<!--        dependencies="topology.topology.dependencies"-->
+<!--        property-name="outputName"-->
+<!--        property-value="outputExpression.obj"-->
+<!--        on-save="updateLocalExpression(propertyDefinition, propertyName, propertyValue)"-->
+<!--        editable="true"-->
+<!--        condensed="true">-->
+<!--      </property-display>-->
+<!--      <div ng-if="outputExpression.obj && !typeMatch" class="var-undefined var-scope-item">-->
+<!--        {{'APPLICATIONS.INPUTS.EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE' | translate}}-->
+<!--      </div>-->
 
-    </uib-tab>
+<!--    </uib-tab>-->
 
-    <uib-tab id="expression-tab" index="1">
-      <uib-tab-heading>
-        <span><i class="fa fa-usd"></i> {{'APPLICATIONS.OUTPUTS.EXPRESSION' | translate}}</span>
-      </uib-tab-heading>
-      <form name="variable" class="form-horizontal" role="form" novalidate>
-        <textarea class="form-control" ng-model="inputExpression.str" rows="8"></textarea>
-      </form>
-    </uib-tab>
-  </uib-tabset>
+<!--    <uib-tab id="expression-tab" index="1">-->
+<!--      <uib-tab-heading>-->
+<!--        <span><i class="fa fa-usd"></i> {{'APPLICATIONS.OUTPUTS.EXPRESSION' | translate}}</span>-->
+<!--      </uib-tab-heading>-->
+<!--      <form name="variable" class="form-horizontal" role="form" novalidate>-->
+<!--        <textarea class="form-control" ng-model="outputExpression.str" rows="8"></textarea>-->
+<!--      </form>-->
+<!--    </uib-tab>-->
+<!--  </uib-tabset>-->
 
 </div>
 <div class="modal-footer">
