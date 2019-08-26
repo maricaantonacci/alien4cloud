@@ -8,9 +8,11 @@ define(function (require) {
   var angular = require('angular');
 
   modules.get('a4c-topology-editor', ['a4c-common', 'ui.ace', 'treeControl']).controller('a4cEditorOutputExpEditCtrl',
-    ['$scope', '$uibModal', 'outputName', 'outputExpression', '$uibModalInstance', 'propertiesServices',
-      function($scope,  $uibModal, outputName, outputExpression, $uibModalInstance, propertiesServices) {
+    ['$scope', '$uibModal', 'isCreateNew', 'outputName', 'outputDescription', 'outputExpression', '$uibModalInstance', 'propertiesServices',
+      function($scope,  $uibModal, isCreateNew, outputName, outputDescription, outputExpression, $uibModalInstance, propertiesServices) {
         $scope.outputName = outputName;
+        $scope.outputDescription = outputDescription;
+        $scope.isCreateNew = isCreateNew;
 
         $scope.outputExpression = {
           str: outputExpression,
@@ -26,7 +28,13 @@ define(function (require) {
         };
 
         $scope.ok = function() {
-          $uibModalInstance.close($scope.outputExpression);
+          $uibModalInstance.close(
+          {
+            outputName: $scope.outputName,
+            outputDescription: "test",
+            //$scope.outputDescription,
+            outputExpression: $scope.outputExpression
+            });
         };
 
         $scope.cancel = function() {

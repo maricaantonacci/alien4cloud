@@ -61,7 +61,16 @@
       "DEPLOYER" : "Deployer input",
       "EXPRESSION" : "Expression",
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "Une expression ne matchant pas le type de l'input a été renseignée. Allez dans la partie \"Expression\" pour l'editer. \nSi vous voulez editer cet input comme propriété, assurez vous de fournir soit une expression qui matche le type de l'input, soit une valeur vide.",
-      "MODAL_HEADER" : "Editer l'input < {{var}} >"
+      "MODAL_HEADER" : "Editer l'input < {{var}} >",
+      "MODAL_HEADER_CREATE" : "Nouvelle output",
+      "DESCRIPTION" : "Description"
+    },
+    "OUTPUTS" : {
+      "CLEAR" : "Effacer",
+      "DEPLOYER" : "Deployer output",
+      "EXPRESSION" : "Expression",
+      "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "Une expression ne matchant pas le type de l'output a été renseignée. Allez dans la partie \"Expression\" pour l'editer. \nSi vous voulez editer cet output comme propriété, assurez vous de fournir soit une expression qui matche le type de l'output, soit une valeur vide.",
+      "MODAL_HEADER_EDIT" : "Editer l'output < {{var}} >"
     },
     "META_PROPERTIES" : "Méta-propriétés",
     "NEW" : "Nouvelle Application",
@@ -835,11 +844,14 @@
     },
     "MENU_FILES" : "Fichiers de l'archive",
     "MENU_HISTORY" : "Historique",
-    "MENU_INPUTS_VAR" : "Inputs et Variables",
+    "MENU_INPUTS_VAR" : "Inputs, Outputs et Variables",
     "MENU_TOPOLOGY" : "Topologie",
     "MENU_VALIDATION" : "Validation de la topologie",
     "MENU_WORKFLOW" : "Workflows",
     "OPERATION" : "Operation",
+    "OUTPUTS" : {
+      "ADD": "Add new output"
+    },
     "REDO" : "Rejouer",
     "SAVE" : "Sauvegarder",
     "UNDO" : "Annuler",
@@ -1027,6 +1039,7 @@
     }
   },
   "N/A" : "N/A",
+  "NAME" : "Nom",
   "NAVADMIN" : {
     "MENU_AUDIT" : "Audit",
     "MENU_ORCHESTRATORS" : "Orchestrateurs",
@@ -1045,6 +1058,7 @@
     "MENU_DEPLOY_NEXT" : "Préparer le prochain déploiement",
     "MENU_DEPLOY_NEXT_DEPLOY" : "Vérifier & déployer",
     "MENU_DEPLOY_NEXT_INPUTS" : "Inputs",
+    "MENU_DEPLOY_NEXT_OUTPUTS" : "Outputs",
     "MENU_DEPLOY_NEXT_LOCATIONS" : "Locations",
     "MENU_DEPLOY_NEXT_MATCHING" : "Matching",
     "MENU_DEPLOY_NEXT_TOPOLOGY" : "Topology",

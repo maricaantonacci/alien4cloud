@@ -43,7 +43,7 @@ define(function (require) {
         }
       }
 
-      $scope.clearInput = function(outputName) {
+      $scope.clearOutput = function(outputName) {
         $scope.execute({
           type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
           name: outputName,
@@ -59,6 +59,9 @@ define(function (require) {
               scope: $scope,
               size: 'lg',
               resolve: {
+                isCreateNew: function() {
+                    return true;
+                },
                 outputName: function() {
                   return "";
                 },
@@ -70,13 +73,13 @@ define(function (require) {
                 }
               }
             });
-        modalInstance.result.then(function(outputExpression) {
+        modalInstance.result.then(function(output) {
           // ${app_trigram}/${env_name}/demo
           $scope.execute({
             type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
-            name: outputName,
-            description: outputDescription.str,
-            expression: outputExpression.str
+            name: output.outputName,
+            description: output.outputDescription,
+            expression: output.outputExpression.str
           });
         });
       }
@@ -88,6 +91,9 @@ define(function (require) {
           scope: $scope,
           size: 'lg',
           resolve: {
+                isCreateNew: function() {
+                    return false;
+                },
             outputName: function() {
               return outputName;
             },
@@ -122,9 +128,9 @@ define(function (require) {
       };
 
       $scope.$watch('triggerVarRefresh', function(newValue){
-        if(_.defined(newValue)){
-          refresh();
-        }
+//        if(_.defined(newValue)){
+//          refresh();
+//        }
       });
     }
   ]);

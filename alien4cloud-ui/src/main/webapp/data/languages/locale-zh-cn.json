@@ -63,6 +63,15 @@
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "不匹配输入类型的表达式已经提供了。 转到\"表达式 \"标签来编辑它。 \ n如果要将其作为属性进行编辑，请确保提供与输入类型匹配的表达式，或将其设置为空。",
       "MODAL_HEADER" : "编辑输入 < {{var}} >"
     },
+    "OUTPUTS" : {
+      "CLEAR" : "清除",
+      "DEPLOYER" : "部署者產量",
+      "EXPRESSION" : "表达式",
+      "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "不匹配產量类型的表达式已经提供了。 转到\"表达式 \"标签来编辑它。  n如果要将其作为属性进行编辑，请确保提供与產量类型匹配的表达式，或将其设置为空。",
+      "MODAL_HEADER_EDIT" : "编辑產量 < {{var}} >",
+      "MODAL_HEADER_CREATE" : "新產出",
+      "DESCRIPTION" : "描述"
+    },
     "META_PROPERTIES" : "元属性",
     "NEW" : "新建应用",
     "RUNTIME" : {
@@ -833,11 +842,14 @@
     },
     "MENU_FILES" : "工件内容",
     "MENU_HISTORY" : "历史",
-    "MENU_INPUTS_VAR" : "输入和变量",
+    "MENU_INPUTS_VAR" : "輸入，輸出和變量",
     "MENU_TOPOLOGY" : "拓扑",
     "MENU_VALIDATION" : "拓扑验证",
     "MENU_WORKFLOW" : "工作流",
     "OPERATION" : "操作",
+    "OUTPUTS" : {
+      "ADD": "添加新輸出"
+    },
     "REDO" : "重做",
     "SAVE" : "保存",
     "UNDO" : "撤销",
@@ -1025,6 +1037,7 @@
     }
   },
   "N/A" : "N/A",
+  "NAME" : "名稱",
   "NAVADMIN" : {
     "MENU_AUDIT" : "审核",
     "MENU_ORCHESTRATORS" : "云编排工具",
@@ -1043,6 +1056,7 @@
     "MENU_DEPLOY_NEXT" : "准备下一个部署",
     "MENU_DEPLOY_NEXT_DEPLOY" : "回顾和部署",
     "MENU_DEPLOY_NEXT_INPUTS" : "输入",
+    "MENU_DEPLOY_NEXT_OUTPUTS" : "輸出",
     "MENU_DEPLOY_NEXT_LOCATIONS" : "位置",
     "MENU_DEPLOY_NEXT_MATCHING" : "匹配",
     "MENU_DEPLOY_NEXT_TOPOLOGY" : "拓扑",
