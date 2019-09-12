@@ -2,11 +2,43 @@
   <div class="modal-header">
      <h3>{{'EDITOR.ARTIFACTS.SELECT' | translate}}</h3>
   </div>
+  <uib-tab heading="{{'EDITOR.ARTIFACTS.VIRTUAL' | translate}}" id="virtual-tab" active="activeTab === 'virtual'" ng-click="setActiveTab('virtual')">
+    <form name="selectArtifactVirtualForm" class="form-horizontal" role="form" ng-submit="saveVirtual()" novalidate>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="artifact-file" class="col-lg-3 control-label">{{'EDITOR.ARTIFACTS.REPOS.FILE' | translate}}</label>
+          <div class="col-lg-9">
+            <input type="text" class="form-control" id="artifact-file" ng-model="artifact.reference" value="{{ artifact.reference }}"
+                   required>
+            </input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="artifact-type" class="col-lg-3 control-label">{{'EDITOR.ARTIFACTS.REPOS.TYPE' | translate}}</label>
+          <div class="col-lg-9">
+            <input type="text" class="form-control" id="artifact-type" ng-model="artifact.artifactType" value="{{ artifactOrig.artifactType }}"
+                   required disabled>
+            </input>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-default" ng-click="cancel()">
+          {{'CANCEL' | translate}}
+        </a>
+        <button id="select-artifact-virtual-button" class="btn btn-primary">
+          {{'SELECT' | translate}}
+        </button>
+      </div>
+    </form>
+  </uib-tab>
   <uib-tab heading="{{'EDITOR.ARTIFACTS.REPOS.LOCAL' | translate}}" id="local-tab" active="activeTab === 'local'" ng-click="setActiveTab('local')">
     <form name="selectArtifactForm" class="form-horizontal" role="form" ng-submit="save(selectArtifactForm.$valid)" novalidate>
 
       <div class="modal-body">
-        <treecontrol class="tree-classic" tree-model="treedata" options="opts" on-selection="onSelect(node)" on-node-toggle="onSelect(node)" selected-node="selected" expanded-nodes="expandedNodes">
+        <treecontrol class="tree-classic" tree-model="treedata" options="opts" on-selection="onSelect(node)"
+                     on-node-toggle="onSelect(node)" selected-node="selected" expanded-nodes="expandedNodes">
           {{node.name}}
         </treecontrol>
         <input type="hidden" class="form-control" id="artifact_reference_id" ng-model="artifact.reference" name="name" required >
