@@ -61,7 +61,15 @@
       "DEPLOYER" : "部署者输入",
       "EXPRESSION" : "表达式",
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "不匹配输入类型的表达式已经提供了。 转到\"表达式 \"标签来编辑它。 \ n如果要将其作为属性进行编辑，请确保提供与输入类型匹配的表达式，或将其设置为空。",
-      "MODAL_HEADER" : "编辑输入 < {{var}} >"
+      "MODAL_HEADER_EDIT" : "編輯輸入 < {{var}} >",
+      "MODAL_HEADER_CREATE" : "新的輸入",
+      "DEFAULT" : "默認",
+      "DESCRIPTION" : "描述",
+      "REQUIRED" : {
+        "FNAME" : "需要",
+        "YES" : "是",
+        "NO" : "沒有"
+      }
     },
     "OUTPUTS" : {
       "CLEAR" : "清除",
@@ -70,7 +78,9 @@
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "不匹配產量类型的表达式已经提供了。 转到\"表达式 \"标签来编辑它。  n如果要将其作为属性进行编辑，请确保提供与產量类型匹配的表达式，或将其设置为空。",
       "MODAL_HEADER_EDIT" : "编辑產量 < {{var}} >",
       "MODAL_HEADER_CREATE" : "新產出",
-      "DESCRIPTION" : "描述"
+      "DESCRIPTION" : "描述",
+      "DELETE" : "刪除",
+      "VALIDATE" : "驗證"
     },
     "META_PROPERTIES" : "元属性",
     "NEW" : "新建应用",
@@ -801,7 +811,10 @@
         "URL" : "URL"
       },
       "REPOSITORY" : "存储库",
-      "SELECT" : "选择工件"
+      "SELECT" : "选择工件",
+      "CREATE_NEW" : "Create new artifact",
+      "EDIT" : "Edit artifact",
+      "VIRTUAL" : "Virtual"
     },
     "ASK_SAVE" : {
       "MESSAGE" : "在离开编辑器之前要保存更改吗？",
@@ -839,6 +852,9 @@
     "GIT_HISTORY" : "Git历史",
     "HISTORY" : {
       "DETAIL" : "详情"
+    },
+    "INPUTS" : {
+      "ADD": "Add new input"
     },
     "MENU_FILES" : "工件内容",
     "MENU_HISTORY" : "历史",

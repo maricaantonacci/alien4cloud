@@ -61,7 +61,19 @@
       "DEPLOYER" : "Deployer input",
       "EXPRESSION" : "Expression",
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "An expression not matching the input type has been provided. Go to \"Expression\" tab to edit it. \nIf you want to edit it as a property, make sure to either provide an expression matching the input type, or set it empty.",
-      "MODAL_HEADER" : "Edit input < {{var}} >"
+      "MODAL_HEADER_EDIT" : "Edit input < {{var}} >",
+      "MODAL_HEADER_CREATE" : "New input",
+      "NEW" : {
+        "TYPE" : "Type",
+        "NAME" : "Name",
+        "DEFAULT": "Default",
+          "DESCRIPTION": "Description",
+          "REQUIRED": {
+            "FNAME": "Required",
+            "YES": "Yes",
+            "NO": "No"
+          }
+        }
     },
     "OUTPUTS" : {
       "CLEAR" : "Clear",
@@ -70,7 +82,9 @@
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "An expression not matching the output type has been provided. Go to \"Expression\" tab to edit it. \nIf you want to edit it as a property, make sure to either provide an expression matching the output type, or set it empty.",
       "MODAL_HEADER_EDIT" : "Edit output < {{var}} >",
       "MODAL_HEADER_CREATE" : "New output",
-      "DESCRIPTION" : "Description"
+      "DESCRIPTION" : "Description",
+      "DELETE" : "Delete",
+      "VALIDATE" : "Validate"
     },
     "META_PROPERTIES" : "Meta-properties",
     "NEW" : "New Application",
@@ -803,7 +817,11 @@
         "URL" : "URL"
       },
       "REPOSITORY" : "Repository",
-      "SELECT" : "Select artifact"
+      "SELECT" : "Select artifact",
+      "CREATE_NEW" : "Create new artifact",
+      "EDIT" : "Edit artifact < {{artifactName}} >",
+      "VIRTUAL" : "Virtual"
+
     },
     "ASK_SAVE" : {
       "MESSAGE" : "Do you want to save changes before leaving the editor ?",
@@ -841,6 +859,9 @@
     "GIT_HISTORY" : "Git history",
     "HISTORY" : {
       "DETAIL" : "Details"
+    },
+    "INPUTS" : {
+      "ADD": "Add new input"
     },
     "MENU_FILES" : "Archive content",
     "MENU_HISTORY" : "History",
