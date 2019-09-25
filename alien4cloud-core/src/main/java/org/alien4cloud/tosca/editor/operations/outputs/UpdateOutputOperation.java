@@ -4,12 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.alien4cloud.tosca.model.definitions.OutputDefinition;
 
-/**
- * Add a topology output
- */
-@Getter
 @Setter
-public class AddOutputOperation extends AbstractOutputOperation {
+@Getter
+public class UpdateOutputOperation  extends AbstractOutputOperation {
 
     /**
      * The definition of the output we want to add
@@ -18,6 +15,6 @@ public class AddOutputOperation extends AbstractOutputOperation {
 
     @Override
     public String commitMessage() {
-        return "add output";
+        return "update output";
     }
 }

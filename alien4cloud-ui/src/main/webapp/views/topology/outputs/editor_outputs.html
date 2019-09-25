@@ -7,19 +7,21 @@
     <tr>
       <th>{{'COMMON.NAME' | translate}}</th>
       <th>{{'APPLICATIONS.OUTPUTS.EXPRESSION' | translate}}</th>
+      <th>{{'APPLICATIONS.OUTPUTS.DESCRIPTION' | translate}}</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <!--tr ng-repeat="(outputName, description, value) in topology.topology.outputs">
-      <td style="width: 20%">{{outputName}}</td-->
+    <tr ng-repeat="(outputName, output) in topology.topology.outputs">
+      <td style="width: 20%">{{outputName}}</td>
       <!-- ng-bind-html doesn't work here as we want to add ng-click to variable elements. So a4c-compile is a hack directive for that to work. -->
-      <!--td ng-if="loadedOutputs[outputName]" style="white-space: pre;"><span a4c-compile=dump(loadedOutputs[inputoutputName])></span></td>
-      <td ng-if="!loadedOutputs[outputName]" class= "deployer_input">{{'APPLICATIONS.OUTPUTS.DEPLOYER' | translate}}</td>
+      <td style="white-space: pre;"><span a4c-compile=dumpOutputValue(output.value)></span></td>
+      <!--td ng-if="!loadedOutputs[outputName]" class= "deployer_input">{{'APPLICATIONS.OUTPUTS.DEPLOYER' | translate}}</td-->
+      <td style="width: 40%">{{output.description}}</td>
       <td>
         <a class="btn btn-default btn-sm" ng-click="editOutput(outputName)"><i class="fa fa-edit"></i> {{'COMMON.EDIT' | translate}}</a>
-        <a class="btn btn-default btn-sm" ng-click="clearOutput(outputName)"><i class="fa fa-eraser"></i> {{'APPLICATIONS.OUTPUTS.CLEAR' | translate}}</a>
+        <a class="btn btn-default btn-sm" ng-click="deleteOutput(outputName)"><i class="fa fa-eraser"></i> {{'APPLICATIONS.OUTPUTS.DELETE' | translate}}</a>
       </td>
-    </tr-->
+    </tr>
   </tbody>
 </table>

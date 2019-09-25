@@ -8,7 +8,38 @@ define(function (require) {
 
   modules.get('a4c-common').factory('topologyJsonProcessor', ['listToMapService', function(listToMapService) {
       // This service post-process a topology json in order to add maps field from ordered maps array (array of MapEntry).
+
+
+      function renderToscaFuntion(jsonFunction) {
+        var result = Object.create(null);
+        var fName = jsonFunction["function"];
+        var params = jsonFunction["parameters"];
+        var newParams = [];
+        for (const param of params) {
+            if (typeof param === 'string' || param instanceof String || typeof param == 'number') {
+                newParams.push(param);
+            } else {
+                newParams.push(renderToscaFuntion(param));
+            }
+        }
+        result[fName] = (newParams.length == 1 ? newParams[0] : newParams);
+        return result;
+      }
+
       return {
+
+        renderOuputValue: function(outputValue) {
+            if (typeof outputValue === 'string' || outputValue instanceof String || typeof outputValue == 'number')
+                return outputValue;
+             else
+                return renderToscaFuntion(outputValue);
+
+        },
+
+        renderToscaFuntion: function(jsonFunction) {
+            return renderToscaFuntion(jsonFunction);
+        },
+
         /**
          * Compute the number of times that a requirement template is used by relationships.
          *
