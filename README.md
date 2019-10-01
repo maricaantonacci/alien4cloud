@@ -95,7 +95,6 @@ For the deep orchestrator integration you need to have also the following proper
 ```yaml
 deep:
   orchestrator:
-    url: <orchestrator_url>
     keystore:
       location: <cert_keystore_location>
       password: <cert_keystore_password>
@@ -103,7 +102,6 @@ deep:
 
 where
 
-- ```orchestrator_url``` is the base URL of the DEEP orchestrator to use
 - ```cert_keystore_location``` is the location of a JKS keystore containing the certificate used by the orchestrator endpoint.
 - ```cert_keystore_password``` is the password for the above keystore, if any.
 
@@ -115,7 +113,7 @@ where
 <dependency>
     <groupId>org.springframework.social</groupId>
     <artifactId>spring-social-oidc</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.4</version>
 </dependency>
 ```
 
