@@ -5,7 +5,7 @@ module.exports = {
   options: {
     port: 9999,
     // Change this to'0.0.0.0' to access the server from outside.
-    hostname: 'localhost',
+    hostname: "0.0.0.0",//'localhost',
     livereload: 35729
   },
   proxies: [
@@ -21,7 +21,7 @@ module.exports = {
   ],
   livereload: {
     options: {
-      open: true,
+      open: false, //Don't run a browser
       base: ['.tmp', '<%= yeoman.app %>'],
       middleware: function(connect, options) {
         if (!Array.isArray(options.base)) {
