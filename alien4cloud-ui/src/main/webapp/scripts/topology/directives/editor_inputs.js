@@ -25,7 +25,8 @@ define(function (require) {
 
 
   modules.get('a4c-topology-editor', ['a4c-common', 'ui.ace', 'treeControl']).controller('editorInputsCtrl',
-    ['$scope', 'topologyVariableService', '$http', 'topoBrowserService', '$filter', '$uibModal', function($scope, topologyVariableService, $http, topoBrowserService, $filter, $uibModal) {
+    ['$scope', 'topologyVariableService', '$http', 'topoBrowserService', '$filter', '$uibModal',
+    function($scope, topologyVariableService, $http, topoBrowserService, $filter, $uibModal) {
 
       $scope.dump = function(value) {
         return $filter('a4cLinky')(yaml.safeDump(value, {indent: 4}), 'openVarModal');
@@ -50,6 +51,41 @@ define(function (require) {
         });
       };
 
+      $scope.createInput = function() {
+              var modalInstance = $uibModal.open({
+                templateUrl: 'views/topology/inputs/edit_input_modal.html',
+                controller: 'a4cEditorInputExpEditCtrl',
+                scope: $scope,
+                size: 'lg',
+                resolve: {
+                  inputName: function() {
+                    return "";
+                  },
+                  inputExpression: function() {
+                    return "";
+                  },
+                  isCreateNew: function() {
+                   return true;
+                 }
+                }
+              });
+              modalInstance.result.then(function(input) {
+                // ${app_trigram}/${env_name}/demo
+                let t = input.name;
+                $scope.execute({
+                  type: 'org.alien4cloud.tosca.editor.operations.inputs.AddInputOperation',
+                  inputName: input.name,
+                  propertyDefinition: {
+                    type: input.type,
+                    name: input.name,
+                    required: input.required,
+                    description: input.description,
+                    default: input.defaultValue
+                  }
+                });
+              });
+            };
+
       $scope.editInput = function(inputName) {
         var modalInstance = $uibModal.open({
           templateUrl: 'views/topology/inputs/edit_input_modal.html',
@@ -62,10 +98,14 @@ define(function (require) {
             },
             inputExpression: function() {
               return _.defined($scope.loadedInputs) && _.defined($scope.loadedInputs[inputName]) ? yaml.safeDump($scope.loadedInputs[inputName], {indent: 4}) : '';
+            },
+            isCreateNew: function() {
+              return false;
             }
           }
         });
-        modalInstance.result.then(function(inputExpression) {
+        modalInstance.result.then(function(input) {
+            var inputExpression = input;//.inputExpression;
           // ${app_trigram}/${env_name}/demo
           $scope.execute({
             type: 'org.alien4cloud.tosca.editor.operations.inputs.UpdateInputExpressionOperation',
