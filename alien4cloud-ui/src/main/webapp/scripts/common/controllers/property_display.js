@@ -99,6 +99,7 @@ define(function(require) {
 
       /* method private to factorise all call to the serve and trigge errors */
       var callSaveService = function(propertyRequest) {
+        //var deps = $scope.configuration.dependencies;
         var saveResult = $scope.onSave(propertyRequest);
         // If the callback return a promise
         if (_.defined(saveResult) && _.defined(saveResult.then)) {
@@ -377,6 +378,16 @@ define(function(require) {
             $scope.definitionObject.uiPassword = $scope.definition.password;
             $scope.isLongText = _.defined(shownValue) && typeof shownValue === 'string' && shownValue.indexOf('\n') > -1;
             break;
+         case 'tosca.datatypes.Root':
+         case 'tosca.datatypes.network.PortDef':
+           $scope.definitionObject.uiName = 'string';
+           if(_.defined(shownValue) && _.defined(shownValue.value)) {
+             $scope.definitionObject.uiValue = shownValue.value;
+           } else {
+             $scope.definitionObject.uiValue = shownValue;
+           }
+           $scope.isLongText = _.defined(shownValue) && typeof shownValue === 'string' && shownValue.indexOf('\n') > -1;
+           break;
           default :
             $scope.definitionObject.uiName = 'complex';
             $scope.definitionObject.uiValue = shownValue;

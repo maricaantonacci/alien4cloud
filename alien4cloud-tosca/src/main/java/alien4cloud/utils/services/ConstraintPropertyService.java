@@ -20,6 +20,7 @@ import org.alien4cloud.tosca.model.types.DataType;
 import org.alien4cloud.tosca.model.types.PrimitiveDataType;
 import org.alien4cloud.tosca.normative.types.IPropertyType;
 import org.alien4cloud.tosca.normative.types.ToscaTypes;
+import org.alien4cloud.tosca.normative.types.datatypes.DatatypesRoot;
 
 import java.beans.IntrospectionException;
 import java.util.List;
@@ -71,13 +72,19 @@ public final class ConstraintPropertyService {
             value = ((PropertyValue) propertyValue).getValue();
         }
         boolean isTypeDerivedFromPrimitive = false;
+        boolean isDatatype = false;
         DataType dataType = null;
         String typeName = propertyDefinition.getType();
         if (!ToscaTypes.isPrimitive(typeName)) {
-            dataType = ToscaContext.get(DataType.class, typeName);
-            if (dataType instanceof PrimitiveDataType) {
-                // the type is derived from a primitive type
-                isTypeDerivedFromPrimitive = true;
+            if (ToscaTypes.isDatatype(typeName))
+            {
+                isDatatype = true;
+            } else {
+                dataType = ToscaContext.get(DataType.class, typeName);
+                if (dataType instanceof PrimitiveDataType) {
+                    // the type is derived from a primitive type
+                    isTypeDerivedFromPrimitive = true;
+                }
             }
         }
 
@@ -86,6 +93,8 @@ public final class ConstraintPropertyService {
                 checkSimplePropertyConstraint(propertyName, (String) value, propertyDefinition);
             } else if (isTypeDerivedFromPrimitive) {
                 checkComplexPropertyDerivedFromPrimitiveTypeConstraints(propertyName, (String) value, propertyDefinition, dataType);
+            } else if (isDatatype) {
+
             } else {
                 throwConstraintValueDoNotMatchPropertyTypeException(
                         "Property value is a String while the expected data type is the complex type " + propertyDefinition.getType(), propertyName,

@@ -5,15 +5,11 @@ import java.util.Set;
 
 import org.alien4cloud.tosca.exceptions.ConstraintValueDoNotMatchPropertyTypeException;
 import org.alien4cloud.tosca.exceptions.ConstraintViolationException;
-import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
-import org.alien4cloud.tosca.model.definitions.ConcatPropertyValue;
-import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
-import org.alien4cloud.tosca.model.definitions.PropertyConstraint;
-import org.alien4cloud.tosca.model.definitions.PropertyDefinition;
-import org.alien4cloud.tosca.model.definitions.PropertyValue;
+import org.alien4cloud.tosca.model.definitions.*;
 import org.alien4cloud.tosca.model.types.DataType;
 import org.alien4cloud.tosca.normative.types.IPropertyType;
 import org.alien4cloud.tosca.normative.types.ToscaTypes;
+import org.alien4cloud.tosca.normative.types.datatypes.DatatypesRoot;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.nodes.Node;
 
@@ -60,10 +56,15 @@ public class PropertyDefinitionPostProcessor implements IPostProcessor<Map.Entry
             AbstractPropertyValue defaultValue = propertyDefinition.getDefault();
             if (defaultValue instanceof FunctionPropertyValue || defaultValue instanceof ConcatPropertyValue) {
                 //TODO Validate constraints on functions
-            } else {
-                // it should be a PropertyValue
-                ConstraintPropertyService.checkPropertyConstraint(propertyName,
-                    ((PropertyValue) defaultValue).getValue(), propertyDefinition);
+            } else if (defaultValue instanceof ScalarPropertyValue) {
+                if (ToscaTypes.fromYamlTypeName(propertyDefinition.getType()) != null) {
+                    //TODO Validate TOSCA datatypes
+
+                } else {
+                    // it should be a PropertyValue
+                    ConstraintPropertyService.checkPropertyConstraint(propertyName,
+                            ((PropertyValue) defaultValue).getValue(), propertyDefinition);
+                }
             }
         } catch (ConstraintValueDoNotMatchPropertyTypeException | ConstraintViolationException e) {
             Node node = ParsingContextExecution.getObjectToNodeMap().get(propertyDefinition.getDefault());
