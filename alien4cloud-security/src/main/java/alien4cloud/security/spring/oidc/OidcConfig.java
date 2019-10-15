@@ -71,7 +71,6 @@ public class OidcConfig implements SocialConfigurer {
         }
         connectionFactoryConfigurer.addConnectionFactory(
                     new OidcConnectionFactory(
-                            environment.getProperty("deep.orchestrator.url"),
                             orchestratorKeystore,
                             environment.getProperty("oidc.iam.issuer"),
                             environment.getProperty("oidc.iam.client-id"),
