@@ -1,27 +1,36 @@
 <a class="btn btn-success btn-xs" ng-click="createOutput()">
     <i class="fa fa-plus-circle"></i> {{'EDITOR.OUTPUTS.ADD' | translate}}
-  </a>
+</a>
 <empty-place-holder data="topology.topology.outputs"></empty-place-holder>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>{{'COMMON.NAME' | translate}}</th>
-      <th>{{'APPLICATIONS.OUTPUTS.EXPRESSION' | translate}}</th>
-      <th>{{'APPLICATIONS.OUTPUTS.DESCRIPTION' | translate}}</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="(outputName, output) in topology.topology.outputs">
-      <td style="width: 20%">{{outputName}}</td>
-      <!-- ng-bind-html doesn't work here as we want to add ng-click to variable elements. So a4c-compile is a hack directive for that to work. -->
-      <td style="white-space: pre;"><span a4c-compile=dumpOutputValue(output.value)></span></td>
-      <!--td ng-if="!loadedOutputs[outputName]" class= "deployer_input">{{'APPLICATIONS.OUTPUTS.DEPLOYER' | translate}}</td-->
-      <td style="width: 40%">{{output.description}}</td>
-      <td>
-        <a class="btn btn-default btn-sm" ng-click="editOutput(outputName)"><i class="fa fa-edit"></i> {{'COMMON.EDIT' | translate}}</a>
-        <a class="btn btn-default btn-sm" ng-click="deleteOutput(outputName)"><i class="fa fa-eraser"></i> {{'APPLICATIONS.OUTPUTS.DELETE' | translate}}</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="var-table-wrapper" ng-if="_.isNotEmpty(topology.topology.outputs)">
+    <div class="var-table-wrapper-header">
+        <div class="var-table-cell var-table-cell-w14 var-table-cell-header">{{'COMMON.NAME' | translate}}</div>
+        <div class="var-table-cell var-table-cell-w35 var-table-cell-header">{{'APPLICATIONS.OUTPUTS.EXPRESSION' |
+            translate}}
+        </div>
+        <div class="var-table-cell var-table-cell-w35 var-table-cell-header">{{'APPLICATIONS.OUTPUTS.DESCRIPTION' |
+            translate}}
+        </div>
+        <div class="var-table-cell var-table-cell-w14 var-table-cell-header"></div>
+    </div>
+    <div class="var-table-scroll">
+        <table class="table table-hover">
+
+            <tbody class="var-table-wrapper-body">
+            <tr ng-repeat="(outputName, output) in topology.topology.outputs">
+                <td class="var-table-cell-w14">{{outputName}}</td>
+                <!-- ng-bind-html doesn't work here as we want to add ng-click to variable elements. So a4c-compile is a hack directive for that to work. -->
+                <td class="var-table-cell-w35"><span a4c-compile=dumpOutputValue(output.value)></span></td>
+                <!--td ng-if="!loadedOutputs[outputName]" class= "deployer_input">{{'APPLICATIONS.OUTPUTS.DEPLOYER' | translate}}</td-->
+                <td class="var-table-cell-w35">{{output.description}}</td>
+                <td class="var-table-cell-w14">
+                    <a class="btn btn-default btn-sm" ng-click="editOutput(outputName)"><i class="fa fa-edit"></i>
+                        {{'COMMON.EDIT' | translate}}</a>
+                    <a class="btn btn-default btn-sm" ng-click="deleteOutput(outputName)"><i class="fa fa-eraser"></i>
+                        {{'APPLICATIONS.OUTPUTS.DELETE' | translate}}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
