@@ -72,19 +72,23 @@ public final class ConstraintPropertyService {
             value = ((PropertyValue) propertyValue).getValue();
         }
         boolean isTypeDerivedFromPrimitive = false;
-        boolean isDatatype = false;
+        //boolean isDatatype = false;
         DataType dataType = null;
         String typeName = propertyDefinition.getType();
         if (!ToscaTypes.isPrimitive(typeName)) {
-            if (ToscaTypes.isDatatype(typeName))
-            {
-                isDatatype = true;
-            } else {
-                dataType = ToscaContext.get(DataType.class, typeName);
-                if (dataType instanceof PrimitiveDataType) {
-                    // the type is derived from a primitive type
-                    isTypeDerivedFromPrimitive = true;
-                }
+            dataType = ToscaContext.get(DataType.class, typeName);
+            if (dataType instanceof PrimitiveDataType) {
+                // the type is derived from a primitive type
+                isTypeDerivedFromPrimitive = true;
+//            if (ToscaTypes.isDatatype(typeName))
+//            {
+//                isDatatype = true;
+//            } else {
+//                dataType = ToscaContext.get(DataType.class, typeName);
+//                if (dataType instanceof PrimitiveDataType) {
+//                    // the type is derived from a primitive type
+//                    isTypeDerivedFromPrimitive = true;
+//                }
             }
         }
 
@@ -93,7 +97,7 @@ public final class ConstraintPropertyService {
                 checkSimplePropertyConstraint(propertyName, (String) value, propertyDefinition);
             } else if (isTypeDerivedFromPrimitive) {
                 checkComplexPropertyDerivedFromPrimitiveTypeConstraints(propertyName, (String) value, propertyDefinition, dataType);
-            } else if (isDatatype) {
+//            } else if (isDatatype) {
 
             } else {
                 throwConstraintValueDoNotMatchPropertyTypeException(

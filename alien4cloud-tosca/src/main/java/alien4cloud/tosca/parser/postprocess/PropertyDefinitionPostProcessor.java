@@ -56,15 +56,19 @@ public class PropertyDefinitionPostProcessor implements IPostProcessor<Map.Entry
             AbstractPropertyValue defaultValue = propertyDefinition.getDefault();
             if (defaultValue instanceof FunctionPropertyValue || defaultValue instanceof ConcatPropertyValue) {
                 //TODO Validate constraints on functions
-            } else if (defaultValue instanceof ScalarPropertyValue) {
-                if (ToscaTypes.fromYamlTypeName(propertyDefinition.getType()) != null) {
-                    //TODO Validate TOSCA datatypes
-
-                } else {
-                    // it should be a PropertyValue
-                    ConstraintPropertyService.checkPropertyConstraint(propertyName,
-                            ((PropertyValue) defaultValue).getValue(), propertyDefinition);
-                }
+            } else {
+                // it should be a PropertyValue
+                ConstraintPropertyService.checkPropertyConstraint(propertyName,
+                        ((PropertyValue) defaultValue).getValue(), propertyDefinition);
+//            } else if (defaultValue instanceof ScalarPropertyValue) {
+//                if (ToscaTypes.fromYamlTypeName(propertyDefinition.getType()) != null) {
+//                    //TODO Validate TOSCA datatypes
+//
+//                } else {
+//                    // it should be a PropertyValue
+//                    ConstraintPropertyService.checkPropertyConstraint(propertyName,
+//                            ((PropertyValue) defaultValue).getValue(), propertyDefinition);
+//                }
             }
         } catch (ConstraintValueDoNotMatchPropertyTypeException | ConstraintViolationException e) {
             Node node = ParsingContextExecution.getObjectToNodeMap().get(propertyDefinition.getDefault());
