@@ -1,7 +1,11 @@
 package alien4cloud.rest.internal;
 
+import org.alien4cloud.tosca.editor.EditionContext;
+import org.alien4cloud.tosca.editor.EditionContextManager;
 import org.alien4cloud.tosca.exceptions.ConstraintValueDoNotMatchPropertyTypeException;
 import org.alien4cloud.tosca.exceptions.ConstraintViolationException;
+import org.alien4cloud.tosca.normative.types.datatypes.DatatypesNetworkPortDef;
+import org.alien4cloud.tosca.normative.types.datatypes.DatatypesRoot;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +36,14 @@ public class PropertiesController {
     public RestResponse<ConstraintInformation> checkPropertyDefinition(@RequestBody PropertyValidationRequest propertyValidationRequest) {
         if (propertyValidationRequest.getPropertyDefinition() != null) {
             try {
-                if (propertyValidationRequest.getDependencies() != null) {
-                    ToscaContext.init(propertyValidationRequest.getDependencies());
+                if (!isDataTypeFromPrimitive(propertyValidationRequest.getPropertyDefinition().getType())) {
+                    if (propertyValidationRequest.getDependencies() != null) {
+                        ToscaContext.init(propertyValidationRequest.getDependencies());
+                    }
+
+                    ConstraintPropertyService.checkPropertyConstraint(propertyValidationRequest.getDefinitionId(), propertyValidationRequest.getValue(),
+                            propertyValidationRequest.getPropertyDefinition());
                 }
-                ConstraintPropertyService.checkPropertyConstraint(propertyValidationRequest.getDefinitionId(), propertyValidationRequest.getValue(),
-                        propertyValidationRequest.getPropertyDefinition());
             } catch (ConstraintViolationException e) {
                 log.error("Constraint violation error for property <" + propertyValidationRequest.getDefinitionId() + "> with value <"
                         + propertyValidationRequest.getValue() + ">", e);
@@ -60,5 +67,11 @@ public class PropertiesController {
         }
 
         return RestResponseBuilder.<ConstraintInformation> builder().build();
+    }
+
+    protected boolean isDataTypeFromPrimitive(String dataTypeName) {
+        if (dataTypeName.equalsIgnoreCase(DatatypesNetworkPortDef.NAME))
+            return true;
+        return false;
     }
 }

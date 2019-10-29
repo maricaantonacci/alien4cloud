@@ -2,7 +2,7 @@ package org.alien4cloud.tosca.normative.types.datatypes;
 
 import org.alien4cloud.tosca.exceptions.InvalidPropertyValueException;
 
-public class DatatypesNetworkPortDef extends DatatypesRoot<Integer> {
+public class DatatypesNetworkPortDef extends DatatypesPrimitive<Integer> {
 
     public static final String NAME = "tosca.datatypes.network.PortDef";
 
