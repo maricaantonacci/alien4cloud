@@ -724,6 +724,25 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.5.1</version>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <serverId>nexus</serverId>
+              <nexusUrl>https://repository.indigo-datacloud.eu/</nexusUrl>
+              <skipStaging>true</skipStaging>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -739,4 +758,16 @@
       </properties>
     </profile>
   </profiles>
+  
+  <distributionManagement>
+     <snapshotRepository>
+         <id>maven-snapshots</id>
+         <url>https://repository.indigo-datacloud.eu/repository/maven-snapshots/</url>
+     </snapshotRepository>
+     <repository>
+         <id>maven-releases</id>
+         <url>https://repository.indigo-datacloud.eu/repository/maven-releases/</url>
+     </repository>
+  </distributionManagement>
+
 </project>
