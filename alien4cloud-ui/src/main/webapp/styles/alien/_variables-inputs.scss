@@ -32,3 +32,49 @@
 .var-defined:hover .var-scope-delete {
   display: inline-block;
 }
+
+.var-table-wrapper {
+  position:relative;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+.var-table-scroll {
+  min-height: 5em;
+  max-height: 30em;
+  overflow:auto;
+  margin-top:2vh;
+}
+
+.var-table-wrapper-header {
+    width: 100%;
+}
+
+.var-table-wrapper-body {
+    width: 100%;
+}
+
+.var-table-cell {
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+.var-table-cell-header {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.var-table-cell-w35 {
+    width: 35%;
+}
+
+.var-table-cell-w14 {
+    width: 14%;
+}
+
+
+.var-table-cell-w70 {
+    width: 70%;
+}
+

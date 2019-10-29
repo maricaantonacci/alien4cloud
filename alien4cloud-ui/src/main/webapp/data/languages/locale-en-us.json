@@ -61,7 +61,30 @@
       "DEPLOYER" : "Deployer input",
       "EXPRESSION" : "Expression",
       "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "An expression not matching the input type has been provided. Go to \"Expression\" tab to edit it. \nIf you want to edit it as a property, make sure to either provide an expression matching the input type, or set it empty.",
-      "MODAL_HEADER" : "Edit input < {{var}} >"
+      "MODAL_HEADER_EDIT" : "Edit input < {{var}} >",
+      "MODAL_HEADER_CREATE" : "New input",
+      "NEW" : {
+        "TYPE" : "Type",
+        "NAME" : "Name",
+        "DEFAULT": "Default",
+          "DESCRIPTION": "Description",
+          "REQUIRED": {
+            "FNAME": "Required",
+            "YES": "Yes",
+            "NO": "No"
+          }
+        }
+    },
+    "OUTPUTS" : {
+      "CLEAR" : "Clear",
+      "DEPLOYER" : "Deployer output",
+      "EXPRESSION" : "Expression",
+      "EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE" : "An expression not matching the output type has been provided. Go to \"Expression\" tab to edit it. \nIf you want to edit it as a property, make sure to either provide an expression matching the output type, or set it empty.",
+      "MODAL_HEADER_EDIT" : "Edit output < {{var}} >",
+      "MODAL_HEADER_CREATE" : "New output",
+      "DESCRIPTION" : "Description",
+      "DELETE" : "Delete",
+      "VALIDATE" : "Validate"
     },
     "META_PROPERTIES" : "Meta-properties",
     "NEW" : "New Application",
@@ -794,7 +817,11 @@
         "URL" : "URL"
       },
       "REPOSITORY" : "Repository",
-      "SELECT" : "Select artifact"
+      "SELECT" : "Select artifact",
+      "CREATE_NEW" : "Create new artifact",
+      "EDIT" : "Edit artifact < {{artifactName}} >",
+      "VIRTUAL" : "Virtual"
+
     },
     "ASK_SAVE" : {
       "MESSAGE" : "Do you want to save changes before leaving the editor ?",
@@ -833,13 +860,19 @@
     "HISTORY" : {
       "DETAIL" : "Details"
     },
+    "INPUTS" : {
+      "ADD": "Add new input"
+    },
     "MENU_FILES" : "Archive content",
     "MENU_HISTORY" : "History",
-    "MENU_INPUTS_VAR" : "Inputs and Variables",
+    "MENU_INPUTS_VAR" : "Inputs, Outputs and Variables",
     "MENU_TOPOLOGY" : "Topology",
     "MENU_VALIDATION" : "Topology validation",
     "MENU_WORKFLOW" : "Workflows",
     "OPERATION" : "Operation",
+    "OUTPUTS" : {
+      "ADD": "Add new output"
+    },
     "REDO" : "Redo",
     "SAVE" : "Save",
     "UNDO" : "Undo",
@@ -1027,6 +1060,7 @@
     }
   },
   "N/A" : "N/A",
+  "NAME" : "Name",
   "NAVADMIN" : {
     "MENU_AUDIT" : "Audit",
     "MENU_ORCHESTRATORS" : "Orchestrators",
@@ -1045,6 +1079,7 @@
     "MENU_DEPLOY_NEXT" : "Prepare next deployment",
     "MENU_DEPLOY_NEXT_DEPLOY" : "Review & deploy",
     "MENU_DEPLOY_NEXT_INPUTS" : "Inputs",
+    "MENU_DEPLOY_NEXT_OUTPUTS" : "Outputs",
     "MENU_DEPLOY_NEXT_LOCATIONS" : "Locations",
     "MENU_DEPLOY_NEXT_MATCHING" : "Matching",
     "MENU_DEPLOY_NEXT_TOPOLOGY" : "Topology",

@@ -1,39 +1,95 @@
 <div class="modal-header">
-  <h3>{{'APPLICATIONS.INPUTS.MODAL_HEADER' | translate:{var:inputName} }}</h3>
+  <h3 ng-if="isCreateNew">{{ 'APPLICATIONS.INPUTS.MODAL_HEADER_CREATE'  | translate }}</h3>
+  <h3 ng-if="!isCreateNew">{{ 'APPLICATIONS.INPUTS.MODAL_HEADER_EDIT' | translate:{var:inputName} }}</h3>
 </div>
 <div class="modal-body">
 
-  <uib-tabset active="activeTab">
-    <uib-tab id="value-tab" index="0">
-      <uib-tab-heading>
-        <span><i class="fa fa-code"></i> {{'VALUE' | translate}}</span>
-      </uib-tab-heading>
+  <div ng-if="!isCreateNew">
+    <uib-tabset active="activeTab">
+      <uib-tab id="value-tab" index="0">
+        <uib-tab-heading>
+          <span><i class="fa fa-code"></i> {{'VALUE' | translate}}</span>
+        </uib-tab-heading>
 
-      <property-display ng-if="!inputExpression.obj || typeMatch"
-        definition="getPropertyDefinition()"
-        property-type="topology.dataTypes[getPropertyDefinition().type]"
-        dependencies="topology.topology.dependencies"
-        property-name="inputName"
-        property-value="inputExpression.obj"
-        on-save="updateLocalExpression(propertyDefinition, propertyName, propertyValue)"
-        editable="true"
-        condensed="true">
-      </property-display>
-      <div ng-if="inputExpression.obj && !typeMatch" class="var-undefined var-scope-item">
-        {{'APPLICATIONS.INPUTS.EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE' | translate}}
+        <property-display ng-if="!inputExpression.obj || typeMatch"
+          definition="getPropertyDefinition()"
+          property-type="topology.dataTypes[getPropertyDefinition().type]"
+          dependencies="topology.topology.dependencies"
+          property-name="inputName"
+          property-value="inputExpression.obj"
+          on-save="updateLocalExpression(propertyDefinition, propertyName, propertyValue)"
+          editable="true"
+          condensed="true">
+        </property-display>
+        <div ng-if="inputExpression.obj && !typeMatch" class="var-undefined var-scope-item">
+          {{'APPLICATIONS.INPUTS.EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE' | translate}}
+        </div>
+
+      </uib-tab>
+
+      <uib-tab id="expression-tab" index="1">
+        <uib-tab-heading>
+          <span><i class="fa fa-usd"></i> {{'APPLICATIONS.INPUTS.EXPRESSION' | translate}}</span>
+        </uib-tab-heading>
+        <form name="variable" class="form-horizontal" role="form" novalidate>
+          <textarea class="form-control" ng-model="inputExpression.str" rows="8"></textarea>
+        </form>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+
+  <div ng-if="isCreateNew">
+
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label for="new-input-name" class="col-lg-3 control-label">{{'APPLICATIONS.INPUTS.NEW.NAME' | translate}}</label>
+        <div class="col-lg-9">
+          <input type="text" class="form-control" id="new-input-name" ng-model="input.name"
+                 value="{{ input.name }}"
+                 required>
+          </input>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="new-input-type" class="col-lg-3 control-label">{{'APPLICATIONS.INPUTS.NEW.TYPE' | translate}}</label>
+        <div class="col-lg-9">
+          <select id="new-input-type" class="form-select" ng-model="input.type"
+                  ng-options="type for type in inputTypes" required >
+
+          </select>
+        </div>
       </div>
 
-    </uib-tab>
+      <div class="form-group">
+        <label for="new-input-default" class="col-lg-3 control-label">{{'APPLICATIONS.INPUTS.NEW.DEFAULT' | translate}}</label>
+        <div class="col-lg-9">
+          <input type="text" class="form-control" id="new-input-default" ng-model="input.defaultValue"
+                 required>
+          </input>
+        </div>
+      </div>
 
-    <uib-tab id="expression-tab" index="1">
-      <uib-tab-heading>
-        <span><i class="fa fa-usd"></i> {{'APPLICATIONS.INPUTS.EXPRESSION' | translate}}</span>
-      </uib-tab-heading>
-      <form name="variable" class="form-horizontal" role="form" novalidate>
-        <textarea class="form-control" ng-model="inputExpression.str" rows="8"></textarea>
-      </form>
-    </uib-tab>
-  </uib-tabset>
+      <div class="form-group">
+        <label for="new-input-description" class="col-lg-3 control-label">{{'APPLICATIONS.INPUTS.NEW.DESCRIPTION' | translate}}</label>
+        <div class="col-lg-9">
+          <textarea type="text" class="form-control" id="new-input-description" ng-model="input.description"
+
+                 required>
+          </textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="new-input-required" class="col-lg-3 control-label">{{'APPLICATIONS.INPUTS.NEW.REQUIRED.FNAME' | translate}}</label>
+        <div class="col-lg-9">
+          <select id="new-input-required" class="form-select" ng-model="input.required" required
+                  ng-options="o.v as o.n for o in [{ n: 'No', v: false }, { n: 'Yes', v: true }]">
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 </div>
 <div class="modal-footer">

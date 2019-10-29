@@ -29,6 +29,13 @@ define(function (require) {
 
           var requirementDefinition = this.getRequirementDefinition(nodeTypes[nodeTemplates[sourceElementName].type], requirementName);
 
+          // Sometimes A4C fails to bind the id "host" to the relationship name "tosca.relationships.HostedOn"
+          if (requirementDefinition.id === "host" && requirementDefinition.relationshipType === null) 
+            requirementDefinition.relationshipType = "tosca.relationships.HostedOn";
+
+          if (requirementDefinition.nodeType === null) 
+            requirementDefinition.nodeType = nodeTemplates[sourceElementName].type;
+
           if(_.defined(requirementDefinition.relationshipType)) { // There is a relationship type specified for the requirement.
             var relationshipType = relationshipTypes[requirementDefinition.relationshipType];
             if(_.defined(relationshipType)) { // We have found a valid relationship type

@@ -11,6 +11,8 @@ import org.alien4cloud.tosca.normative.primitives.Time;
 import com.google.common.collect.Maps;
 
 import alien4cloud.utils.version.Version;
+import org.alien4cloud.tosca.normative.types.datatypes.DatatypesNetworkPortDef;
+import org.alien4cloud.tosca.normative.types.datatypes.DatatypesRoot;
 
 /**
  * The primitive type that TOSCA YAML supports.
@@ -29,6 +31,8 @@ public class ToscaTypes {
     public static final IPropertyType<Range> RANGE_TYPE = new RangeType();
     public static final IPropertyType<Long> MAP_TYPE = new MapType();
     public static final IPropertyType<Long> LIST_TYPE = new ListType();
+//    public static final IPropertyType<?> TOSCA_DATATYPES_ROOT_TYPE = new DatatypesRoot();
+//    public static final IPropertyType<Integer> TOSCA_DATATYPES_NETWORK_PORTDEF_TYPE = new DatatypesNetworkPortDef();
 
     public static final String BOOLEAN = BooleanType.NAME;
     public static final String INTEGER = IntegerType.NAME;
@@ -42,9 +46,12 @@ public class ToscaTypes {
     public static final String RANGE = RangeType.NAME;
     public static final String LIST = ListType.NAME;
     public static final String MAP = MapType.NAME;
+//    public static final String TOSCA_DATATYPES_ROOT = DatatypesRoot.NAME;
+//    public static final String TOSCA_DATATYPES_NETWORK_PORTDEF = DatatypesNetworkPortDef.NAME;
 
     private static final Map<String, IPropertyType<?>> SIMPLE_TYPES_MAP = Maps.newHashMap();
     private static final Map<String, IPropertyType<?>> PRIMITIVE_TYPES_MAP = Maps.newHashMap();
+//    private static final Map<String, IPropertyType<?>> DATATYPES_TYPES_MAP = Maps.newHashMap();
 
     static {
         SIMPLE_TYPES_MAP.put(BOOLEAN, BOOLEAN_TYPE);
@@ -61,6 +68,9 @@ public class ToscaTypes {
         PRIMITIVE_TYPES_MAP.putAll(SIMPLE_TYPES_MAP);
         PRIMITIVE_TYPES_MAP.put(LIST, LIST_TYPE);
         PRIMITIVE_TYPES_MAP.put(MAP, MAP_TYPE);
+//        DATATYPES_TYPES_MAP.putAll(PRIMITIVE_TYPES_MAP);
+//        DATATYPES_TYPES_MAP.put(TOSCA_DATATYPES_ROOT, TOSCA_DATATYPES_ROOT_TYPE);
+//        DATATYPES_TYPES_MAP.put(TOSCA_DATATYPES_NETWORK_PORTDEF, TOSCA_DATATYPES_NETWORK_PORTDEF_TYPE);
     }
 
     public static IPropertyType<?> fromYamlTypeName(String typeName) {
@@ -68,6 +78,7 @@ public class ToscaTypes {
             return null;
         }
         return PRIMITIVE_TYPES_MAP.get(typeName);
+       // return DATATYPES_TYPES_MAP.get(typeName);
     }
 
     /**
@@ -83,4 +94,7 @@ public class ToscaTypes {
     public static boolean isPrimitive(String typeName) {
         return PRIMITIVE_TYPES_MAP.containsKey(typeName);
     }
+//    public static boolean isDatatype(String typeName) {
+//        return DATATYPES_TYPES_MAP.containsKey(typeName);
+//    }
 }

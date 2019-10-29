@@ -99,6 +99,7 @@ define(function(require) {
 
       /* method private to factorise all call to the serve and trigge errors */
       var callSaveService = function(propertyRequest) {
+        //var deps = $scope.configuration.dependencies;
         var saveResult = $scope.onSave(propertyRequest);
         // If the callback return a promise
         if (_.defined(saveResult) && _.defined(saveResult.then)) {
@@ -242,14 +243,58 @@ define(function(require) {
         $scope.initScope();
       };
 
+      var renderPropertyValue = function(propertyValue) {
+        if (typeof propertyValue === 'object') {
+            if (propertyValue.hasOwnProperty('function') &&  propertyValue.hasOwnProperty('parameters') &&  propertyValue.parameters.length > 0) {
+                var renderedP = "";
+                if (propertyValue.parameters.length == 1) {
+                    renderedP = renderPropertyValue(propertyValue.parameters[0]);
+                } else {
+                    var params = [];
+                    for (var idx=0; idx<propertyValue.parameters.length; ++idx) {
+                        params.push(renderPropertyValue(propertyValue.parameters[idx]));
+                    }
+                    renderedP = "[ " + params.join(", ") + " ]";
+                }
+                return "{ " + propertyValue["function"] + ": " + renderedP + " }";
+            } else {
+                var props = [];
+                Object.keys(propertyValue).forEach(function(key, index) {
+                    var parsedVal = renderPropertyValue(propertyValue[key]);
+                    props.push(key + ": " + parsedVal);
+                });
+                return "{ " + props.join(", ") + " }";
+            }
+        } else if (typeof propertyValue === 'number' || typeof propertyValue === 'boolean' ) {
+            return propertyValue;
+        } else if (typeof propertyValue === 'string') {
+            var re = new RegExp(/[\s,:\[\]\{\}\-]/);
+            if (propertyValue.match(re) != null) {
+                return "\"" + propertyValue + "\"";
+            } else
+                return propertyValue;
+        } else if (propertyValue.isArray()) {
+            var arr = [];
+            for (var idx=0; idx<propertyValue.length - 1; ++idx) {
+                var parsedEl = handleParam(propertyValue[idx]);
+                arr.push(parsedEl);
+            }
+            return "[ " + arr.join(", ") + " ]";
+        } else {
+            return JSON.stringify(propertyValue);
+        }
+      };
+
+
       var getPropValueDisplay = function($scope, propertyValue) {
         if (propertyValue.hasOwnProperty('value')) {
           // Here handle scalar value
           return propertyValue.value;
         } else if (propertyValue.hasOwnProperty('function') && propertyValue.hasOwnProperty('parameters') && propertyValue.parameters.length > 0) {
           // And here a function (get_input / get_property)
-          $scope.editable = false;
-          return propertyValue.function + ': ' + _(propertyValue.parameters).toString();
+          $scope.editable = true;
+          return renderPropertyValue(propertyValue);
+          //'{ ' + propertyValue.function + ': ' + _(propertyValue.parameters).toString() + ' }';
         } else if (propertyValue.hasOwnProperty('function_concat') && propertyValue.hasOwnProperty('parameters') && propertyValue.parameters.length > 0) {
           // And here a concat
           $scope.editable = false;
@@ -377,6 +422,16 @@ define(function(require) {
             $scope.definitionObject.uiPassword = $scope.definition.password;
             $scope.isLongText = _.defined(shownValue) && typeof shownValue === 'string' && shownValue.indexOf('\n') > -1;
             break;
+         case 'tosca.datatypes.Root':
+         case 'tosca.datatypes.network.PortDef':
+           $scope.definitionObject.uiName = 'string';
+           if(_.defined(shownValue) && _.defined(shownValue.value)) {
+             $scope.definitionObject.uiValue = shownValue.value;
+           } else {
+             $scope.definitionObject.uiValue = shownValue;
+           }
+           $scope.isLongText = _.defined(shownValue) && typeof shownValue === 'string' && shownValue.indexOf('\n') > -1;
+           break;
           default :
             $scope.definitionObject.uiName = 'complex';
             $scope.definitionObject.uiValue = shownValue;

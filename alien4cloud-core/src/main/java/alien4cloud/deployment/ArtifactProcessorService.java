@@ -65,11 +65,13 @@ public class ArtifactProcessorService {
             Path csarPath = repository.getExpandedCSAR(artifact.getArchiveName(), artifact.getArchiveVersion());
             Path resolvedPath = csarPath.resolve(artifact.getArtifactRef());
             if (!Files.exists(resolvedPath)) {
-                throw new UnresolvableArtifactException("Artifact could not be accessed " + artifact);
+                log.warn("Artifact could not be accessed " + artifact);
+                //throw new UnresolvableArtifactException("Artifact could not be accessed " + artifact);
             }
             artifact.setArtifactPath(resolvedPath.toString());
         } catch (NotFoundException e) {
-            throw new UnresolvableArtifactException("Artifact could not be found " + artifact, e);
+            log.warn("Artifact could not be accessed " + artifact);
+            //throw new UnresolvableArtifactException("Artifact could not be found " + artifact, e);
         }
     }
 

@@ -1,5 +1,7 @@
 package org.alien4cloud.tosca.editor.processors.nodetemplate;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.alien4cloud.tosca.editor.operations.nodetemplate.UpdateNodeDeploymentArtifactOperation;
@@ -33,8 +35,9 @@ public class UpdateNodeDeploymentArtifactProcessor implements IEditorOperationPr
 
         if (operation.getArtifactRepository() == null) {
             // this is an archive file, ensure that the file exists within the archive
-            FileProcessorHelper.getFileTreeNode(operation.getArtifactReference());
-            artifact.setArtifactRepository(ArtifactRepositoryConstants.ALIEN_TOPOLOGY_REPOSITORY);
+            if (operation.getArtifactReference() != null && Files.exists(Paths.get(operation.getArtifactReference())))
+                FileProcessorHelper.getFileTreeNode(operation.getArtifactReference());
+            artifact.setArtifactRepository(ArtifactRepositoryConstants.VIRTUAL_ARTIFACT_REPOSITORY);
             artifact.setRepositoryName(null);
             artifact.setRepositoryURL(null);
         } else {
@@ -42,6 +45,8 @@ public class UpdateNodeDeploymentArtifactProcessor implements IEditorOperationPr
             artifact.setRepositoryName(operation.getRepositoryName());
             artifact.setRepositoryURL(operation.getRepositoryUrl());
         }
+
+        //if (operation.getArtifactReference() != null && Files.exists(Paths.get(operation.getArtifactReference())))
         artifact.setArtifactRef(operation.getArtifactReference());
         artifact.setArchiveName(operation.getArchiveName());
         artifact.setArchiveVersion(operation.getArchiveVersion());
