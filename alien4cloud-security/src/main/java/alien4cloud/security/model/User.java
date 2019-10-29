@@ -2,6 +2,7 @@ package alien4cloud.security.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.elasticsearch.annotation.BooleanField;
 import org.elasticsearch.annotation.ESObject;
 import org.elasticsearch.annotation.Id;
@@ -26,12 +27,12 @@ import lombok.Setter;
 @Setter
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements SocialUserDetails {
     private static final long serialVersionUID = 1L;
     @Id
     private String username;
     private String password;
-    private String plainPassword;
     private String lastName;
     private String firstName;
     @StringField(includeInAll = false, indexType = IndexType.no)

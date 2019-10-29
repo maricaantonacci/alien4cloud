@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>alien4cloud</groupId>
   <artifactId>alien4cloud-parent</artifactId>
-  <version>2.1.0-UPV-1.0.0</version>
+  <version>2.1.0-DEEP-1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Application LIfecycle ENabler parent project.</name>
   <description>Application LIfecycle ENabler is an application that allows you to manage your application's lifecycle
@@ -17,7 +17,7 @@
     <module>alien4cloud-core</module>
     <module>alien4cloud-mock-paas-provider-plugin</module>
     <module>alien4cloud-rest-api</module>
-    <!--module>alien4cloud-rest-it</module-->
+    <module>alien4cloud-rest-it</module>
     <module>alien4cloud-ui</module>
   </modules>
 
@@ -561,8 +561,6 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <debug>true</debug>
-          <debuglevel>lines,vars,source</debuglevel> 
         </configuration>
       </plugin>
 

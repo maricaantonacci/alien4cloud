@@ -5,6 +5,7 @@ import java.util.List;
 import alien4cloud.json.deserializer.PropertyValueDeserializer;
 import lombok.Getter;
 import lombok.Setter;
+import alien4cloud.json.deserializer.OperationParameterDeserializer;
 import alien4cloud.ui.form.annotation.FormProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

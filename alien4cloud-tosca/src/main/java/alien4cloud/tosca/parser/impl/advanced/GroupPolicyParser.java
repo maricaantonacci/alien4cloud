@@ -56,7 +56,7 @@ public class GroupPolicyParser implements INodeParser<AbstractPolicy> {
             context.getParsingErrors().add(new ParsingError(ErrorCode.YAML_MAPPING_NODE_EXPECTED, null, node.getStartMark(), null, node.getEndMark(), null));
             return null;
         }
-        Map<String, Object> nodeMap = ParserUtils.parseMap((MappingNode) node, context);
+        Map<String, Object> nodeMap = ParserUtils.parseMap((MappingNode) node);
 
         Object nameO = (Object) nodeMap.get(NAME);
         Object typeO = (Object) nodeMap.get(TYPE);

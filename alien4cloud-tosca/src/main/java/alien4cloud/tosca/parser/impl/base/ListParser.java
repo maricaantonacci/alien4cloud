@@ -1,6 +1,6 @@
 package alien4cloud.tosca.parser.impl.base;
 
-import java.util.Collection;
+import java.util.List;
 
 import alien4cloud.tosca.parser.INodeParser;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListParser<T> extends CollectionParser<T> {
+public class ListParser<T> extends CollectionParser<List<T>, T> {
 
     /**
      * Constructor called by spring (see BaseParserFactory).
@@ -35,7 +35,7 @@ public class ListParser<T> extends CollectionParser<T> {
     }
 
     @Override
-    protected Collection<T> getCollectionInstance() {
+    protected List<T> getCollectionInstance() {
         return Lists.newArrayList();
     }
 }

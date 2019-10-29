@@ -18,27 +18,27 @@ public class InstanceInformation {
     /**
      * The textual representation of the state of the instance.
      */
-	protected String state;
+    private String state;
 
     /**
      * The effective representation of the state of the instance (SUCCESS, PROCESSING, FAILURE).
      */
-    protected InstanceStatus instanceStatus;
+    private InstanceStatus instanceStatus;
 
     /** Values of attributes for this instance. */
-    protected Map<String, String> attributes;
+    private Map<String, String> attributes;
     /** Additional properties specific from the container. */
-    protected Map<String, String> runtimeProperties;
+    private Map<String, String> runtimeProperties;
 
     /** Available operations outputs for this node instance */
     /** do not serialize */
     @JsonIgnore
-    protected Map<String, String> operationsOutputs;
+    private Map<String, String> operationsOutputs;
     
     /**
      * The results returned from an Orchestrator grouped by the ID
      * of the output
      */
-    protected Map<String, String> outputsResults;
+    private Map<String, String> outputsResults;
     
 }

@@ -27,10 +27,4 @@ public class ScalarPropertyValue extends PropertyValue<String> {
     public ScalarPropertyValue(String value) {
         super(value);
     }
-    
-    @Override
-    @JsonIgnore
-    public boolean isDefinition() {
-        return false;
-    }
 }
