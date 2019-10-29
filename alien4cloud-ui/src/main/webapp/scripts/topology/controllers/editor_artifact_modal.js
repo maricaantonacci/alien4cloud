@@ -3,9 +3,14 @@ define(function (require) {
 
   var modules = require('modules');
 
-  modules.get('a4c-topology-editor', ['ui.bootstrap']).controller('TopologyEditorArtifactModalCtrl', ['$scope', '$uibModalInstance', '$translate', 'explorerService','archiveContentTree', 'availableRepositories', 'artifact', 'topology', 'toaster',
+  modules.get('a4c-topology-editor', ['ui.bootstrap']).controller('TopologyEditorArtifactModalCtrl', ['$scope', '$uibModalInstance',
+    '$translate', 'explorerService','archiveContentTree', 'availableRepositories', 'artifact', 'topology', 'toaster',
     function($scope, $uibModalInstance, $translate, explorerService, archiveContentTree, availableRepositories, artifact, topology, toaster) {
       $scope.artifact = {};
+      $scope.artifactOrig = artifact;
+      $scope.artifact.artifactName = artifact.artifactName;
+      $scope.artifact.reference = artifact.artifactRef;
+      $scope.artifact.artifactType = artifact.artifactType;
 
       $scope.opts = explorerService.getOps(false);
       $scope.treedata = {
@@ -16,7 +21,7 @@ define(function (require) {
       if (artifact.artifactRepository === 'alien_topology') {
         $scope.activeTab = 'local';
       } else {
-        $scope.activeTab = 'remote';
+        $scope.activeTab = 'virtual';
       }
       $scope.initialRepositoryName = artifact.repositoryName;
 
@@ -40,6 +45,13 @@ define(function (require) {
           $uibModalInstance.close($scope.artifact);
         }
       };
+
+      $scope.saveVirtual = function() {
+        $scope.artifact.archiveName = $scope.artifactOrig.archiveName;
+        $scope.artifact.archiveVersion = $scope.artifactOrig.archiveVersion;
+        $scope.artifact.repositoryUrl = $scope.artifactOrig.repositoryUrl;
+        $uibModalInstance.close($scope.artifact);
+    };
 
       $scope.cancel = function() {
         $uibModalInstance.dismiss('cancel');

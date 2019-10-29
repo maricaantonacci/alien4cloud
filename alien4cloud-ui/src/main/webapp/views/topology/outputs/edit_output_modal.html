@@ -1,36 +1,50 @@
 <div class="modal-header">
-  <h3>{{'APPLICATIONS.OUTPUTS.MODAL_HEADER' | translate:{var:outputName} }}</h3>
+  <h3 ng-if="isCreateNew">{{ 'APPLICATIONS.OUTPUTS.MODAL_HEADER_CREATE'  | translate }}</h3>
+  <h3 ng-if="!isCreateNew">{{ 'APPLICATIONS.OUTPUTS.MODAL_HEADER_EDIT' | translate:{var:output.name} }}</h3>
 </div>
 <div class="modal-body">
 
   <uib-tabset active="activeTab">
     <uib-tab id="value-tab" index="0">
       <uib-tab-heading>
-        <span><i class="fa fa-code"></i> {{'VALUE' | translate}}</span>
+        <span><i class="fa fa-code"></i> {{'NAME' | translate}}</span>
       </uib-tab-heading>
+      <form name="variable" class="form-horizontal" role="form" novalidate>
+        <input class="form-control" ng-model="output.name">
+      </form>
 
-      <property-display ng-if="!inputExpression.obj || typeMatch"
-        definition="getPropertyDefinition()"
-        property-type="topology.dataTypes[getPropertyDefinition().type]"
-        dependencies="topology.topology.dependencies"
-        property-name="inputName"
-        property-value="inputExpression.obj"
-        on-save="updateLocalExpression(propertyDefinition, propertyName, propertyValue)"
-        editable="true"
-        condensed="true">
-      </property-display>
-      <div ng-if="inputExpression.obj && !typeMatch" class="var-undefined var-scope-item">
-        {{'APPLICATIONS.INPUTS.EXPRESSION_DOES_NOT_MATCH_INPUT_TYPE' | translate}}
-      </div>
+<!--      <property-display ng-if="!outputExpression.obj || typeMatch"-->
+<!--        definition="getPropertyDefinition()"-->
+<!--        property-type="topology.dataTypes[getPropertyDefinition().type]"-->
+<!--        dependencies="topology.topology.dependencies"-->
+<!--        property-name="outputName"-->
+<!--        property-description="outputDescription"-->
+<!--        property-value="outputExpression.obj"-->
+<!--        on-save="updateLocalExpression(propertyDefinition, propertyName, propertyDescription, propertyValue)"-->
+<!--        editable="true"-->
+<!--        condensed="true">-->
+<!--      </property-display>-->
+<!--      <div ng-if="outputExpression.obj && !typeMatch" class="var-undefined var-scope-item">-->
+<!--        {{'APPLICATIONS.OUTPUTS.EXPRESSION_DOES_NOT_MATCH_OUTPUT_TYPE' | translate}}-->
+<!--      </div>-->
 
     </uib-tab>
 
-    <uib-tab id="expression-tab" index="1">
+    <uib-tab id="description-tab" index="1">
+      <uib-tab-heading>
+        <span><i class="fa fa-th-list"></i> {{'APPLICATIONS.OUTPUTS.DESCRIPTION' | translate}}</span>
+      </uib-tab-heading>
+      <form name="variable" class="form-horizontal" role="form" novalidate>
+        <textarea class="form-control" ng-model="output.description" rows="8"></textarea>
+      </form>
+    </uib-tab>
+
+    <uib-tab id="expression-tab" index="2">
       <uib-tab-heading>
         <span><i class="fa fa-usd"></i> {{'APPLICATIONS.OUTPUTS.EXPRESSION' | translate}}</span>
       </uib-tab-heading>
       <form name="variable" class="form-horizontal" role="form" novalidate>
-        <textarea class="form-control" ng-model="inputExpression.str" rows="8"></textarea>
+        <textarea class="form-control" ng-model="output.value" rows="8"></textarea>
       </form>
     </uib-tab>
   </uib-tabset>
@@ -39,6 +53,9 @@
 <div class="modal-footer">
   <button id="modal-push-button" class="btn btn-primary" ng-click="ok()">
     {{ 'GENERIC_FORM.SAVE'| translate}}
+  </button>
+  <button id="modal-push-button" class="btn btn-primary" ng-click="validate()">
+    {{'APPLICATIONS.OUTPUTS.VALIDATE' | translate}}
   </button>
   <button id="modal-close-button" class="btn btn-default" ng-click="cancel()">
     {{'GENERIC_FORM.CANCEL' | translate}}

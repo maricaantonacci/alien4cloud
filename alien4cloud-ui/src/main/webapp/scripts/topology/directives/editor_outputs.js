@@ -8,6 +8,7 @@ define(function (require) {
 
   require('scripts/topology/controllers/editor_outputs_edit_modal');
   require('scripts/topology/services/topology_variables_service');
+  require('scripts/topology/services/topology_json_processor');
   require('scripts/topology/services/topology_browser_service');
   require('scripts/topology/directives/variable_display_ctrl');
   require('scripts/common/filters/a4c_linky');
@@ -25,61 +26,73 @@ define(function (require) {
 
 
   modules.get('a4c-topology-editor', ['a4c-common', 'ui.ace', 'treeControl']).controller('editorOutputsCtrl',
-    ['$scope', 'topologyVariableService', '$http', 'topoBrowserService', '$filter', '$uibModal', 
-    	function($scope, topologyVariableService, $http, topoBrowserService, $filter, $uibModal) {
+    ['$scope', 'topologyVariableService', '$http', 'topoBrowserService', '$filter', '$uibModal', 'topologyJsonProcessor',
+    	function($scope, topologyVariableService, $http, topoBrowserService, $filter, $uibModal, topologyJsonProcessor) {
 
-      $scope.dump = function(value) {
-        return $filter('a4cLinky')(yaml.safeDump(value, {indent: 4}), 'openVarModal');
+
+
+      $scope.dumpOutputValue = function(value) {
+        let res = topologyJsonProcessor.renderOuputValue(value);
+        let json = JSON.stringify(res, null, ' ');
+        json = json.replace(/^"+|(?!\\)(")+$/g, '');
+        json = json.replace(/\{\s*\"(.+)\"\s*:/g,"{ $1:").replace(/\n/g, "");//.replace(/]\}/g, " ] }"); 
+        return json;
+        //return $filter('a4cLinky')(yaml.safeDump(value, {indent: 4}), 'openVarModal');
       };
 
-      function refresh(){
-        var inputsFileNode = topologyVariableService.getInputsNode($scope.topology.archiveContentTree.children[0]);
-        // var inputsFileNode = topologyVariableService.getInputs($scope.topology.archiveContentTree.children[0]);
+     function refresh(){
+//        var inputsFileNode = topologyVariableService.getInputsNode($scope.topology.archiveContentTree.children[0]);
+//        // var inputsFileNode = topologyVariableService.getInputs($scope.topology.archiveContentTree.children[0]);
 
-        if(_.defined(inputsFileNode)){
-          topoBrowserService.getContent($scope.topology.topology, inputsFileNode, function(result){
-            $scope.loadedOutputs= yaml.safeLoad(result.data);
+//        if(_.defined(inputsFileNode)){
+//          topoBrowserService.getContent($scope.topology.topology, inputsFileNode, function(result){
+//            $scope.loadedOutputs= yaml.safeLoad(result.data);
+//          });
+//        }
+    	$scope.outputsMap = Object.create(null);
+    	if ($scope.topology.topology.hasOwnProperty("outputs"))
+          Object.keys($scope.topology.topology.outputs).forEach(function(key, index) {
+              $scope.outputsMap[key] = $scope.topology.topology.outputs[key];
           });
-        }
-      }
+     }
 
-      $scope.clearInput = function(outputName) {
-        $scope.execute({
-          type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
-          name: outputName,
-          description: null,
-          expression: null
-        });
-      };
+
+    $scope.deleteOutput = function(outputName) {
+      $scope.execute({
+        type: 'org.alien4cloud.tosca.editor.operations.outputs.DeleteOutputOperation',
+        outputName: outputName
+      });
+    };
 
       $scope.createOutput = function() {
     	  var modalInstance = $uibModal.open({
               templateUrl: 'views/topology/outputs/edit_output_modal.html',
-              controller: 'a4cEditorOutputExpCreateCtrl',
+              controller: 'a4cEditorOutputExpEditCtrl',
               scope: $scope,
               size: 'lg',
               resolve: {
+                isCreateNew: function() {
+                    return true;
+                },
                 outputName: function() {
-                  return outputName;
+                  return "";
                 },
                 outputDescription: function() {
-                  return outputDescription;
+                  return "";
                 },
                 outputExpression: function() {
-                  return _.defined($scope.loadedOutputs) && _.defined($scope.loadedOutputs[outputName]) ? 
-                		  yaml.safeDump($scope.loadedOutputs[outputName], {indent: 4}) : '';
+                  return "";
                 }
               }
             });
-            modalInstance.result.then(function(outputExpression) {
-              // ${app_trigram}/${env_name}/demo
-              $scope.execute({
-                type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
-                name: outputName,
-                description: outputExpression.str,
-                expression: outputExpression.str
-              });
-            });
+        modalInstance.result.then(function(output) {
+          // ${app_trigram}/${env_name}/demo
+          $scope.execute({
+            type: 'org.alien4cloud.tosca.editor.operations.outputs.AddOutputOperation',
+            outputName: output.name,
+            outputDefinition: output
+          });
+        });
       }
       
       $scope.editOutput = function(outputName) {
@@ -89,21 +102,28 @@ define(function (require) {
           scope: $scope,
           size: 'lg',
           resolve: {
+                isCreateNew: function() {
+                    return false;
+                },
             outputName: function() {
               return outputName;
             },
+                outputDescription: function() {
+                  return $scope.outputsMap[outputName].description;
+                },
             outputExpression: function() {
-              return _.defined($scope.loadedOutputs) && _.defined($scope.loadedOutputs[outputName]) ? 
-            		  yaml.safeDump($scope.loadedOutputs[outputName], {indent: 4}) : '';
+              return _.defined($scope.outputsMap[outputName]) &&
+                _.defined($scope.outputsMap[outputName].value) ?
+            		  $scope.dumpOutputValue($scope.outputsMap[outputName].value) : '';
             }
           }
         });
-        modalInstance.result.then(function(outputExpression) {
+        modalInstance.result.then(function(output) {
           // ${app_trigram}/${env_name}/demo
           $scope.execute({
-            type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputExpressionOperation',
-            name: outputName,
-            expression: outputExpression.str
+            type: 'org.alien4cloud.tosca.editor.operations.outputs.UpdateOutputOperation',
+            outputName: outputName,
+            outputDefinition: output
           });
         });
       };
@@ -123,9 +143,9 @@ define(function (require) {
       };
 
       $scope.$watch('triggerVarRefresh', function(newValue){
-        if(_.defined(newValue)){
-          refresh();
-        }
+       if(_.defined(newValue)){
+         refresh();
+       }
       });
     }
   ]);

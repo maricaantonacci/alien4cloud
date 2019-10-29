@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class ToscaPropertySerializerUtils {
 
-    private static Pattern ESCAPE_PATTERN = Pattern.compile(".*[,:\\[\\]\\{\\}-].*");
+    private static Pattern ESCAPE_PATTERN = Pattern.compile(".*[\\s,:\\[\\]\\{\\}-].*");
     private static Pattern VALID_YAML_PATTERN = Pattern.compile("[a-zA-Z0-9]+");
     private static Pattern FLOAT_PATTERN = Pattern.compile("([0-9]+[.])?[0-9]+");
 
@@ -69,7 +69,7 @@ public class ToscaPropertySerializerUtils {
 
     public static String formatValue(boolean appendLf, int indentLevel, Object value) {
         if (isPrimitiveType(value)) {
-            return formatTextValue(indentLevel, (String) value);
+            return formatTextValue(indentLevel, value.toString());
         } else if (value instanceof Map) {
             return formatMapValue(appendLf, indentLevel, (Map<String, Object>) value);
         } else if (value instanceof Object[]) {

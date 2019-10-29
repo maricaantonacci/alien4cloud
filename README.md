@@ -129,3 +129,21 @@ connRepository.getPrimaryConnection(Oidc.class).createData()
 ```
 
 Inside the returned object, you will have both the access and refresh token for the current session.
+
+## Secure connection with self signed certificate
+
+Please follow the next steps to create your own certificate to use with A4C
+
+```openssl req -x509 -nodes -days 1 -newkey rsa:2048 -sha256 -keyout ssl-a4c.key -out ssl-a4c.crt -subj '/CN=<domain>/O=<entity>/C=<country ID two chars>/ST=<state>/L=<location>' -passout pass:${PASSWORD}
+
+openssl pkcs12 -export -in ssl-a4c.crt -inkey ssl-a4c.key -name alien4cloud -out ssl-a4c.p12 -passin pass:${PASSWORD} -passout pass:${PASSWORD}
+
+# create a keystore with a temp entry
+keytool -genkey -dname "CN=tmp, OU=ID, O=tmp, L=tmp, S=tmp, C=ES" -v -keystore ssl-a4c.keystore -alias tmp -keyalg RSA -keysize 2048 -validity 1 -storepass ${PASSWORD} -noprompt
+
+# delete the temp entry
+keytool -delete -alias tmp -keystore ssl-a4c.keystore -storepass ${PASSWORD}
+
+# import your self generated key
+keytool -importkeystore -destkeystore ssl-a4c.keystore -srckeystore ssl-a4c.p12 -srcstoretype PKCS12 -alias alien4cloud -srcstorepass ${PASSWORD} -deststorepass ${PASSWORD}  -storepass ${PASSWORD}
+```

@@ -8,14 +8,27 @@ define(function (require) {
   var angular = require('angular');
 
   modules.get('a4c-topology-editor', ['a4c-common', 'ui.ace', 'treeControl']).controller('a4cEditorInputExpEditCtrl',
-    ['$scope', '$uibModal', 'inputName', 'inputExpression', '$uibModalInstance', 'propertiesServices',
-      function($scope,  $uibModal, inputName, inputExpression, $uibModalInstance, propertiesServices) {
+    ['$scope', '$uibModal', 'inputName', 'inputExpression', 'isCreateNew', '$uibModalInstance', 'propertiesServices',
+      function($scope,  $uibModal, inputName, inputExpression, isCreateNew, $uibModalInstance, propertiesServices) {
+        $scope.isCreateNew = isCreateNew;
         $scope.inputName = inputName;
+        // "integer", "float", "boolean", "version"
+        $scope.inputTypes = [
+                "string", "integer","float", "boolean", "version"
+        ];
+        $scope.defaultInputType = "string";
 
         $scope.inputExpression = {
           str: inputExpression,
           obj: yaml.safeLoad(inputExpression)
         };
+        $scope.input = {
+          type: $scope.defaultInputType,
+          name: inputName,
+          required: false,
+          description: null,
+          defaultValue: null
+        }
 
         $scope.getPropertyDefinition = function() {
           return $scope.topology.topology.inputs[inputName];
@@ -26,7 +39,11 @@ define(function (require) {
         };
 
         $scope.ok = function() {
-          $uibModalInstance.close($scope.inputExpression);
+            if (isCreateNew) {
+                $uibModalInstance.close($scope.input);
+            } else {
+              $uibModalInstance.close($scope.inputExpression);
+            }
         };
 
         $scope.cancel = function() {
