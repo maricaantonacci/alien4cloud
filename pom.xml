@@ -530,7 +530,7 @@
     </repository>
   </repositories>
 
- <!--   
+   
   <pluginRepositories>
     <pluginRepository>
       <id>repo.opensource.fastconnect.org</id>
@@ -541,6 +541,8 @@
       <url>https://fastconnect.org/maven/content/repositories/opensource-snapshot</url>
     </pluginRepository>
   </pluginRepositories>
+
+ <!--
 
   <distributionManagement>
     <repository>
