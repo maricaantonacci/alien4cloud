@@ -11,11 +11,13 @@ import lombok.Setter;
 public class UpdateNodePropertyValueOperation extends AbstractNodeOperation {
     private String propertyName;
     private Object propertyValue;
+    private String propertyUnit;
 
     @Override
     public String commitMessage() {
         if (getPropertyValue() instanceof String) {
-            return "update value of property <" + getPropertyName() + "> in node <" + getNodeName() + "> to <" + getPropertyValue() + ">";
+            String unit = propertyUnit != null ? " " + getPropertyUnit() : "";
+            return "update value of property <" + getPropertyName() + "> in node <" + getNodeName() + "> to <" + getPropertyValue() + unit + ">";
         }
         return "update value of property <" + getPropertyName() + "> in node <" + getNodeName() + ">";
     }

@@ -30,6 +30,9 @@ import alien4cloud.tosca.context.ToscaContextual;
 @Service
 public class PropertyService {
 
+    public static final String TOSCA_OUTPUT_TEMPLATE = "tosca_definitions_version: tosca_simple_yaml_1_0\ntopology_template:\n  outputs:\n    %s:\n      value: %s\n";
+
+
     public <T extends AbstractPropertyValue> void setPropertyValue(Map<String, T> properties, PropertyDefinition propertyDefinition, String propertyName,
             Object propertyValue) throws ConstraintValueDoNotMatchPropertyTypeException, ConstraintViolationException {
         // take the default value
