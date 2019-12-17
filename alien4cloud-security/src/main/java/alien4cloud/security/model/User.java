@@ -35,6 +35,8 @@ public class User implements SocialUserDetails {
     private String password;
     private String lastName;
     private String firstName;
+    @StringField(includeInAll = true, indexType = IndexType.no)
+    private String information;
     @StringField(includeInAll = false, indexType = IndexType.no)
     private String email;
     @StringField(indexType = IndexType.not_analyzed)
@@ -56,11 +58,12 @@ public class User implements SocialUserDetails {
     @BooleanField(includeInAll = false, index = IndexType.no)
     private boolean enabled = true;
 
-    public User(String username, String lastName, String firstName, String email) {
+    public User(String username, String lastName, String firstName, String email, String information) {
         this.username = username;
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
+        this.information = information;
     }
 
     @JsonIgnore

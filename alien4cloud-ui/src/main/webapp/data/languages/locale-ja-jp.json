@@ -1363,6 +1363,10 @@
     "EDIT_GROUP_HEADER" : "グループの追加もしくは削除",
     "FIRST_NAME" : "First Name",
     "LAST_NAME" : "Last Name",
+    "INFORMATION": "情報",
+    "INFORMATION_DIALOG": {
+      "TITLE": "ユーザーのその他の情報"
+    },
     "NEW" : "新しいユーザ",
     "PASSWORD" : "Password",
     "ROLES" : "ロール"

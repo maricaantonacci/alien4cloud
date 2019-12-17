@@ -74,7 +74,7 @@ public class UserService {
             adminPassword = (adminPassword == null) ? "admin" : adminPassword;
 
             String[] roles = new String[] { Role.ADMIN.toString() };
-            createUser(adminUserName, email, null, null, roles, adminPassword);
+            createUser(adminUserName, email, null, null, roles, adminPassword, null);
         }
     }
 
@@ -96,12 +96,13 @@ public class UserService {
      * @param roles The roles of the new user.
      * @param password The password of the new user (hash only will be saved).
      */
-    public void createUser(String userName, String email, String firstName, String lastName, String[] roles, String password) {
+    public void createUser(String userName, String email, String firstName, String lastName, String[] roles, String password, String information) {
         if (alienUserDao.find(userName) != null) {
             throw new AlreadyExistException("A user with the given username already exists.");
         }
         User user = new User();
         user.setUsername(userName);
+        user.setInformation(information);
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -264,6 +265,15 @@ public class UserService {
         }
         ArrayList<String> roles = new ArrayList(Arrays.asList(user.getRoles()));
         return roles.contains("ADMIN");
+    }
+
+    public boolean canEditUserSpecificSettings(String username) {
+        User user = retrieveUser(username);
+        if (user.getRoles() == null) {
+            return false;
+        }
+        ArrayList<String> roles = new ArrayList(Arrays.asList(user.getRoles()));
+        return roles.contains(Role.USER_SPECIFIC_SETTINGS_EDITOR.name());
     }
 
     /**

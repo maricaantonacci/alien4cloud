@@ -28,6 +28,7 @@
               <th>{{ 'USERS.LAST_NAME' | translate}}</th>
               <th>{{ 'COMMON.USERNAME' | translate}}</th>
               <th ng-if="displayAll || displayEmail">{{ 'COMMON.EMAIL' | translate}}</th>
+              <th>{{ 'USERS.INFORMATION' | translate}}</th>
               <th>{{ 'COMMON.GROUPS' | translate}}</th>
               <th ng-if="displayAll || displayRoles">{{ 'USERS.ROLES' | translate}}</th>
               <th class="text-center"><i ng-if="managedEnvRoleList" class="fa fa-desktop" uib-tooltip="{{'APPLICATIONS.APPLICATION' | translate }}" tooltip-placement="top" tooltip-append-to-body="true"></i></th>
@@ -58,6 +59,14 @@
                   {{user.email || '---' }} <i class="fa fa-pencil-square-o"></i>
                 </span>
                 <span ng-if="!user.internalDirectory || !crudSupport">{{user.email || '---' }}</span>
+              </td>
+              <td id="user_{{user.username}}_information">
+                <span ng-if="user.internalDirectory && crudSupport" class="form-input-editable"  buttons="no"
+                      ng-click="openUserInformationModal(user)"
+                      blur="submit">
+                  {{ user.information.length > 20 ? ((user.information | limitTo:20) + "...") : (user.information || '---') }} <i class="fa fa-pencil-square-o"></i>
+                </span>
+                <span ng-if="!user.internalDirectory || !crudSupport">{{ '---' }}</span>
               </td>
               <td name="groups">
                 <span ng-if="!(userGroupsEmpty = !user.groups || user.groups.length <= 0)">

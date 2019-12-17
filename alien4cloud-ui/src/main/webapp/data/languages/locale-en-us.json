@@ -1371,6 +1371,10 @@
     "EDIT_GROUP_HEADER" : "Add or remove groups",
     "FIRST_NAME" : "First Name",
     "LAST_NAME" : "Last Name",
+    "INFORMATION": "Information",
+    "INFORMATION_DIALOG": {
+      "TITLE": "User Miscellaneous information"
+    },
     "NEW" : "New User",
     "PASSWORD" : "Password",
     "ROLES" : "Roles"

@@ -16,7 +16,7 @@ define(function (require) {
       key: 'NAVBAR.MENU_ADMIN',
       icon: 'fa fa-wrench',
       priority: 10000,
-      roles: ['ADMIN']
+      roles: ['ADMIN', 'USER_SPECIFIC_SETTINGS_EDITOR']
     }
   });
   // register admin default home page
