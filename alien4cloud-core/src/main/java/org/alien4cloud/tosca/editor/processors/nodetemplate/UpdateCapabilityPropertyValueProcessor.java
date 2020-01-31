@@ -4,10 +4,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import alien4cloud.tosca.parser.ParserUtils;
+import alien4cloud.tosca.parser.ToscaSimpleParser;
 import org.alien4cloud.tosca.editor.exception.PropertyValueException;
 import org.alien4cloud.tosca.editor.operations.nodetemplate.UpdateCapabilityPropertyValueOperation;
 import org.alien4cloud.tosca.editor.processors.IEditorOperationProcessor;
 import org.alien4cloud.tosca.model.Csar;
+import org.elasticsearch.common.inject.Inject;
 import org.springframework.stereotype.Component;
 
 import alien4cloud.exception.NotFoundException;
@@ -32,6 +35,9 @@ public class UpdateCapabilityPropertyValueProcessor implements IEditorOperationP
     @Resource
     private PropertyService propertyService;
 
+    @Resource
+    private ToscaSimpleParser toscaSimpleParser;
+
     @Override
     @SneakyThrows
     public void process(Csar csar, Topology topology, UpdateCapabilityPropertyValueOperation operation) {
@@ -52,6 +58,8 @@ public class UpdateCapabilityPropertyValueProcessor implements IEditorOperationP
                 propertyName, capability.getType(), operation.getNodeName(), topology.getId(), capabilityType.getProperties().get(propertyName), propertyValue);
 
         try {
+
+            propertyValue = ParserUtils.parsePropertyValue(toscaSimpleParser, propertyValue);
             propertyService.setCapabilityPropertyValue(capability, capabilityType.getProperties().get(propertyName), propertyName, propertyValue);
         } catch (ConstraintFunctionalException e) {
             throw new PropertyValueException("Error when setting node " + operation.getNodeName() + " property.", e, propertyName, propertyValue);

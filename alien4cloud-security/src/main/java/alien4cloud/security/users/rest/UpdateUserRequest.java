@@ -13,6 +13,7 @@ public class UpdateUserRequest {
     private String password;
     private String lastName;
     private String firstName;
+    private String information;
     private String email;
-    private String[] roles;
+    //private String[] roles;
 }

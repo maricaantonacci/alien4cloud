@@ -23,6 +23,7 @@ define(function(require) {
 
       /* Permissions */
       var allAccessAdminRole = 'ADMIN';
+      var userSpecificSettingsEditorRole = 'USER_SPECIFIC_SETTINGS_EDITOR';
 
       return {
         currentStatus: null,
@@ -70,6 +71,9 @@ define(function(require) {
                 if (userData.roles.indexOf(allAccessAdminRole) > -1) {
                   return true;
                 }
+                //console.log(userData.roles);
+                //console.log(roles);
+                //console.trace();
                 for (var i = 0; i < roles.length; i++) {
                   var hasRole = userData.roles.indexOf(roles[i]) > -1;
                   if (hasRole) {

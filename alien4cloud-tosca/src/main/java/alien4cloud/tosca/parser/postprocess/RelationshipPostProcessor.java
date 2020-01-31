@@ -66,6 +66,7 @@ public class RelationshipPostProcessor {
         referencePostProcessor.process(new ReferencePostProcessor.TypeReference(relationshipTemplate, relationshipTemplate.getType(), RelationshipType.class));
         relationshipTemplate.setRequirementType(rd.getType());
 
+
         ArchiveRoot archiveRoot = (ArchiveRoot) ParsingContextExecution.getRoot().getWrappedInstance();
         // now find the target of the relation
         NodeTemplate targetNodeTemplate = archiveRoot.getTopology().getNodeTemplates().get(relationshipTemplate.getTarget());

@@ -50,5 +50,8 @@ public class UpdateNodeDeploymentArtifactProcessor implements IEditorOperationPr
         artifact.setArtifactRef(operation.getArtifactReference());
         artifact.setArchiveName(operation.getArchiveName());
         artifact.setArchiveVersion(operation.getArchiveVersion());
+        nodeTemplate.getArtifacts().replace(artifact.getArtifactName(), artifact);
+        nodeTemplates.replace(operation.getNodeName(), nodeTemplate);
+        topology.setNodeTemplates(nodeTemplates);
     }
 }
