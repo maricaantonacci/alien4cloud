@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h3>{{ 'USERS.INFORMATION_DIALOG.TITLE'  | translate }}</h3>
+</div>
+<div class="modal-body">
+    <form name="variable" class="form-horizontal" role="form" novalidate>
+        <textarea class="form-control" ng-model="user.information" rows="8"></textarea>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button id="modal-push-button" class="btn btn-primary" ng-click="okInformationDialog(user)">
+        {{ 'GENERIC_FORM.SAVE'| translate}}
+    </button>
+    <button id="modal-close-button" class="btn btn-default" ng-click="cancelInformationDialog()">
+        {{'GENERIC_FORM.CANCEL' | translate}}
+    </button>
+</div>

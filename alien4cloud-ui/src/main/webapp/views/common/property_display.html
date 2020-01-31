@@ -10,7 +10,24 @@
   <div ng-class="{'col-md-5': deletable, 'col-md-8': !deletable, 'form-editable': !condensed}"
     ng-init="isStringDisplayType = (definitionObject.uiName === 'scalar-unit' || definitionObject.uiName === 'string');">
 
-    <div id="div_{{propertyName}}"  ng-if="isStringDisplayType && !definitionObject.uiSecret" ng-class="{'property-required' : definition.required && definitionObject.uiEmpty}">
+    <div id="div_{{propertyName}}"  ng-if="isFunctionProperty" ng-class="{'property-required' : definition.required && definitionObject.uiEmpty}">
+      <span
+            ng-click="switchLongTextChoice(true)"
+            editable-text="definitionObject.uiValue" buttons="yes"
+            onbeforesave="propertySave($data)" blur="submit"
+            onhide="switchLongTextChoice(false)"
+            e-uib-typeahead="suggestion for suggestion in suggestion.get($viewValue)" class="typeahead editable-property"
+            e-typeahead-min-length="suggestion.minLength"
+            e-typeahead-wait-ms="suggestion.waitBeforeRequest"
+            e-typeahead-loading="searching">
+        <span>{{definitionObject.uiValue | truncate:30}}</span>
+        <span class="fa fa-pencil-square-o clickable" ng-click="switchLongTextChoice(true)"></span>
+      </span>
+    </div>
+
+
+    <div id="div_{{propertyName}}"  ng-if="!isFunctionProperty && isStringDisplayType && !definitionObject.uiSecret"
+         ng-class="{'property-required' : definition.required && definitionObject.uiEmpty}">
 
       <!-- Case : string -->
       <div class="col-md-9">
@@ -84,7 +101,8 @@
         <info content="definition.description"></info>
       </span>
     </div>
-    <div ng-if="!isStringDisplayType && !definitionObject.uiSecret" ng-switch="definitionObject.uiName" ng-class="{'property-required' : definition.required}">
+    <div ng-if="!isFunctionProperty && !isStringDisplayType && !definitionObject.uiSecret" ng-switch="definitionObject.uiName"
+         ng-class="{'property-required' : definition.required}">
       <div class="col-md-9"> <!-- a div for making the cell -->
         <span ng-switch-when="select">
           <!-- Case : validValues  -->

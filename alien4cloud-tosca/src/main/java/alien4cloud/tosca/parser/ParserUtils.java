@@ -1,9 +1,19 @@
 package alien4cloud.tosca.parser;
 
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
+import alien4cloud.tosca.model.ArchiveRoot;
+import org.alien4cloud.tosca.model.definitions.AbstractPropertyValue;
+import org.alien4cloud.tosca.model.definitions.FunctionPropertyValue;
+import org.alien4cloud.tosca.model.definitions.OutputDefinition;
+import org.alien4cloud.tosca.model.definitions.ScalarPropertyValue;
+import org.alien4cloud.tosca.normative.constants.ToscaFunctionConstants;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
@@ -20,6 +30,11 @@ import com.google.common.collect.Maps;
  * Utility class to help with parsing.
  */
 public final class ParserUtils {
+
+    public static final String OUTPUT_NAME = "dummy";
+    public static final String TOSCA_DUMMY_TEMPLATE = "tosca_definitions_version: tosca_simple_yaml_1_0\ntopology_template:\n  outputs:\n    "
+            + OUTPUT_NAME
+            + ":\n      value: %s\n";
 
     /**
      * Utility to get a scalar.
@@ -110,4 +125,75 @@ public final class ParserUtils {
         parsingErrors.add(new ParsingError(ErrorCode.SYNTAX_ERROR, "Invalid type syntax", node.getStartMark(), "Expected the type to match tosca type", node
                 .getEndMark(), expectedType));
     }
+
+    public static Object parsePropertyValue(ToscaSimpleParser toscaParser, Object propertyValue ) throws ParsingException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        if (propertyValue instanceof Map) {
+            Map<String, Object> propertyValueParsed = ((Map<String, Object>) propertyValue);
+            if (!propertyValueParsed.containsKey("function") && !propertyValueParsed.containsKey("parameters")) {
+                Map<String, Object> result = new HashMap<>();
+                for (Map.Entry<String, Object> o : propertyValueParsed.entrySet()) {
+                    Object parsedPropertyValue = parsePropertyValue(toscaParser, o.getValue());
+                    result.put(o.getKey(), parsedPropertyValue);
+                }
+                return result;
+            } else {
+                return functionFromMap(propertyValue);
+            }
+        } else if (propertyValue instanceof Collection) {
+            Collection propertyValueParsed = ((Collection) propertyValue);
+            Collection result = new ArrayList();
+            for (Object o: propertyValueParsed) {
+                Object item = parsePropertyValue(toscaParser, o);
+                result.add(item);
+            }
+            return result;
+        } else if (propertyValue instanceof String) {
+            return getUpdateProperty(toscaParser, propertyValue.toString());
+        } else if (propertyValue instanceof Number || propertyValue instanceof Boolean) {
+            return new ScalarPropertyValue(propertyValue.toString());
+        } else {
+            return propertyValue;
+        }
+    }
+
+    protected static Object functionFromMap(Object functionObj) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        if (functionObj instanceof Map) {
+            FunctionPropertyValue fpv = new FunctionPropertyValue();
+            Map<String, Object> functionObjMap = ((Map<String, Object>) functionObj);
+            fpv.setFunction(functionObjMap.get("function").toString());
+            Collection parameters = (Collection) functionObjMap.get("parameters");
+            List<Object> result = new ArrayList();
+            for (Object o: parameters) {
+                Object item = functionFromMap(o);
+                result.add(item);
+            }
+            fpv.setParameters(result);
+            return fpv;
+        } else if (functionObj instanceof Collection) {
+            Collection functionObjArr = ((Collection) functionObj);
+            List<Object> result = new ArrayList();
+            for (Object o: functionObjArr) {
+                Object item = functionFromMap(o);
+                result.add(item);
+            }
+            return result;
+        } else if (functionObj instanceof Number || functionObj instanceof Boolean) {
+            Class<?> clazz = Class.forName(functionObj.getClass().getName());
+            Constructor<?> ctor = clazz.getConstructor(String.class);
+            return ctor.newInstance(new Object[] { functionObj });
+        } else {
+            return functionObj.toString();
+        }
+
+    }
+
+    protected static AbstractPropertyValue getUpdateProperty(ToscaSimpleParser toscaParser, String propertyValue) throws ParsingException {
+        ParsingResult<ArchiveRoot> pr = toscaParser.parse(
+                new ByteArrayInputStream(String.format(TOSCA_DUMMY_TEMPLATE, propertyValue).getBytes(StandardCharsets.UTF_8)), null);
+        OutputDefinition odNew = pr.getResult().getTopology().getOutputs().get(OUTPUT_NAME);
+        return odNew.getValue();
+    }
+
+
+
 }

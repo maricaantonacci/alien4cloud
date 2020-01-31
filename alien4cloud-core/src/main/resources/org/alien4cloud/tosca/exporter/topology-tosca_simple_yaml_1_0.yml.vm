@@ -8,9 +8,10 @@
 ## BEGINNING OF DOCUMENT
 tosca_definitions_version: tosca_simple_yaml_1_0
 
-template_name: ${template_name}
-template_version: ${template_version}
-template_author: ${template_author}
+metadata:
+  template_name: ${template_name}
+  template_version: ${template_version}
+  template_author: ${template_author}
 
 description: ${utils.renderDescription(${template_description}, "")}
 #if($utils.collectionIsNotEmpty($topology.dependencies))
@@ -100,35 +101,36 @@ ${utils.formatArtifact($artifactEntry.value, 4)}
         - ${relationship.requirementName}:
             node: ${relationship.target}
             capability: $topology.nodeTemplates[$relationship.target].capabilities[$relationship.targetedCapabilityName].type
-            relationship: ${relationship.type}
+            relationship:
+              type: ${relationship.type}
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($relationship.properties))
-            properties:$propertyUtils.formatProperties(7, $relationship.properties)
+              properties:$propertyUtils.formatProperties(9, $relationship.properties)
 #end## if
 #set($serviceRelationshipArtifacts = $utils.getServiceRelationshipArtifacts($nodeTemplateEntry.value, $topology.nodeTemplates.get(${relationship.target}), $relationship))
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($serviceRelationshipArtifacts))
-            artifacts:
+              artifacts:
 #foreach($artifactEntry in ${serviceRelationshipArtifacts.entrySet()})
-              $artifactEntry.key:
-${utils.formatArtifact($artifactEntry.value, 8)}
+                $artifactEntry.key:
+${utils.formatArtifact($artifactEntry.value, 10)}
 #end## of $artifactEntry iteration
 #end## if has artifacts
 #if($utils.doesInterfacesContainsImplementedOperation($relationship.interfaces))
-            interfaces:
+              interfaces:
 #foreach($interfaceEntry in ${relationship.interfaces.entrySet()})
 #if($utils.doesInterfaceContainsImplementedOperation($interfaceEntry.value))
-              ${interfaceEntry.key}:
+                ${interfaceEntry.key}:
 #foreach($operationEntry in ${interfaceEntry.value.operations.entrySet()})
 #if($utils.isOperationImplemented($operationEntry.value))
 #set($enableImplementationArtifactShortNotation = $utils.canUseShortNotationForImplementationArtifact($operationEntry.value))
 #if($enableImplementationArtifactShortNotation)
-                ${operationEntry.key}: $operationEntry.value.implementationArtifact.artifactRef
+                  ${operationEntry.key}: $operationEntry.value.implementationArtifact.artifactRef
 #else
-                ${operationEntry.key}:
+                  ${operationEntry.key}:
 #if($utils.mapIsNotEmptyAndContainsNotnullValues($operationEntry.value.inputParameters))
-                  inputs:$propertyUtils.formatProperties(10, $operationEntry.value.inputParameters)
+                    inputs:$propertyUtils.formatProperties(12, $operationEntry.value.inputParameters)
 #end
-                  implementation:
-${utils.formatArtifact($operationEntry.value.implementationArtifact, 10)}
+                    implementation:
+${utils.formatArtifact($operationEntry.value.implementationArtifact, 12)}
 #end## if inputParameters not empty
 #end## if isOperationImplemented
 #end## of operations iteration

@@ -8,7 +8,8 @@ public enum Role implements IResourceRoles {
     APPLICATIONS_MANAGER,
     ARCHITECT,
     COMPONENTS_MANAGER,
-    COMPONENTS_BROWSER;
+    COMPONENTS_BROWSER,
+    USER_SPECIFIC_SETTINGS_EDITOR;
 
     public static String getStringFormatedRole(String role) {
         if (role == null || role.trim().isEmpty()) {

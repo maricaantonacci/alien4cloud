@@ -31,6 +31,28 @@ define(function (require) {
     };
   }];
 
+  var UserInfoCtrl = ['$scope', '$uibModalInstance', 'user', function($scope, $uibModalInstance, user) {
+         $scope.user = user;
+         console.log(user);
+
+        $scope.okInformationDialog = function() {
+
+                $uibModalInstance.close($scope.user);
+              };
+
+              $scope.cancelInformationDialog = function() {
+                $uibModalInstance.dismiss('canceled');
+              };
+
+         $scope.handleRoleSelection = function(user, role) {
+           if (!user.roles || user.roles.indexOf(role) < 0) {
+             userServices.addToRoleArray(user, role);
+           } else {
+             userServices.removeFromRoleArray(user, role);
+           }
+         };
+       }];
+
   modules.get('a4c-security', ['a4c-search']).controller('UsersDirectiveCtrl', ['$scope', '$rootScope', '$uibModal', 'userServices', 'searchServiceFactory', 'groupServices',
     function($scope, $rootScope, $uibModal, userServices, searchServiceFactory, groupServices) {
 
@@ -58,6 +80,25 @@ define(function (require) {
           });
         });
       };
+
+       $scope.openUserInformationModal = function(user) {
+              console.log(user);
+              var modalInstance = $uibModal.open({
+                templateUrl: 'views/users/user_information_modal.html',
+                controller: UserInfoCtrl,
+                windowClass: 'searchModal',
+                scope: $scope,
+                size: 'lg',
+                resolve: {
+                  user: function() {
+                      return user;
+                  }
+                }
+              });
+              modalInstance.result.then(function(user) {
+                 $scope.userChanged(user, 'information', user.information);
+                      });
+            };
 
       //prevent closing when clicking on a role
       $scope.preventClose = function(event) {
@@ -113,6 +154,10 @@ define(function (require) {
         $scope.searchService.search();
       });
 
+
+
+
+
       /*get groups*/
       $scope.searchGroups = function(groupQuery) {
         var searchRequest = {
@@ -164,6 +209,8 @@ define(function (require) {
       $scope.userChanged = function(user, fieldName, fieldValue) {
         var updateUserRequest = {};
         updateUserRequest[fieldName] = fieldValue;
+        console.log(fieldName);
+        console.log(fieldValue);
         userServices.update({
           username: user.username
         }, angular.toJson(updateUserRequest));

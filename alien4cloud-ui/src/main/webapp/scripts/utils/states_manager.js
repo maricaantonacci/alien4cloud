@@ -96,6 +96,7 @@ define(function (require) {
       _.forOwn(states, function(value) {
         if(_.has(value, 'routeConfiguration.menu')) {
           var menuItem = value.routeConfiguration.menu;
+          //console.log(menuItem);
           menu.push(menuItem);
         }
       });

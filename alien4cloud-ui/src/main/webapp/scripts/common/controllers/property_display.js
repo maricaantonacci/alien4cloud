@@ -100,6 +100,7 @@ define(function(require) {
       /* method private to factorise all call to the serve and trigge errors */
       var callSaveService = function(propertyRequest) {
         //var deps = $scope.configuration.dependencies;
+        console.log(propertyRequest);
         var saveResult = $scope.onSave(propertyRequest);
         // If the callback return a promise
         if (_.defined(saveResult) && _.defined(saveResult.then)) {
@@ -135,13 +136,16 @@ define(function(require) {
           if (_.undefined(unit)) {
             unit = $scope.definitionObject.uiUnit;
           }
-          data += ' ' + unit;
+          if (!/\s*\{\s*.*\s*\}.*/.test(data))
+            data += ' ' + unit;
         }
+        console.log(data);
         // check constraint here
         var propertyRequest = {
           propertyName: $scope.propertyName,
           propertyDefinition: $scope.definition,
-          propertyValue: data
+          propertyValue: data,
+          propertyUnit: unit
         };
         if (_.defined($scope.definition.suggestionId) && _.defined(data) && data !== null) {
           return propertySuggestionServices.get({
@@ -309,6 +313,16 @@ define(function(require) {
         }
       };
 
+      var isFunctionProperty = function(propertyValue) {
+        return propertyValue != null
+            && propertyValue != undefined
+            && typeof propertyValue === 'object'
+            && propertyValue.hasOwnProperty('function')
+            &&  propertyValue.hasOwnProperty('parameters')
+      }
+
+
+
       $scope.initScope = function() {
         // Define properties
         if (!_.defined($scope.definition)) {
@@ -319,7 +333,9 @@ define(function(require) {
         var shownValue = $scope.propertyValue;
         if (_.defined($scope.propertyValue) && $scope.propertyValue.definition === false) {
           shownValue = getPropValueDisplay($scope, $scope.propertyValue);
-        }
+          $scope.isFunctionProperty = isFunctionProperty($scope.propertyValue);
+        } else
+           $scope.isFunctionProperty  = false;
 
         // handling default value
         shownValue = shownValue || $scope.definition.default;
@@ -379,6 +395,7 @@ define(function(require) {
         }
 
         // Second phase : regardless constraints
+
         switch (type) {
           case 'boolean':
             $scope.definitionObject.uiName = 'checkbox';
@@ -397,17 +414,28 @@ define(function(require) {
           case 'scalar-unit.size':
             $scope.definitionObject.uiName = 'scalar-unit';
             $scope.definitionObject.units = ['B', 'KB', 'KIB', 'MB', 'MIB', 'GB', 'GIB', 'TB', 'TIB'];
-            splitScalarUnitValue(true);
+            console.log(shownValue);
+            console.log($scope.isFunctionProperty);
+            if (!$scope.isFunctionProperty)
+                splitScalarUnitValue(true);
+            else
+                $scope.definitionObject.uiValue = shownValue;
             break;
           case 'scalar-unit.time':
             $scope.definitionObject.uiName = 'scalar-unit';
             $scope.definitionObject.units = ['d', 'h', 'm', 's', 'ms', 'us', 'ns'];
-            splitScalarUnitValue(false);
+            if (!$scope.isFunctionProperty)
+                splitScalarUnitValue(false);
+            else
+                $scope.definitionObject.uiValue = shownValue;
             break;
           case 'scalar-unit.frequency':
             $scope.definitionObject.uiName = 'scalar-unit';
             $scope.definitionObject.units = ['Hz', 'KHz', 'MHz', 'GHz'];
-            splitScalarUnitValue(true);
+            if (!$scope.isFunctionProperty)
+                splitScalarUnitValue(true);
+            else
+                $scope.definitionObject.uiValue = shownValue;
             break;
           case 'version':
           case 'float':

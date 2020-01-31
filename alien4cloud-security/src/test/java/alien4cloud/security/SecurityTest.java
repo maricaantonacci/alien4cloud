@@ -61,7 +61,7 @@ public class SecurityTest {
         request.setUsername("guy");
         request.setPassword("password");
         userService.createUser(request.getUsername(), request.getEmail(), request.getFirstName(), request.getLastName(), request.getRoles(),
-                request.getPassword());
+                request.getPassword(), request.getInformation());
     }
 
     public void testLoginSuccess(String userName, String password, String[] expectedAuthorities) {

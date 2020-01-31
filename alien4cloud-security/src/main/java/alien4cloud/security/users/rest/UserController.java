@@ -61,13 +61,13 @@ public class UserController {
     @Audit
     public RestResponse<Void> create(@Valid @RequestBody CreateUserRequest request) {
         userService.createUser(request.getUsername(), request.getEmail(), request.getFirstName(), request.getLastName(), request.getRoles(),
-                request.getPassword());
+                request.getPassword(), request.getInformation());
         return RestResponseBuilder.<Void> builder().build();
     }
 
     @ApiOperation("Update an user by merging the userUpdateRequest into the existing user")
     @RequestMapping(value = "/{username}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or (hasAuthority('USER_SPECIFIC_SETTINGS_EDITOR') and #username == authentication.principal.username)")
     @Audit
     public RestResponse<Void> update(@PathVariable String username, @RequestBody UpdateUserRequest userUpdateRequest) {
         userService.updateUser(username, userUpdateRequest);

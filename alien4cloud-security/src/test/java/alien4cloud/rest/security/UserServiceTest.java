@@ -32,7 +32,7 @@ public class UserServiceTest {
         request.setUsername("oneguy");
         request.setPassword("password");
         userService.createUser(request.getUsername(), request.getEmail(), request.getFirstName(), request.getLastName(), request.getRoles(),
-                request.getPassword());
+                request.getPassword(), request.getInformation());
         User createdUser = userService.retrieveUser(request.getUsername());
         Assert.assertNotNull(createdUser);
         Assert.assertEquals(request.getUsername(), createdUser.getUsername());
@@ -46,8 +46,8 @@ public class UserServiceTest {
         request.setUsername("aguy");
         request.setPassword("whatever");
         userService.createUser(request.getUsername(), request.getEmail(), request.getFirstName(), request.getLastName(), request.getRoles(),
-                request.getPassword());
+                request.getPassword(), request.getInformation());
         userService.createUser(request.getUsername(), request.getEmail(), request.getFirstName(), request.getLastName(), request.getRoles(),
-                request.getPassword());
+                request.getPassword(), request.getInformation());
     }
 }
