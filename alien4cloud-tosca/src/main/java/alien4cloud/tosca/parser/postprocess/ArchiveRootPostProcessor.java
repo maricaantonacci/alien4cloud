@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -77,7 +78,8 @@ public class ArchiveRootPostProcessor implements IPostProcessor<ArchiveRoot> {
         ToscaContext.get().register(archiveRoot);
 
         doProcess(archiveRoot);
-
+        archiveRoot.getArchive().setMissingDependencies(ToscaContext.get().getMissingDependencies().stream().collect(Collectors.toSet()));
+        ToscaContext.get().clearMissingDependencies();
         // reset to TOSCA template value (in case they where changed)
         archiveRoot.getArchive().setName(archiveName);
         archiveRoot.getArchive().setVersion(archiveVersion);
@@ -112,6 +114,7 @@ public class ArchiveRootPostProcessor implements IPostProcessor<ArchiveRoot> {
         // Dependencies defined in the import section only
         // These should override transitive deps regardless of type of conflict ?
         Set<CSARDependency> dependencies = archiveRoot.getArchive().getDependencies();
+        archiveRoot.getArchive().setMissingDependencies(ToscaContext.get().getMissingDependencies());
 
         // Ensure the archive does not import itself
         Csar archive = archiveRoot.getArchive();

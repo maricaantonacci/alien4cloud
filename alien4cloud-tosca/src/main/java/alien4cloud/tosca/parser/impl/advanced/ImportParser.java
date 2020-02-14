@@ -36,6 +36,7 @@ public class ImportParser implements INodeParser<CSARDependency> {
         Csar csar = ToscaContext.get().getArchive(dependency.getName(), dependency.getVersion());
         log.debug("Import {} {} {}", dependency.getName(), dependency.getVersion(), csar);
         if (csar == null) {
+            ToscaContext.get().addMissingDependency(dependency);
             // error is not a blocker, as long as no type is missing we just mark it as a warning.
             context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.MISSING_DEPENDENCY, "Import definition is not valid",
                     node.getStartMark(), "Specified dependency is not found in Alien 4 Cloud repository.", node.getEndMark(), valueAsString));
