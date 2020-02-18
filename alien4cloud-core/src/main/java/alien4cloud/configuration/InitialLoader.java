@@ -156,7 +156,7 @@ public class InitialLoader {
         try {
             List<Path> archives = FileUtil.listFiles(rootDirectory, ".+\\.(zip|csar)");
             // TODO: remove this sort after testing the algo
-            Collections.sort(archives);
+            // Collections.sort(archives);
             for (Path archive : archives) {
                 try {
                     ParsingResult<ArchiveRoot> parsingResult = parser.parse(archive, AlienConstants.GLOBAL_WORKSPACE_ID);
@@ -182,6 +182,7 @@ public class InitialLoader {
                         if (parsedCSARs.containsKey(id)) {
                             ArchiveNode dependency = parsedCSARs.get(id);
                             dependency.addImportedBy(an);
+                            an.addImport(cd);
                         } else {
                             log.error("Import dependency named " + cd.getName() + " and version " + cd.getVersion()
                                     + " of CSAR " + an.getArchiveRoot().getArchive().getName() + " version " + an.getArchiveRoot().getArchive().getVersion()
@@ -191,18 +192,37 @@ public class InitialLoader {
                 }
             }
 
-            final Queue<ArchiveNode> nodesLefttoProcess = parsedCSARs.entrySet().stream().filter(an -> an.getValue().getDependencies().isEmpty())
-                    .map(entry -> entry.getValue())
-                    .collect(Collectors.toCollection(ArrayDeque::new));
-            while (!nodesLefttoProcess.isEmpty()) {
-                ArchiveNode an = nodesLefttoProcess.poll();
-                if (!an.isVisited())
-                    result.add(an.getPath());
-                an.setVisited(true);
-                for (ArchiveNode importedBy: an.getImportedBy().values()) {
-                    if (!importedBy.isVisited())
-                        nodesLefttoProcess.add(importedBy);
+            final Set<String> nodesLefttoProcess = parsedCSARs.entrySet().stream().filter(an -> an.getValue().getDependencies().isEmpty())
+                    .map(entry -> entry.getValue().getId())
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            Iterator<String> itNodes = nodesLefttoProcess.iterator();
+            while (itNodes.hasNext()) {
+                String id = itNodes.next();
+                itNodes.remove();
+                ArchiveNode an = parsedCSARs.get(id);
+                List<String> importsIds = an.getImports();
+                boolean dependencyNotProcessed = false;
+                for (String importId: importsIds) {
+                    ArchiveNode importAN = parsedCSARs.get(importId);
+                    if (!importAN.isVisited()) {
+                        nodesLefttoProcess.add(importAN.getId());
+                        dependencyNotProcessed = true;
+                    }
                 }
+                if (dependencyNotProcessed) {
+                    nodesLefttoProcess.add(an.getId());
+                } else {
+                    if (!an.isVisited())
+                        result.add(an.getPath());
+                    an.setVisited(true);
+                }
+                for (String importedById: an.getImportedBy()) {
+                    ArchiveNode importedBy = parsedCSARs.get(importedById);
+                    if (!importedBy.isVisited()) {
+                        nodesLefttoProcess.add(importedBy.getId());
+                    }
+                }
+                itNodes = nodesLefttoProcess.iterator();
             }
         } catch (IOException e) {
             log.error("Failed to load initial archives", e);
@@ -239,7 +259,8 @@ public class InitialLoader {
     protected static class ArchiveNode {
         protected ArchiveRoot archiveRoot;
         protected Path path;
-        protected Map<String, ArchiveNode> importedBy;
+        protected List<String> importedBy;
+        protected List<String> imports;
         protected Set<CSARDependency> dependencies;
         @Setter
         protected boolean visited;
@@ -249,7 +270,8 @@ public class InitialLoader {
             this.archiveRoot = archiveRoot;
             this.path = path;
             this.dependencies = dependencies;
-            importedBy = new HashMap<>();
+            importedBy = new ArrayList<>();
+            imports = new ArrayList<>();
             visited = false;
         }
 
@@ -258,8 +280,12 @@ public class InitialLoader {
         }
 
         public void addImportedBy(ArchiveNode node) {
-            importedBy.put(generateIdAR(node.getArchiveRoot()), node);
+            importedBy.add(generateIdAR(node.getArchiveRoot()));
         }
+        public void addImport(CSARDependency cd) {
+            imports.add(generateIdCD(cd));
+        }
+
 
         public static String generateIdAR(ArchiveRoot ar) {
             return ar.getArchive().getName() + ": " +  ar.getArchive().getVersion();
