@@ -78,12 +78,6 @@ public class Csar implements IManagedSecuredResource, IWorkspaceResource {
 
     private String description;
 
-    /**
-     * Dependencies imported but not found yet in the list of files
-     */
-    @NestedObject(nestedClass = CSARDependency.class)
-    private Set<CSARDependency> missingDependencies;
-
     @NestedObject(nestedClass = CSARDependency.class)
     private Set<CSARDependency> dependencies;
 

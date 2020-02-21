@@ -13,11 +13,13 @@ import javax.inject.Inject;
 import alien4cloud.tosca.context.ToscaContext;
 import alien4cloud.tosca.model.ArchiveRoot;
 import alien4cloud.tosca.parser.ParsingResult;
+import alien4cloud.tosca.parser.ToscaArchiveParser;
 import lombok.Getter;
 import lombok.Setter;
 import org.alien4cloud.tosca.catalog.ArchiveParser;
 import org.alien4cloud.tosca.catalog.ArchiveUploadService;
 import org.alien4cloud.tosca.model.CSARDependency;
+import org.alien4cloud.tosca.model.CsarDependenciesBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +52,8 @@ public class InitialLoader {
     private static final String PLUGINS_FOLDER = "plugins";
 
     @Inject
-    private ArchiveParser parser;
+    private ToscaArchiveParser toscaArchiveParser;
+
     @Inject
     private ArchiveUploadService csarUploadService;
     @Inject
@@ -159,13 +162,11 @@ public class InitialLoader {
             // Collections.sort(archives);
             for (Path archive : archives) {
                 try {
-                    ParsingResult<ArchiveRoot> parsingResult = parser.parse(archive, AlienConstants.GLOBAL_WORKSPACE_ID);
-                    ArchiveRoot ar = parsingResult.getResult();
-                    Set<CSARDependency> dependencies = ar.getArchive().getMissingDependencies();
-                    if (ar.getArchive().getDependencies() != null)
-                        dependencies.addAll(ar.getArchive().getDependencies());
-                    ArchiveNode an = new ArchiveNode(ar, archive, dependencies);
-                    parsedCSARs.put(ArchiveNode.generateIdAR(ar), an);
+                    ParsingResult<CsarDependenciesBean> cdb = toscaArchiveParser.parseImports(archive);
+
+                    Set<CSARDependency> dependencies = cdb.getResult().getDependencies();
+                    ArchiveNode an = new ArchiveNode(cdb.getResult(), archive);
+                    parsedCSARs.put(ArchiveNode.generateIdCD(cdb.getResult().getSelf()), an);
                 } catch (ParsingException e) {
                     log.error("Initial upload of archive [ {} ] has failed.", archive.toString(), e);
                 }
@@ -181,18 +182,18 @@ public class InitialLoader {
                         String id = ArchiveNode.generateIdCD(cd);
                         if (parsedCSARs.containsKey(id)) {
                             ArchiveNode dependency = parsedCSARs.get(id);
-                            dependency.addImportedBy(an);
+                            dependency.addImportedBy(an.getId());
                             an.addImport(cd);
                         } else {
                             log.error("Import dependency named " + cd.getName() + " and version " + cd.getVersion()
-                                    + " of CSAR " + an.getArchiveRoot().getArchive().getName() + " version " + an.getArchiveRoot().getArchive().getVersion()
+                                    + " of CSAR " + an.getCsarDependenciesBean().getSelf().getName() + " version " + an.getCsarDependenciesBean().getSelf().getVersion()
                                     + " cannot be found in the list of init CSARs");
                         }
                     }
                 }
             }
 
-            final Set<String> nodesLefttoProcess = parsedCSARs.entrySet().stream().filter(an -> an.getValue().getDependencies().isEmpty())
+            final Set<String> nodesLefttoProcess = parsedCSARs.entrySet().stream().filter(an -> an.getValue().getDependencies() == null)
                     .map(entry -> entry.getValue().getId())
                     .collect(Collectors.toCollection(LinkedHashSet::new));
             Iterator<String> itNodes = nodesLefttoProcess.iterator();
@@ -257,30 +258,31 @@ public class InitialLoader {
 
     @Getter
     protected static class ArchiveNode {
-        protected ArchiveRoot archiveRoot;
+        //protected ArchiveRoot archiveRoot;
+        protected CsarDependenciesBean csarDependenciesBean;
         protected Path path;
         protected List<String> importedBy;
         protected List<String> imports;
-        protected Set<CSARDependency> dependencies;
         @Setter
         protected boolean visited;
+        protected String id;
 
 
-        public ArchiveNode(ArchiveRoot archiveRoot, Path path, Set<CSARDependency> dependencies) {
-            this.archiveRoot = archiveRoot;
+        public ArchiveNode(CsarDependenciesBean csarDependenciesBean, Path path) {
+            this.csarDependenciesBean = csarDependenciesBean;
             this.path = path;
-            this.dependencies = dependencies;
             importedBy = new ArrayList<>();
             imports = new ArrayList<>();
             visited = false;
+            id = generateIdCD(csarDependenciesBean.getSelf());
         }
 
-        public String getId() {
-            return generateIdAR(this.archiveRoot);
+        public Set<CSARDependency> getDependencies() {
+            return csarDependenciesBean.getDependencies();
         }
 
-        public void addImportedBy(ArchiveNode node) {
-            importedBy.add(generateIdAR(node.getArchiveRoot()));
+        public void addImportedBy(String id) {
+            importedBy.add(id);
         }
         public void addImport(CSARDependency cd) {
             imports.add(generateIdCD(cd));

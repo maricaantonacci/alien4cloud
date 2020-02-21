@@ -101,8 +101,6 @@ public class ToscaContext {
         @Getter
         /** Current context dependencies. */
         private final Set<CSARDependency> dependencies;
-        /** Current context missing dependencies. */
-        private final Set<CSARDependency> missingDependencies;
         /** Context archives. */
         private final Map<String, Csar> archivesMap = Maps.newHashMap();
         /** Cached types in the context. <ElementType, <ElementId, Element>> */
@@ -110,7 +108,6 @@ public class ToscaContext {
 
         public Context(Set<CSARDependency> dependencies) {
             this.dependencies = dependencies;
-            this.missingDependencies = new HashSet<>();
         }
 
         private CSARDependency getDependencyByName(String dependencyName) {
@@ -159,29 +156,6 @@ public class ToscaContext {
                 dependency.setHash(csar.getHash());
             }
             dependencies.add(dependency);
-        }
-
-        /**
-         * Add a missing dependency to the current context.
-         *
-         * @param dependency The dependency to add.
-         */
-        public void addMissingDependency(CSARDependency dependency) {
-            log.debug("Add missing dependency to context", dependency);
-            missingDependencies.add(dependency);
-        }
-
-        /**
-         * Remove all missing dependency in the current context.
-         *
-         */
-        public void clearMissingDependencies() {
-            log.debug("Remove all missing dependency");
-            missingDependencies.clear();
-        }
-
-        public Set<CSARDependency> getMissingDependencies() {
-            return missingDependencies;
         }
 
         /**
