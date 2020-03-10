@@ -34,7 +34,7 @@
           </li>
           <li role="presentation" class="divider"></li>
           <li>
-            <a href="https://github.com/alien4cloud/alien4cloud/releases/tag/{{version.tag}}" target="_blank" ng-if="!version.isSnapshot">
+            <a href="https://github.com/indigo-dc/alien4cloud/releases/tag/{{version.tag}}" target="_blank" ng-if="!version.isSnapshot">
             <i class="fa fa-codepen"></i> <strong>{{version.tag}}</strong>
           </a>
             <a ng-if="version.isSnapshot">
@@ -42,6 +42,12 @@
           </a>
             <a href="swagger-ui.html" target="_blank">
             <i class="fa fa-mortar-board"></i> <strong>API Documentation</strong>
+          </a>
+          <a href="https://indigo-dc.github.io/alien4cloud-deep/" target="_blank">
+            <i class="fa fa-mortar-board"></i> <strong>DEEP Documentation</strong>
+          </a>
+          <a href="https://www.youtube.com/playlist?list=PLgPH186Qwh_1fgarVgrvOUDsyaRGeM7oe" target="_blank">
+            <i class="fa fa-play"></i> <strong>Video Tutorials</strong>
           </a>
           </li>
           <li ng-show="status.currentStatus.data.isLogged" role="presentation" class="divider"></li>
