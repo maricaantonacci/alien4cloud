@@ -21,8 +21,12 @@ public interface ICSARRepositorySearchService {
      * @param archiveVersion The version of the archive.
      * @return The cloud service archive matching the given id.
      */
-    Csar getArchive(String archiveName, String archiveVersion);
+    default Csar getArchive(String archiveName, String archiveVersion) {
+    	return getArchive(new CSARDependency(archiveName, archiveVersion));
+    }
 
+    Csar getArchive(CSARDependency dependency);
+    
     List<Csar> getCsarsByName(String archiveName, int numResults);
     
     /**

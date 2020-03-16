@@ -157,7 +157,7 @@ public class ToscaContext {
             log.debug("Add dependency to context", dependency);
             if (dependency.getHash() == null) {
                 // we should try to get the hash from the repository
-                Csar csar = getArchive(dependency.getName(), dependency.getVersion());
+                Csar csar = getArchive(dependency);
                 dependency.setHash(csar.getHash());
             }
             dependencies.add(dependency);
@@ -256,12 +256,16 @@ public class ToscaContext {
          * @param version The version of the archive to get.
          * @return The archive from it's id.
          */
-        public Csar getArchive(String name, String version) {
-            String id = new Csar(name, version).getId();
+		public Csar getArchive(String archiveName, String archiveVersion) {
+			return getArchive(new CSARDependency(archiveName, archiveVersion));
+		}
+		
+        public Csar getArchive(CSARDependency dependency) {
+            String id = new Csar(dependency.getName(), dependency.getVersion()).getId();
             Csar archive = archivesMap.get(id);
             log.debug("get archive from map {} {} {}", id, archive);
             if (archive == null) {
-                archive = csarRepositorySearchService.getArchive(name, version);
+                archive = csarRepositorySearchService.getArchive(dependency);
                 log.debug("get archive from repo {} {} {}", id, archive, csarRepositorySearchService.getClass().getName());
                 archivesMap.put(id, archive);
             }
