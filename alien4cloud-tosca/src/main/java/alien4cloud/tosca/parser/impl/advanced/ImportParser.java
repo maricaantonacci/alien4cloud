@@ -33,7 +33,7 @@ public class ImportParser implements INodeParser<CSARDependency> {
         }
         String valueAsString = dependency.getName() + ":" + dependency.getVersion();
         String currentArchiveVersion = context.<ArchiveRoot> getRootObj().getArchive().getVersion();
-        Csar csar = ToscaContext.get().getArchive(dependency.getName(), dependency.getVersion());
+        Csar csar = ToscaContext.get().getArchive(dependency);
         log.debug("Import {} {} {}", dependency.getName(), dependency.getVersion(), csar);
         if (csar == null) {
             // error is not a blocker, as long as no type is missing we just mark it as a warning.

@@ -132,7 +132,7 @@ public class ArchiveRootPostProcessor implements IPostProcessor<ArchiveRoot> {
 
         // Compute all distinct transitives dependencies
         final Set<CSARDependency> transitiveDependencies = new HashSet<>(
-                dependencies.stream().map(csarDependency -> ToscaContext.get().getArchive(csarDependency.getName(), csarDependency.getVersion()))
+                dependencies.stream().map(csarDependency -> ToscaContext.get().getArchive(csarDependency))
                         .map(Csar::getDependencies).filter(c -> c != null).reduce(Sets::union).orElse(Collections.emptySet()));
 
         // 2. Resolve all transitive vs. direct dependencies conflicts using the direct dependency's version

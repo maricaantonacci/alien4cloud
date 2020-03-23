@@ -36,7 +36,7 @@ public class CsarDependencyLoader implements ICsarDependencyLoader {
     @ToscaContextual
     public CSARDependency buildDependencyBean(String name, String version) {
         CSARDependency newDependency = new CSARDependency(name, version);
-        Csar csar = ToscaContext.get().getArchive(name, version);
+        Csar csar = ToscaContext.get().getArchive(newDependency);
         if (csar != null) {
             newDependency.setHash(csar.getHash());
         }

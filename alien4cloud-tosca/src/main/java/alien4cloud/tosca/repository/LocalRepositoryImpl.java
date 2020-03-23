@@ -50,8 +50,7 @@ public class LocalRepositoryImpl implements ICSARRepositorySearchService {
     }
 
     @Override
-    public Csar getArchive(String archiveName, String archiveVersion) {
-        CSARDependency dependency = new CSARDependency(archiveName, archiveVersion);
+    public Csar getArchive(CSARDependency dependency) {
         ArchiveRoot root = parse(dependency).getResult();
         return root == null ? null : root.getArchive();
     }
