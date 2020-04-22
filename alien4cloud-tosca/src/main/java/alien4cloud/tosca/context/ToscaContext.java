@@ -2,12 +2,7 @@ package alien4cloud.tosca.context;
 
 import static alien4cloud.utils.AlienUtils.safe;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 import org.alien4cloud.tosca.model.CSARDependency;

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -77,7 +78,6 @@ public class ArchiveRootPostProcessor implements IPostProcessor<ArchiveRoot> {
         ToscaContext.get().register(archiveRoot);
 
         doProcess(archiveRoot);
-
         // reset to TOSCA template value (in case they where changed)
         archiveRoot.getArchive().setName(archiveName);
         archiveRoot.getArchive().setVersion(archiveVersion);
