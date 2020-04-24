@@ -518,11 +518,11 @@
       <name>Lombok Repository</name>
       <url>http://projectlombok.org/mavenrepo</url>
     </repository>
-    <repository>
+    <!--repository>
       <id>sonatype-snapshot</id>
       <name>Sonatype snapshot</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository>
+    </repository-->
     <repository>
       <id>jcenter-snapshots</id>
       <name>jcenter</name>
