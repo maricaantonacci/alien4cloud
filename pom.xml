@@ -504,7 +504,7 @@
 
   </dependencyManagement>
 
-  <repositories>
+  <!--repositories>
     <repository>
       <id>repo.opensource.fastconnect.org</id>
       <url>http://fastconnect.org/maven/content/repositories/opensource</url>
@@ -518,19 +518,19 @@
       <name>Lombok Repository</name>
       <url>http://projectlombok.org/mavenrepo</url>
     </repository>
-    <!--repository>
+    <repository>
       <id>sonatype-snapshot</id>
       <name>Sonatype snapshot</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository-->
+    </repository>
     <repository>
       <id>jcenter-snapshots</id>
       <name>jcenter</name>
       <url>https://jcenter.bintray.com/</url>
     </repository>
-  </repositories>
+  </repositories-->
 
-  <pluginRepositories>
+  <!--pluginRepositories>
     <pluginRepository>
       <id>repo.opensource.fastconnect.org</id>
       <url>https://fastconnect.org/maven/content/repositories/opensource</url>
@@ -539,9 +539,9 @@
       <id>repo.opensource.snapshot.fastconnect.org</id>
       <url>https://fastconnect.org/maven/content/repositories/opensource-snapshot</url>
     </pluginRepository>
-  </pluginRepositories>
+  </pluginRepositories-->
 
-  <distributionManagement>
+  <!--distributionManagement>
     <repository>
       <id>repo.opensource.fastconnect.org</id>
       <url>https://fastconnect.org/maven/content/repositories/opensource</url>
@@ -550,7 +550,7 @@
       <id>repo.opensource.snapshot.fastconnect.org</id>
       <url>https://fastconnect.org/maven/content/repositories/opensource-snapshot</url>
     </snapshotRepository>
-  </distributionManagement>
+  </distributionManagement-->
 
   <build>
     <plugins>
