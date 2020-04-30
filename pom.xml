@@ -521,6 +521,11 @@
       <url>https://jcenter.bintray.com/</url>
     </repository>
     <repository>
+      <id>github-indigodc-a4c-elasticsearchmapping</id>
+      <name>github-indigodc-a4c-elasticsearchmapping</name>
+      <url>https://maven.pkg.github.com/indigo-dc/elasticsearch-mapping-parent/</url>
+    </repository>
+    <repository>
       <id>pdl-releases</id>
       <url>https://www.portaildulibre.fr/nexus/repository/opensource-releases</url>
     </repository>
@@ -531,6 +536,10 @@
   </repositories>
 
   <pluginRepositories>
+    <pluginRepository>
+      <id>jcenter-snapshots</id>
+      <url>https://jcenter.bintray.com/</url>
+    </pluginRepository>
     <pluginRepository>
       <id>pdl-releases</id>
       <url>https://www.portaildulibre.fr/nexus/repository/opensource-releases</url>
