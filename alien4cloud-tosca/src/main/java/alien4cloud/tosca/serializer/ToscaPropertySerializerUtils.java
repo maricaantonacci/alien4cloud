@@ -113,6 +113,9 @@ public class ToscaPropertySerializerUtils {
     }
 
     private static String formatMapValue(boolean appendFirstLf, int indentLevel, Map<String, Object> value) {
+        if (value == null || value.isEmpty()) {
+            return "{}";
+        }   	
         indentLevel++;
         StringBuilder buffer = new StringBuilder();
         boolean isFirst = true;
@@ -131,7 +134,7 @@ public class ToscaPropertySerializerUtils {
     }
 
     private static String formatListValue(int indentLevel, List<Object> value) {
-        if (value.isEmpty()) {
+        if (value == null || value.isEmpty()) {
             return "[]";
         }
         indentLevel++;
