@@ -32,7 +32,7 @@ public class ToscaDefinitionVersionParser implements INodeParser<String> {
                 } else {
                     try {
                         loadingNormative.set(true);
-                        Csar csar = ToscaContext.get().getArchive(dependency.getName(), dependency.getVersion());
+                        Csar csar = ToscaContext.get().getArchive(dependency);
                         if (csar == null) {
                             return toscaDefinitionVersion;
                         }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -77,7 +78,6 @@ public class ArchiveRootPostProcessor implements IPostProcessor<ArchiveRoot> {
         ToscaContext.get().register(archiveRoot);
 
         doProcess(archiveRoot);
-
         // reset to TOSCA template value (in case they where changed)
         archiveRoot.getArchive().setName(archiveName);
         archiveRoot.getArchive().setVersion(archiveVersion);
@@ -132,7 +132,7 @@ public class ArchiveRootPostProcessor implements IPostProcessor<ArchiveRoot> {
 
         // Compute all distinct transitives dependencies
         final Set<CSARDependency> transitiveDependencies = new HashSet<>(
-                dependencies.stream().map(csarDependency -> ToscaContext.get().getArchive(csarDependency.getName(), csarDependency.getVersion()))
+                dependencies.stream().map(csarDependency -> ToscaContext.get().getArchive(csarDependency))
                         .map(Csar::getDependencies).filter(c -> c != null).reduce(Sets::union).orElse(Collections.emptySet()));
 
         // 2. Resolve all transitive vs. direct dependencies conflicts using the direct dependency's version

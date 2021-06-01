@@ -45,8 +45,8 @@ public class ToscaTypeSearchService extends AbstractToscaIndexSearchService<Abst
     private Integer nameQuerySimilitudeBoost;
 
     @Override
-    public Csar getArchive(String archiveName, String archiveVersion) {
-        return searchDAO.findById(Csar.class, Csar.createId(archiveName, archiveVersion));
+    public Csar getArchive(CSARDependency dependency) {
+        return searchDAO.findById(Csar.class, Csar.createId(dependency.getName(), dependency.getVersion()));
     }
 
     @Override
