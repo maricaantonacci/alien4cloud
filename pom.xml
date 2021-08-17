@@ -551,6 +551,7 @@
     </pluginRepository>
   </pluginRepositories>
 
+<!--
   <distributionManagement>
     <repository>
         <id>pdl-releases</id>
@@ -560,6 +561,14 @@
         <id>pdl-snapshots</id>
         <url>https://www.portaildulibre.fr/nexus/repository/opensource-snapshots</url>
     </snapshotRepository>
+  </distributionManagement>
+-->
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/maricaantonacci/alien4cloud</url>
+    </repository>
   </distributionManagement>
 
   <build>
