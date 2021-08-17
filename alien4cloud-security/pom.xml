@@ -138,5 +138,13 @@
             <enabled>false</enabled>
         </snapshots>
     </repository>
+
+    <repository>
+      <id>indigo-dc-nexus-repository</id>
+      <name>INDIGO-DC repository</name>
+      <url>https://repository.indigo-datacloud.eu/repository/maven-public</url>
+    </repository>
+
+
   </repositories>
 </project>
